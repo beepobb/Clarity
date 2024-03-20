@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/Discover"
+        android:title="Discover"
+        android:icon="@drawable/baseline_explore_24"
+        />
+
+    <item
+        android:id="@+id/Favourites"
+        android:title="Favourites"
+        android:icon="@drawable/baseline_favorite_border_24"
+        />
+
+    <item
+        android:id="@+id/Create"
+        android:title="Create"
+        android:icon="@drawable/baseline_add_box_24"
+        />
+
+    <item
+        android:id="@+id/Calendar"
+        android:title="Calendar"
+        android:icon="@drawable/baseline_calendar_month_24"
+        />
+
+    <item
+        android:id="@+id/Profile"
+        android:title="Profile"
+        android:icon="@drawable/outline_account_circle_24"
+        />
+</menu>

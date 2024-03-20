@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Clarity" parent="Base.Theme.Clarity" />
+
+    <style name="RoundFAB" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="android:radius">40dp</item>
+    </style>
+
 </resources>
