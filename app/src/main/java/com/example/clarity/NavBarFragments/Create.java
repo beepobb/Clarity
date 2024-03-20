@@ -1,4 +1,4 @@
-package com.example.clarity;
+package com.example.clarity.NavBarFragments;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.clarity.R;
 
 /**
  * A simple {@link Fragment} subclass.
