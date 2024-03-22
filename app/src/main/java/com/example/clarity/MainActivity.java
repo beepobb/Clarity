@@ -6,8 +6,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
-import com.example.clarity.NavBarFragments.Calendar;
+import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
 import com.example.clarity.NavBarFragments.Discover;
 import com.example.clarity.NavBarFragments.Favourites;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new Discover());
+        replaceFragment(new CalendarFragment());
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemID == R.id.Create) {
                 replaceFragment(new Create());
             } else if (itemID == R.id.Calendar) {
-                replaceFragment(new Calendar());
+                replaceFragment(new CalendarFragment());
             } else if (itemID == R.id.Profile) {
                 replaceFragment(new Profile());
             }
@@ -42,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     * @param fragment a
+     */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
