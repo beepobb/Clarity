@@ -1,4 +1,4 @@
-package com.example.clarity.NavBarFragments;
+package com.example.clarity.NavBarFragments.Profile;
 
 import android.os.Bundle;
 
