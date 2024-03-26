@@ -73,6 +73,7 @@ public class Profile extends Fragment {
         ProfileAlertBox deleteAccountAlertBox = new ProfileAlertBox(R.id.deleteAccountConstraintLayout, dialog, view);
         deleteAccountAlertBox.createAlert("This action permanently deletes the account and you cannot retrieve it");
 
+        // TODO: change image logo for settings in fragment_profile.xml
 
         // initialise dialog buttons
         cancelAction = dialog.findViewById(R.id.buttonCancelAction);
