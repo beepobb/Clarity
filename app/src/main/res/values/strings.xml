@@ -2,4 +2,32 @@
     <string name="app_name">Clarity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name = "Event_name">
+        <item>Event1</item>
+        <item>Event2</item>
+        <item>Event3</item>
+        <item>Event4</item>
+        <item>Event5</item>
+        <item>Event6</item>
+    </string-array>
+
+    <string-array name = "time">
+        <item>12/3/1234</item>
+        <item>34/6/3466</item>
+        <item>92/4/2947</item>
+        <item>39/5/2057</item>
+        <item>4/25/6212</item>
+        <item>2/5/0001</item>
+    </string-array>
+
+    <string-array name = "Description">
+        <item>Event1 is fun</item>
+        <item>Event2 is boring</item>
+        <item>Event3 is for undergraduate</item>
+        <item>Event4 is happening today</item>
+        <item>Event5 is smoke free</item>
+        <item>Event6 praise</item>
+    </string-array>
+
 </resources>
