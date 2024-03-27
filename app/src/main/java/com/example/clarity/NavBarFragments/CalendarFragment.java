@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,12 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clarity.R;
+import com.example.clarity.adapters.CalendarEventAdapter;
 import com.example.clarity.databinding.FragmentCalendarBinding;
+import com.example.clarity.model.Event; // PLACEHOLDER for data source
 
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -41,6 +47,8 @@ public class CalendarFragment extends Fragment {
     private Calendar calendar;
     private CalendarView calendarView;
     private TextView textView;
+    private RecyclerView recyclerView;
+    private List<Event> eventList = new ArrayList<>(); // placeholder Event list for data source
     private FragmentCalendarBinding binding;
 
     public CalendarFragment() {
@@ -87,6 +95,7 @@ public class CalendarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         calendarView = view.findViewById(R.id.calendarView);
         textView = view.findViewById(R.id.AABBCC);
+        recyclerView = view.findViewById(R.id.recyclerView);
         calendar = Calendar.getInstance(); // calendar is like datetime in python
         // Inflate the layout for this fragment
         return view;
@@ -100,6 +109,7 @@ public class CalendarFragment extends Fragment {
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        // onViewCreated is executed after onCreateView
         super.onViewCreated(view, savedInstanceState);
 
         setDate(1,1,2023);
@@ -113,8 +123,23 @@ public class CalendarFragment extends Fragment {
         });
         Log.d("CalendarFragment", "onViewCreate");
 
+        // RECYCLER VIEW SET-UP
+        // Placeholder for data source
+        eventList.add(new Event("UPOP", "1300-1500", "Think Tank 3"));
+        eventList.add(new Event("ML Workshop", "1100-1900", "Classroom 1"));
+        eventList.add(new Event("Career Fair", "1500-2000", "Student Centre"));
+        eventList.add(new Event("Lame Event", "1200-1300", "Somewhere"));
+        eventList.add(new Event("Toilet Break", "1500-1501", "Toilet"));
+
+        // Set up RecyclerView and adapter
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Linear Scroll
+        CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), eventList);
+        recyclerView.setAdapter(adapter);
+
     }
 
+
+    // Helper functions:
     public void setDate(int day, int month, int year) {
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month - 1); // JANUARY is 0
