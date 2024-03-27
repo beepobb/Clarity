@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class Event_adapter extends RecyclerView.Adapter<Event_adapter.MyViewHolder> {
     Context context;
-    ArrayList<Event_model> eventlist;gut
+    ArrayList<Event_model> eventlist;
     public Event_adapter(Context context, ArrayList<Event_model> event_list){
         this.context = context;
         this.eventlist = event_list;
