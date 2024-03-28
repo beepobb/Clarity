@@ -117,7 +117,7 @@ public class CalendarFragment extends Fragment {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                textView.setText(String.valueOf(dayOfMonth+"/"+month+1+"/"+year));
+                textView.setText(String.valueOf(dayOfMonth+"/"+ (month + 1) +"/"+year));
                 Log.d("CalendarFragment", "date set");
             }
         });
@@ -137,7 +137,6 @@ public class CalendarFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
     }
-
 
     // Helper functions:
     public void setDate(int day, int month, int year) {
