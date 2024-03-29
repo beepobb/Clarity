@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param fragment a
+     * Loads fragment associated with the bottom nav bar
+     * @param fragment Discover, Favourites, Create, CalendarFragment, Profile
      */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
