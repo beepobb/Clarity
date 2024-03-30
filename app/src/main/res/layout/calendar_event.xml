@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendarEventCard"
+    app:cardBackgroundColor="@color/white"
+    app:cardPreventCornerOverlap="false"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="true"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/calendarEventNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="20dp"
+            android:text="Event Name Here"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/calendarClockImageView"
+            android:layout_width="19dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="52dp"
+            android:src="@drawable/baseline_access_time_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/calendarEventTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="1300 - 1800"
+            app:layout_constraintStart_toEndOf="@+id/calendarClockImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/calendarLocationImageView"
+            android:layout_width="19dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginLeft="7dp"
+            android:src="@drawable/baseline_location_on_24"
+            app:layout_constraintStart_toEndOf="@+id/calendarEventTimeTextView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/calendarEventLocationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Event Location Here"
+            app:layout_constraintStart_toEndOf="@+id/calendarLocationImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
