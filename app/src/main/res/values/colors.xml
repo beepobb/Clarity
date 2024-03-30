@@ -6,4 +6,11 @@
     <color name="accent_1">#6339CD</color>
     <color name="accent_2">#967ADC</color>
     <color name="red">#FF0000</color>
+    <color name="calendar_label_red">#FF9292</color>
+    <color name="calendar_label_yellow">#FFDA92</color>
+    <color name="calendar_label_blue">#92D8FF</color>
+    <color name="calendar_label_green">#92FF97</color>
+    <color name="calendar_label_pink">#FF92E7</color>
+    <color name="calendar_label_brown">#D38E5C</color>
+    <color name="calendar_label_date">#F2DFFF</color>
 </resources>

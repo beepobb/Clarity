@@ -39,8 +39,9 @@ public class CalendarFragment extends Fragment {
     private Calendar calendar;
     private CalendarView calendarView;
     private TextView aabbcc;
-    private TextView textView2;
-    private RecyclerView recyclerView;
+    private TextView agendaView;
+    private RecyclerView monthlyRecyclerView;
+    private RecyclerView agendaRecyclerView;
     private List<Event> eventList = new ArrayList<>(); // placeholder Event list for data source
     enum CalendarDisplayState {MONTHLY_VIEW, AGENDA_VIEW}
     private CalendarDisplayState calendarDisplayState;
@@ -88,13 +89,33 @@ public class CalendarFragment extends Fragment {
         // get reference to all UI elements
         calendarView = view.findViewById(R.id.calendarView);
         aabbcc = view.findViewById(R.id.AABBCC);
-        recyclerView = view.findViewById(R.id.recyclerView);
+        monthlyRecyclerView = view.findViewById(R.id.recyclerView);
         calendar = Calendar.getInstance(); // calendar is like datetime in python
         displayToggle = view.findViewById(R.id.displayToggle);
-        textView2 = view.findViewById(R.id.textView2);
+
+        agendaView = view.findViewById(R.id.agendaView);
+        agendaRecyclerView = view.findViewById(R.id.agendaRecycler);
 
         // other variables
         calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
+
+        // RECYCLER VIEW SET-UP
+        // Placeholder for data source
+        Calendar upop = Calendar.getInstance();
+        setDate(upop, 2, Calendar.JANUARY, 2023);
+        Calendar toilet = Calendar.getInstance();
+        setDate(toilet, 3, Calendar.JANUARY, 2023);
+
+        eventList.add(new Event("UPOP", "1300-1500", "Think Tank 3", upop));
+        eventList.add(new Event("ML Workshop", "1100-1900", "Classroom 1", upop));
+        eventList.add(new Event("Career Fair", "1500-2000", "Student Centre", upop));
+        eventList.add(new Event("Lame Event", "1200-1300", "Somewhere", upop));
+        eventList.add(new Event("Toilet Break", "1500-1501", "Toilet", toilet));
+
+        // Set up RecyclerView and adapter
+        monthlyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Linear Scroll
+        CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), eventList);
+        monthlyRecyclerView.setAdapter(adapter);
 
         return view; // Inflate the layout for this fragment
     }
@@ -111,13 +132,33 @@ public class CalendarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.i("CalendarFragment", "onViewCreate");
 
-        setDate(1,1,2023);
+        // set default view
+        setDate(calendar,1,1,2023);
+        long milli = calendar.getTimeInMillis();
+        calendarView.setDate(milli);
+        Log.d("CalendarFragment.setDate", calendar.toString());
+        showMonthlyView();
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                aabbcc.setText(String.valueOf(dayOfMonth+"/"+ (month + 1) +"/"+year));
                 Log.d("CalendarFragment", "date set");
+                aabbcc.setText(String.valueOf(dayOfMonth+"/"+ (month + 1) +"/"+year));
+
+                Calendar selectedDate = Calendar.getInstance();
+                setDate(selectedDate, dayOfMonth, month, year);
+                List<Event> subEventList = new ArrayList<>();
+
+                for (Event e: eventList) {
+                    if (selectedDate.equals(e.getDate())) {
+                        subEventList.add(e);
+                    }
+
+                }
+                // Set up RecyclerView and adapter
+                monthlyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Linear Scroll
+                CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), subEventList);
+                monthlyRecyclerView.setAdapter(adapter);
             }
         });
 
@@ -130,6 +171,8 @@ public class CalendarFragment extends Fragment {
                     case AGENDA_VIEW:
                         displayToggle.setImageResource(R.drawable.monthly_view);
                         calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
+
+                        showMonthlyView();
                         break;
                     case MONTHLY_VIEW:
                         displayToggle.setImageResource(R.drawable.agenda_view);
@@ -142,29 +185,19 @@ public class CalendarFragment extends Fragment {
                 Log.d("displayToggle", "value is: " + calendarDisplayState);
             }
         });
-        // RECYCLER VIEW SET-UP
-        // Placeholder for data source
-        eventList.add(new Event("UPOP", "1300-1500", "Think Tank 3"));
-        eventList.add(new Event("ML Workshop", "1100-1900", "Classroom 1"));
-        eventList.add(new Event("Career Fair", "1500-2000", "Student Centre"));
-        eventList.add(new Event("Lame Event", "1200-1300", "Somewhere"));
-        eventList.add(new Event("Toilet Break", "1500-1501", "Toilet"));
-
-        // Set up RecyclerView and adapter
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Linear Scroll
-        CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), eventList);
-        recyclerView.setAdapter(adapter);
-
     }
 
     // Helper functions:
-    public void setDate(int day, int month, int year) {
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1); // JANUARY is 0
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        long milli = calendar.getTimeInMillis();
-        calendarView.setDate(milli);
-        Log.d("CalendarFragment.setDate", calendar.toString());
+
+    // sets date for Calendar object
+    public void setDate(Calendar date, int day, int month, int year) {
+        date.set(Calendar.YEAR, year);
+        date.set(Calendar.MONTH, month - 1); // JANUARY is 0
+        date.set(Calendar.DAY_OF_MONTH, day);
+
+        // seconds and milliseconds don't matter
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
     }
     public void getDate() {
         long date = calendarView.getDate();
@@ -174,16 +207,18 @@ public class CalendarFragment extends Fragment {
         Toast.makeText(getActivity(), selected_date, Toast.LENGTH_SHORT).show();
     }
 
-    // TODO: create UI for Agenda view and method to hide it
     /**
      * Hides Agenda view UI then display Monthly view UI
      */
     public void showMonthlyView() {
         // hide Agenda view UI
+        agendaView.setVisibility(View.GONE);
+        agendaRecyclerView.setVisibility(View.GONE);
 
         // show Monthly view UI
-
-
+        calendarView.setVisibility(View.VISIBLE);
+        monthlyRecyclerView.setVisibility(View.VISIBLE);
+        aabbcc.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -192,11 +227,12 @@ public class CalendarFragment extends Fragment {
     public void showAgendaView() {
         // hide Monthly view UI
         calendarView.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
+        monthlyRecyclerView.setVisibility(View.GONE);
         aabbcc.setVisibility(View.GONE);
 
-        // show Agenda view UI
-        textView2.setVisibility(View.VISIBLE);
+        // show Agenda view UIt
+        agendaView.setVisibility(View.VISIBLE);
+        agendaRecyclerView.setVisibility(View.VISIBLE);
     }
 }
 
