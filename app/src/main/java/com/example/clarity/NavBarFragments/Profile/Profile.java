@@ -9,9 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,18 +27,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clarity.R;
+import com.example.clarity.adapters.CalendarEventAdapter;
+import com.example.clarity.adapters.ProfileInterestAdapter;
+import com.example.clarity.model.Interest;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class Profile extends Fragment {
-    Dialog dialog;
-    Button cancelAction, resetCalendar;
-    View view;
+    private Dialog dialog;
+    private Button cancelAction, resetCalendar;
+    private View view;
+    private List<Interest> interestList = new ArrayList<>();
+    private RecyclerView recyclerView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        recyclerView = view.findViewById(R.id.recyclerView);
         // Return the inflated layout
         return view;
     }
@@ -93,6 +107,19 @@ public class Profile extends Fragment {
                 description.setText("");
             }
         });
+
+        // RECYCLER VIEW SET-UP
+        // Placeholder for data source
+        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.clarity_icon)));
+        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.sad_square_svgrepo_com_1)));
+        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.agenda_view)));
+        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.weekly_view)));
+        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.placeholder_profile)));
+
+        // Set up RecyclerView and adapter
+        recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
+        ProfileInterestAdapter adapter = new ProfileInterestAdapter(getActivity(), interestList);
+        recyclerView.setAdapter(adapter);
 
     }
 }
