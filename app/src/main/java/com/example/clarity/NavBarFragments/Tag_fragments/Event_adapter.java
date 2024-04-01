@@ -1,4 +1,4 @@
-package com.example.clarity.NavBarFragments;
+package com.example.clarity.NavBarFragments.Tag_fragments;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clarity.R;
-
 import java.util.ArrayList;
 
 public class Event_adapter extends RecyclerView.Adapter<Event_adapter.MyViewHolder> {
@@ -35,6 +33,7 @@ public class Event_adapter extends RecyclerView.Adapter<Event_adapter.MyViewHold
         holder.time.setText(eventlist.get(position).getEvent_time());
         holder.des.setText(eventlist.get(position).getEvent_description());
         holder.imageview.setImageResource(eventlist.get(position).getImage_id());
+        holder.loc.setText(eventlist.get(position).getEvent_location());
 
 
     }
@@ -46,13 +45,14 @@ public class Event_adapter extends RecyclerView.Adapter<Event_adapter.MyViewHold
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageview;
-        TextView name, time, des;
+        TextView name, time, des, loc;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             imageview = itemView.findViewById(R.id.imageView2);
-            name = itemView.findViewById(R.id.textView1);
-            time = itemView.findViewById(R.id.textView2);
-            des = itemView.findViewById(R.id.textView3);
+            name = itemView.findViewById(R.id.eventName);
+            time = itemView.findViewById(R.id.eventDate);
+            des = itemView.findViewById(R.id.eventTime);
+            loc = itemView.findViewById(R.id.eventLocation);
 
         }
     }
