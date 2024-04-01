@@ -31,12 +31,10 @@ public class ProfileInterestAdapter extends RecyclerView.Adapter<ProfileInterest
         // Each individual element in the list is an EventViewHolder object
         // ViewHolder is a wrapper around the actual view (e.g. the row)
         // Instance variables access the various Views (name, time, location) in the actual view
-        TextView interestNameTextView;
-        ImageView interestIconImageView;
+        TextView interestCategoryNameTextView;
         public InterestViewHolder(@NonNull View itemView) {
             super(itemView);
-            interestNameTextView = itemView.findViewById(R.id.interestNameTextView);
-            interestIconImageView = itemView.findViewById(R.id.interestIconImageView);
+            interestCategoryNameTextView = itemView.findViewById(R.id.interestCategoryNameTextView);
         }
     }
 
@@ -53,8 +51,7 @@ public class ProfileInterestAdapter extends RecyclerView.Adapter<ProfileInterest
         Interest interest = interestList.get(position); // get an Event object from our data source (eventList)
 
         // Bind Event object data to the EventViewHolder
-        holder.interestNameTextView.setText(interest.getName());
-        holder.interestIconImageView.setImageDrawable(interest.getDrawable());
+        holder.interestCategoryNameTextView.setText(interest.getName());
 
         // Set on click listener
         // ViewHolder is not a View, so we access its root view instead

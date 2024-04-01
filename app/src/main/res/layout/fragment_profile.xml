@@ -7,6 +7,7 @@
     style="@style/ProfileBanner"
     tools:context=".NavBarFragments.Profile.Profile">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -77,11 +78,27 @@
                 app:layout_constraintTop_toTopOf="@+id/profileWhiteBg"
                 app:tint="@color/purple" />
 
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Interests"
+                app:layout_constraintEnd_toEndOf="@+id/circleBg"
+                app:layout_constraintStart_toStartOf="@+id/circleBg"
+                app:layout_constraintTop_toBottomOf="@+id/placeholderProfilePic" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
+                android:layout_width="350dp"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@+id/placeholderProfilePic" />
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/textView2"
+                app:layout_constraintHorizontal_bias="0.503"
+                app:layout_constraintStart_toStartOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" >
+
+            </androidx.recyclerview.widget.RecyclerView>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout2"
@@ -94,88 +111,67 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toTopOf="parent">
 
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/themeConstraintLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp">
-
-                        <ImageView
-                            android:id="@+id/themeIcon"
-                            android:layout_width="49dp"
-                            android:layout_height="45dp"
-                            android:layout_marginStart="32dp"
-                            android:src="@drawable/baseline_add_circle_24"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
+                        android:layout_height="40dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="10dp">
 
                         <TextView
-                            style="@style/Typography"
                             android:id="@+id/themeText"
+                            style="@style/Typography"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
                             android:clickable="true"
                             android:focusable="true"
                             android:text="Theme"
+                            android:textSize="15sp"
+                            android:layout_marginStart="40dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/themeIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
                             android:id="@+id/theme_next"
                             android:layout_width="17dp"
                             android:layout_height="14dp"
-                            android:layout_marginEnd="38dp"
+                            android:layout_marginEnd="44dp"
                             android:src="@drawable/baseline_arrow_forward_ios_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.58" />
+                            app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/resetCalendarConstraintLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="10dp"
                         android:clickable="true">
 
-
-                        <ImageView
-                            android:id="@+id/resetCalendarIcon"
-                            android:layout_width="49dp"
-                            android:layout_height="45dp"
-                            android:layout_marginStart="32dp"
-                            android:src="@drawable/baseline_add_circle_24"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
-
                         <TextView
-                            style="@style/Typography"
                             android:id="@+id/resetCalendarText"
+                            style="@style/Typography"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
+                            android:layout_marginStart="40dp"
                             android:text="Reset Calendar"
+                            android:textSize="15sp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/resetCalendarIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
                             android:id="@+id/calendar_next"
                             android:layout_width="17dp"
                             android:layout_height="14dp"
-                            android:layout_marginEnd="38dp"
+                            android:layout_marginEnd="44dp"
                             android:src="@drawable/baseline_arrow_forward_ios_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -187,37 +183,26 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/resetAccountConstraintLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="10dp"
                         android:clickable="true">
-
-
-                        <ImageView
-                            android:id="@+id/resetAccountIcon"
-                            android:layout_width="49dp"
-                            android:layout_height="45dp"
-                            android:layout_marginStart="32dp"
-                            android:src="@drawable/baseline_add_circle_24"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
 
                         <TextView
                             android:id="@+id/resetAccountText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
+                            android:layout_marginStart="40dp"
                             android:text="Reset Account"
+                            android:textSize="15sp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/resetAccountIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
                             android:id="@+id/resetAccount_next"
                             android:layout_width="17dp"
                             android:layout_height="14dp"
-                            android:layout_marginEnd="38dp"
+                            android:layout_marginEnd="44dp"
                             android:src="@drawable/baseline_arrow_forward_ios_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -229,37 +214,27 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/deleteAccountConstraintLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="10dp"
                         android:clickable="true">
 
-
-                        <ImageView
-                            android:id="@+id/deleteAccountIcon"
-                            android:layout_width="49dp"
-                            android:layout_height="45dp"
-                            android:layout_marginStart="32dp"
-                            android:src="@drawable/baseline_add_circle_24"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
 
                         <TextView
                             android:id="@+id/deleteAccountText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
+                            android:layout_marginStart="40dp"
                             android:text="Delete Account"
+                            android:textSize="15sp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/deleteAccountIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
                             android:id="@+id/deleteAccount_next"
                             android:layout_width="17dp"
                             android:layout_height="14dp"
-                            android:layout_marginEnd="38dp"
+                            android:layout_marginEnd="44dp"
                             android:src="@drawable/baseline_arrow_forward_ios_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -271,36 +246,26 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/aboutConstraintLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginBottom="10dp"
                         android:clickable="true">
-
-                        <ImageView
-                            android:id="@+id/aboutIcon"
-                            android:layout_width="49dp"
-                            android:layout_height="45dp"
-                            android:layout_marginStart="32dp"
-                            android:src="@drawable/baseline_add_circle_24"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
 
                         <TextView
                             android:id="@+id/aboutText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
+                            android:layout_marginStart="40dp"
                             android:text="About"
+                            android:textSize="15sp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/aboutIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
                             android:id="@+id/about_next"
                             android:layout_width="17dp"
                             android:layout_height="14dp"
-                            android:layout_marginEnd="38dp"
+                            android:layout_marginEnd="44dp"
                             android:src="@drawable/baseline_arrow_forward_ios_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"

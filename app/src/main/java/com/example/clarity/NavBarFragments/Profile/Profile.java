@@ -110,14 +110,14 @@ public class Profile extends Fragment {
 
         // RECYCLER VIEW SET-UP
         // Placeholder for data source
-        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.clarity_icon)));
-        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.sad_square_svgrepo_com_1)));
-        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.agenda_view)));
-        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.weekly_view)));
-        interestList.add(new Interest("Technology", ContextCompat.getDrawable(requireActivity(), R.drawable.placeholder_profile)));
+        interestList.add(new Interest("Technology"));
+        interestList.add(new Interest("Event"));
+        interestList.add(new Interest("Poop"));
+        interestList.add(new Interest("Workshop"));
+        interestList.add(new Interest("Seminar"));
 
         // Set up RecyclerView and adapter
-        recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         ProfileInterestAdapter adapter = new ProfileInterestAdapter(getActivity(), interestList);
         recyclerView.setAdapter(adapter);
 
