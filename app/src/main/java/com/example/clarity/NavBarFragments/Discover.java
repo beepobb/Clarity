@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.clarity.R;
+import com.example.clarity.model.data.User;
+import com.example.clarity.model.repository.RestRepo;
 
 /**
  * A simple {@link Fragment} subclass.

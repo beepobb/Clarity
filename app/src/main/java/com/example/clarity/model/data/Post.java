@@ -1,6 +1,6 @@
 package com.example.clarity.model.data;
 
-public class post {
+public class Post {
     private int id;
     private int author_id;
     private String event_start;
