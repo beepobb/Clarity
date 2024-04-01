@@ -1,18 +1,14 @@
-package com.example.clarity.NavBarFragments;
+package com.example.clarity.NavBarFragments.Tag_fragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.clarity.R;
-
 import java.util.ArrayList;
 
 public class Career_tag_fragment extends Fragment{
@@ -23,7 +19,6 @@ public class Career_tag_fragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View viewroot = inflater.inflate(R.layout.fragment_career_tag, container, false);
         RecyclerView recyclerView = viewroot.findViewById(R.id.Career);
         setUpEventList();
@@ -40,9 +35,10 @@ public class Career_tag_fragment extends Fragment{
         String[] name = getResources().getStringArray(R.array.Event_name);
         String[] time = getResources().getStringArray(R.array.time);
         String[] description = getResources().getStringArray(R.array.Description);
+        String[] location = getResources().getStringArray(R.array.Location);
 
         for(int i = 0; i<name.length; i++){
-            list_of_event.add(new Event_model(name[i], time[i], description[i], images[i]));
+            list_of_event.add(new Event_model(name[i], time[i], description[i], location[i], images[i]));
 
 
         }
