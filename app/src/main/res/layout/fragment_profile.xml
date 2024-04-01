@@ -21,7 +21,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/profile_bg"
+                android:background="@drawable/profile_circle_base"
+                android:backgroundTint="?attr/profile_circle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -30,12 +31,13 @@
                 android:id="@+id/profileWhiteBg"
                 android:layout_width="match_parent"
                 android:layout_height="700dp"
-                android:layout_marginTop="112dp"
-                android:src="@drawable/profile_white_bg"
+                android:layout_marginTop="136dp"
+                android:background="@drawable/profile_container"
+                android:backgroundTint="?attr/profile_container"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
                 android:id="@+id/placeholderProfilePic"
