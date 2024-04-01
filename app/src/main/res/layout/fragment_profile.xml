@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/profile_bg"
+    style="@style/ProfileBanner"
     tools:context=".NavBarFragments.Profile.Profile">
 
     <ScrollView
@@ -75,7 +75,7 @@
                 app:layout_constraintHorizontal_bias="0.208"
                 app:layout_constraintStart_toEndOf="@+id/circleBg"
                 app:layout_constraintTop_toTopOf="@+id/profileWhiteBg"
-                app:tint="@color/profile_bg" />
+                app:tint="@color/purple" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -116,6 +116,7 @@
                             app:layout_constraintVertical_bias="0.0" />
 
                         <TextView
+                            style="@style/Typography"
                             android:id="@+id/themeText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -160,6 +161,7 @@
                             app:layout_constraintVertical_bias="0.0" />
 
                         <TextView
+                            style="@style/Typography"
                             android:id="@+id/resetCalendarText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
