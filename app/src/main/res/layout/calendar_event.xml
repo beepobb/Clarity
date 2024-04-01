@@ -6,11 +6,13 @@
     android:id="@+id/calendarEventCard"
     app:cardBackgroundColor="@color/white"
     app:cardPreventCornerOverlap="false"
-    app:cardCornerRadius="15dp"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
     app:cardUseCompatPadding="true"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:layout_marginLeft="7dp"
+    android:layout_marginRight="7dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -51,8 +53,8 @@
             android:id="@+id/calendarLocationImageView"
             android:layout_width="19dp"
             android:layout_height="16dp"
-            android:layout_marginTop="52dp"
             android:layout_marginLeft="7dp"
+            android:layout_marginTop="52dp"
             android:src="@drawable/baseline_location_on_24"
             app:layout_constraintStart_toEndOf="@+id/calendarEventTimeTextView"
             app:layout_constraintTop_toTopOf="parent" />

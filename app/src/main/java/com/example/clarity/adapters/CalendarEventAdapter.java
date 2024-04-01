@@ -21,7 +21,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
     private Context context;
     private List<Event> eventList;
     public CalendarEventAdapter(Context context, List<Event> eventList){
-        this.context = context;
+        this.context = context; // if adapter constructed in a fragment, pass in getActivity()
         this.eventList = eventList; // Placeholder: list of Event objects (to populate RecyclerView)
     }
 
@@ -34,6 +34,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         TextView eventLocationTextView;
 
         public EventViewHolder(@NonNull View itemView) {
+            // itemView is a reference to the layout for the list item (from LayoutInflater when executing onCreateViewHolder)
             super(itemView);
             eventNameTextView = itemView.findViewById(R.id.calendarEventNameTextView);
             eventTimeTextView = itemView.findViewById(R.id.calendarEventTimeTextView);
@@ -49,6 +50,8 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         // BUT does not fill in the contents i.e. does NOT bind it to specific data yet (this is done by onBindViewHolder)
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_event, parent, false);
+        // Inflating calendar_event xml essentially creates a reference to the layout in memory
+        // 'view' is a reference to the layout
         return new EventViewHolder(view);
     }
 
@@ -69,7 +72,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
             @Override
             public void onClick(View view) {
                 // To be set
-                Toast.makeText(context, "ViewHolder itemView onClickListener", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, holder.eventNameTextView.getText(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -79,10 +82,6 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         // RecyclerView calls this to get the size of the data source
         // This is used to determine when there are no more items that can be displayed
         return eventList.size();
-    }
-
-    interface onItemClickListener{
-        void onItemClick(View view, int position);
     }
 
 }

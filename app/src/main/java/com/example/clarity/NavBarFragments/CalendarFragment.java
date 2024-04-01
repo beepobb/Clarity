@@ -1,5 +1,7 @@
 package com.example.clarity.NavBarFragments;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,14 +14,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.applandeo.materialcalendarview.CalendarDay;
+import com.applandeo.materialcalendarview.CalendarUtils;
+import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener;
 import com.example.clarity.R;
 import com.example.clarity.adapters.CalendarEventAdapter;
 import com.example.clarity.databinding.FragmentCalendarBinding;
 import com.example.clarity.model.Event; // PLACEHOLDER for data source
+import com.google.android.material.datepicker.DayViewDecorator;
 
 import org.w3c.dom.Text;
 
@@ -28,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,9 +49,7 @@ public class CalendarFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Calendar calendar;
-    private CalendarView calendarView;
-    private TextView textView;
+    private com.applandeo.materialcalendarview.CalendarView calendarView;
     private RecyclerView recyclerView;
     private List<Event> eventList = new ArrayList<>(); // placeholder Event list for data source
     private FragmentCalendarBinding binding;
@@ -92,12 +95,10 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
+        View view = inflater.inflate(R.layout.fragment_calendar, container, false); // Inflate the layout for this fragment
         calendarView = view.findViewById(R.id.calendarView);
-        textView = view.findViewById(R.id.AABBCC);
         recyclerView = view.findViewById(R.id.recyclerView);
-        calendar = Calendar.getInstance(); // calendar is like datetime in python
-        // Inflate the layout for this fragment
+
         return view;
     }
 
@@ -112,15 +113,29 @@ public class CalendarFragment extends Fragment {
         // onViewCreated is executed after onCreateView
         super.onViewCreated(view, savedInstanceState);
 
-        setDate(1,1,2023);
+        // Calendar Set-Up
+        // MaterialCalendar works with CalendarDay objects (you can convert Calendar objects to it)
 
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        List<CalendarDay> events = new ArrayList<>(); // TODO: load this in from sharedPrefs and database
+
+        // Current day
+        CalendarDay today = new CalendarDay(Calendar.getInstance());
+        today.setImageResource(R.drawable.agenda_view);
+        // setImageResource only for classic calendar!
+        events.add(today);
+
+        // Set the list of calendar days in the MaterialCalendarView
+        calendarView.setCalendarDays(events);
+
+
+        calendarView.setOnCalendarDayClickListener(new OnCalendarDayClickListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                textView.setText(String.valueOf(dayOfMonth+"/"+month+1+"/"+year));
-                Log.d("CalendarFragment", "date set");
+            public void onClick(@NonNull CalendarDay calendarDay) {
+                Calendar clickedDayCalendar = calendarDay.getCalendar();
+                Toast.makeText(getActivity(), clickedDayCalendar.getTime().toString(), Toast.LENGTH_SHORT).show();
             }
         });
+
         Log.d("CalendarFragment", "onViewCreate");
 
         // RECYCLER VIEW SET-UP
@@ -140,20 +155,21 @@ public class CalendarFragment extends Fragment {
 
 
     // Helper functions:
-    public void setDate(int day, int month, int year) {
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1); // JANUARY is 0
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        long milli = calendar.getTimeInMillis();
-        calendarView.setDate(milli);
-        Log.d("CalendarFragment.setDate", calendar.toString());
-    }
-    public void getDate() {
-        long date = calendarView.getDate();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-        calendar.setTimeInMillis(date);
-        String selected_date = simpleDateFormat.format(calendar.getTime());
-        Toast.makeText(getActivity(), selected_date, Toast.LENGTH_SHORT).show();
-    }
+
+//    public void setDate(int day, int month, int year) {
+//        calendar.set(Calendar.YEAR, year);
+//        calendar.set(Calendar.MONTH, month - 1); // JANUARY is 0
+//        calendar.set(Calendar.DAY_OF_MONTH, day);
+//        long milli = calendar.getTimeInMillis();
+//        calendarView.setDate(milli);
+//        Log.d("CalendarFragment.setDate", calendar.toString());
+//    }
+//    public void getDate() {
+//        long date = calendarView.getDate();
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+//        calendar.setTimeInMillis(date);
+//        String selected_date = simpleDateFormat.format(calendar.getTime());
+//        Toast.makeText(getActivity(), selected_date, Toast.LENGTH_SHORT).show();
+//    }
 }
 
