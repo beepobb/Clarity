@@ -3,5 +3,26 @@
     <style name="Base.Theme.Clarity" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="background">@color/bg_dark</item>
     </style>
+    <style name="ScreenBackground"><item name="android:background">@color/dark_grey</item></style>
+    <style name="Container"><item name="android:background">@color/wolf_grey</item></style>
+    <style name="Accent1"><item name="android:textColor">@color/purple</item></style>
+    <style name="Subtitle"><item name="android:textColor">@color/grey</item></style>
+    <style name="Typography"><item name="android:textColor">@color/light_grey</item></style>
+
+    <!-- Styles for Event Fragment -->
+    <style name="EventTitle"><item name="android:textColor">@color/dark_purple</item></style>
+    <style name="EventDetails"><item name="android:textColor">@color/light_grey</item></style>
+    <style name="EventCard"><item name="cardBackgroundColor">@color/purplish_grey</item></style>
+
+    <!-- Styles for Calendar Fragment -->
+    <style name="CalendarEventCard"><item name="cardBackgroundColor">@color/purplish_grey</item></style>
+    <style name="CalendarBanner"><item name="android:background">#1F2020</item></style>
+    <style name="CalendarEventDateContainer"><item name="android:background">@color/purple</item></style>
+    <style name="CalendarEventMainText"><item name="android:textColor">@color/white</item></style>
+    <style name="CalendarEventSubText"><item name="android:textColor">@color/light_grey</item></style>
+
+    <!-- Styles for Profile Fragment -->
+    <style name="ProfileBanner"><item name="android:background">@color/dark_purple</item></style>
 </resources>

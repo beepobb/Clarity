@@ -12,4 +12,24 @@
         <item name="android:radius">40dp</item>
     </style>
 
+    <style name="ScreenBackground"><item name="android:background">@color/off_white</item></style>
+    <style name="Container"><item name="android:strokeColor">@color/light_grey</item></style>
+    <style name="Accent1"><item name="android:textColor">@color/dark_purple</item></style>
+    <style name="Subtitle"><item name="android:textColor">@color/wolf_grey</item></style>
+    <style name="Typography"><item name="android:textColor">@color/grey</item></style>
+
+    <!-- Styles for Event Fragment -->
+    <style name="EventTitle"><item name="android:textColor">@color/black</item></style>
+    <style name="EventDetails"><item name="android:textColor">@color/wolf_grey</item></style>
+    <style name="EventCard"><item name="cardBackgroundColor">@color/light_grey</item></style>
+
+    <!-- Styles for Calendar Fragment -->
+    <style name="CalendarEventCard"><item name="cardBackgroundColor">@color/purple_tint</item></style>
+    <style name="CalendarBanner"><item name="android:background">@color/purple_tint</item></style>
+    <style name="CalendarEventDateContainer"><item name="android:background">#F2DFFF</item></style>
+    <style name="CalendarEventMainText"><item name="android:textColor">@color/dark_purple</item></style>
+    <style name="CalendarEventSubText"><item name="android:textColor">@color/purple</item></style>
+
+    <!-- Styles for Profile Fragment -->
+    <style name="ProfileBanner"><item name="android:background">@color/purple</item></style>
 </resources>
