@@ -1,7 +1,5 @@
 package com.example.clarity.NavBarFragments;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,20 +17,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.applandeo.materialcalendarview.CalendarDay;
-import com.applandeo.materialcalendarview.CalendarUtils;
-import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener;
 import com.example.clarity.R;
 import com.example.clarity.adapters.CalendarEventAdapter;
 import com.example.clarity.model.Event; // PLACEHOLDER for data source
-import com.google.android.material.datepicker.DayViewDecorator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * CalendarFragment handles all logic for Monthly view, which is the default view
@@ -44,7 +37,6 @@ public class CalendarFragment extends Fragment {
 
     private String mParam1; private String mParam2;
     private Calendar calendar;
-    private CalendarView calendarView;
     private TextView aabbcc;
     private RecyclerView monthlyRecyclerView;
     private RecyclerView agendaRecyclerView;
@@ -111,7 +103,7 @@ public class CalendarFragment extends Fragment {
         aabbcc = view.findViewById(R.id.AABBCC);
         calendar = Calendar.getInstance(); // calendar is like datetime in python
         displayToggle = view.findViewById(R.id.displayToggle);
-        monthlyRecyclerView = view.findViewById(R.id.recyclerView);
+        monthlyRecyclerView = view.findViewById(R.id.monthlyRecycler);
 
         // other variables
         calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
@@ -143,10 +135,9 @@ public class CalendarFragment extends Fragment {
         Log.i("CalendarFragment", "onViewCreate");
 
         // set default view
-        setDate(calendar,1,1,2023);
-        calendarView.setDate(calendar.getTimeInMillis());
         showMonthlyView();
 
+        // TODO: fix this ryan
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
