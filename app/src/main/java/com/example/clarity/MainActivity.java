@@ -30,11 +30,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-<<<<<<< HEAD
         replaceFragment(new CalendarFragment());
-=======
         replaceFragment(new Discover());
->>>>>>> b149a27c533ebcad2b0d412690d844279e6fc663
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
