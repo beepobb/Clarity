@@ -13,4 +13,14 @@
     <color name="calendar_label_pink">#FF92E7</color>
     <color name="calendar_label_brown">#D38E5C</color>
     <color name="calendar_label_date">#F2DFFF</color>
+    <color name="purple">#967ADC</color>
+    <color name="off_white">#FFFCFA</color>
+    <color name="dark_purple">#6339CD</color>
+    <color name="light_grey">#F2F3F6</color>
+    <color name="dark_grey">#212121</color>
+    <color name="grey">#A4A7B0</color>
+    <color name="bg_dark">#0E0D0D</color>
+    <color name="purplish_grey">#232232</color>
+    <color name="wolf_grey">#434A54</color>
+    <color name="purple_tint">#FDFAFF</color>
 </resources>
