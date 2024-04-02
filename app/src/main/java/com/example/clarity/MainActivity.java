@@ -14,6 +14,7 @@ import com.example.clarity.NavBarFragments.Favourites;
 import com.example.clarity.NavBarFragments.Profile.Profile;
 import com.example.clarity.databinding.ActivityMainBinding;
 
+import com.example.clarity.model.data.Tag;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.repository.RestRepo;

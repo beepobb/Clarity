@@ -3,6 +3,7 @@ package com.example.clarity.model.repository;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Favourite;
+import com.example.clarity.model.data.Tag;
 
 import org.json.JSONObject;
 
@@ -10,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,10 +21,14 @@ import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.lang.Runnable;
 
+import com.example.clarity.model.util.MD5;
+
 public class RestRepo {
     //################STATIC METHODS################/
     static String endPointUser = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/user";
     static String endPointPost = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/post";
+    static String endPointFavourites = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/favourites";
+    static String endPointTags = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/tags";
     private final Executor executor;
 
     public RestRepo(Executor executor) {
@@ -52,7 +58,6 @@ public class RestRepo {
                 response.append(line);
                 response.append('\r');
             }
-            System.out.println(response);
             rd.close();
             return new JSONObject(response.toString());
         } catch (Exception e) {
@@ -105,7 +110,7 @@ public class RestRepo {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                User response = getUser(username, password);
+                User response = getUser(username, MD5.getMd5(password));
                 callback.onComplete(response);
             }
         });
@@ -128,7 +133,7 @@ public class RestRepo {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                String response = addUser(username, password, email, role);
+                String response = addUser(username, MD5.getMd5(password), email, role);
                 callback.onComplete(response);
             }
         });
@@ -238,11 +243,144 @@ public class RestRepo {
         }
     }
 
+    //################Favourites METHODS################/
+    public void getFavouritesRequest(int user_id, RepositoryCallback<ArrayList<Post>> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Post> response = getFavourites(String.valueOf(user_id));
+                callback.onComplete(response);
+            }
+        });
+    }
 
+    private ArrayList<Post> getFavourites(String user_id) {
+        try {
+            JSONObject tmpList = urlGet(endPointFavourites,"?user_id="+user_id);
+            ArrayList<Post> result = new ArrayList<Post>();
+            for (Iterator<String> it = tmpList.keys(); it.hasNext(); ) {
+                JSONObject tmp = tmpList.getJSONObject(it.next());
+                result.add(
+                        new Post(tmp.getInt("id"), tmp.getInt("author_id"),tmp.getString("event_start")
+                                ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
+                                ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"))
+                );
 
+            }
+            return result;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
+    public void addFavouritesRequest(int post_id, int user_id, RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                String response = addFavourites(String.valueOf(post_id), String.valueOf(user_id));
+                callback.onComplete(response);
+            }
+        });
+    }
 
+    private String addFavourites(String post_id, String user_id) {
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("post_id", post_id);
+        data.put("user_id", user_id);
+        try {
+            return urlPost(endPointFavourites, new JSONObject(data));
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
+    //################Tag METHODS################/
+    public void getPostsWithTagRequest(String category, RepositoryCallback<ArrayList<Post>> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Post> response = getPostsWithTag(category);
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private ArrayList<Post> getPostsWithTag(String category) {
+        try {
+            JSONObject tmpList = urlGet(endPointTags,"?tag_category="+category);
+            ArrayList<Post> result = new ArrayList<Post>();
+            for (Iterator<String> it = tmpList.keys(); it.hasNext(); ) {
+                JSONObject tmp = tmpList.getJSONObject(it.next());
+                result.add(
+                        new Post(tmp.getInt("id"), tmp.getInt("author_id"),tmp.getString("event_start")
+                                ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
+                                ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"))
+                );
+
+            }
+            return result;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void getTagsWithPostIDRequest(int post_id, RepositoryCallback<ArrayList<Tag>> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Tag> response = getTagsWithPostID(String.valueOf(post_id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private ArrayList<Tag> getTagsWithPostID(String post_id) {
+        int post_id_int = Integer.parseInt(post_id);
+        try {
+            JSONObject tmpList = urlGet(endPointTags,"?post_id="+post_id);
+            ArrayList<Tag> result = new ArrayList<Tag>();
+            for (Iterator<String> it = tmpList.keys(); it.hasNext(); ) {
+                JSONObject tmp = tmpList.getJSONObject(it.next());
+                result.add(
+                        new Tag(post_id_int, tmp.getString("tag_category"))
+                );
+            }
+            return result;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void addTagsRequest(int post_id, String category, RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                String response = addTags(String.valueOf(post_id),category);
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private String addTags(String post_id, String category) {
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("post_id", post_id);
+        data.put("tag_category", category);
+        try {
+            return urlPost(endPointTags, new JSONObject(data));
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
 
 
@@ -250,11 +388,6 @@ public class RestRepo {
     // UPDATE FROM UI/UX side regarding which type to display.
     private static void get_image(String url) {
 
-    }
-
-    //################GET METHODS################/
-    private Favourite[] getFavourites(int user_id) {
-        return new Favourite[5];
     }
 
 

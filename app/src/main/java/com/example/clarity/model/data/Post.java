@@ -58,4 +58,9 @@ public class Post {
     public String getCreated_at() {
         return created_at;
     }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }
