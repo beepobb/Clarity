@@ -10,9 +10,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.lang.Runnable;
 
@@ -108,7 +111,7 @@ public class RestRepo {
         });
     }
 
-    public User getUser(String username, String password) {
+    private User getUser(String username, String password) {
         try {
             String urlQuery = "?username="+username+"&password="+password;
             JSONObject tmp = urlGet(endPointUser,urlQuery);
@@ -131,7 +134,7 @@ public class RestRepo {
         });
     }
 
-    public String addUser(String username, String password, String email, String role) {
+    private String addUser(String username, String password, String email, String role) {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("username", username);
         data.put("password", password);
@@ -148,25 +151,56 @@ public class RestRepo {
 
 
     //################POST METHODS################/
-    // NULL indicates failed authentication
-    public void getPostRequest(int post_id, RepositoryCallback<Post> callback) {
+    // Getting one post
+    public void getOnePostRequest(int post_id, RepositoryCallback<Post> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Post response = getPost(String.valueOf(post_id));
+                Post response = getOnePost(String.valueOf(post_id));
                 callback.onComplete(response);
             }
         });
     }
 
-    public Post getPost(String post_id) {
+    // Getting multiple post
+    public void getAllPostRequest(RepositoryCallback<ArrayList<Post>> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Post> response = getAllPost();
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private Post getOnePost(String post_id) {
         try {
             String urlQuery = "?id="+post_id;
             JSONObject tmp = urlGet(endPointPost,urlQuery);
-            System.out.println(tmp);
             return new Post(tmp.getInt("id"), tmp.getInt("author_id"),tmp.getString("event_start")
                     ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
                     ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"));
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    private ArrayList<Post> getAllPost() {
+        try {
+            JSONObject tmpList = urlGet(endPointPost,"");
+            ArrayList<Post> result = new ArrayList<Post>();
+            for (Iterator<String> it = tmpList.keys(); it.hasNext(); ) {
+                JSONObject tmp = tmpList.getJSONObject(it.next());
+                result.add(
+                    new Post(tmp.getInt("id"), tmp.getInt("author_id"),tmp.getString("event_start")
+                        ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
+                        ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"))
+                );
+
+            }
+            return result;
         }
         catch(Exception e) {
             System.out.println(e.getMessage());
@@ -185,7 +219,7 @@ public class RestRepo {
         });
     }
 
-    public String addPost(int author_id, String event_start, String event_end, String image_url, String title,
+    private String addPost(int author_id, String event_start, String event_end, String image_url, String title,
                           String location, String description) {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("author_id", String.valueOf(author_id));
@@ -212,34 +246,16 @@ public class RestRepo {
 
 
 
-
-
     // provide image in a specific type given the url.
     // UPDATE FROM UI/UX side regarding which type to display.
-    public static void get_image(String url) {
+    private static void get_image(String url) {
 
     }
 
     //################GET METHODS################/
-
-    public Post getPost(int post_id) {
-        return null;
-    }
-
-    public Favourite[] getFavourites(int user_id) {
+    private Favourite[] getFavourites(int user_id) {
         return new Favourite[5];
     }
-
-    //################POST METHODS################/
-    // Creating a newpost in data base.
-    public boolean createPost(Post new_post) {
-        return false;
-    }
-
-    public boolean createUser(User new_user) {
-        return false;
-    }
-
 
 
 
