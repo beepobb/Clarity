@@ -1,4 +1,4 @@
-package com.example.clarity;
+package com.example.clarity.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;

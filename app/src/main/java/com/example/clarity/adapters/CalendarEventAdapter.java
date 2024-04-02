@@ -23,11 +23,6 @@ import java.util.List;
 public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdapter.EventViewHolder>{
     // Take data from the source and convert it to individual views to be displayed
     private Context context;
-
-    public String getEventList() {
-        return eventList.toString();
-    }
-
     private List<Event> eventList;
     private String[] daysOfWeekConverter;
     private CalendarFragment.CalendarDisplayState calendarDisplayState;
@@ -117,6 +112,12 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         // RecyclerView calls this to get the size of the data source
         // This is used to determine when there are no more items that can be displayed
         return eventList.size();
+    }
+
+    public void setData(List<Event> eventList){
+        // Update the items in the RecyclerView
+        this.eventList = eventList;
+        notifyDataSetChanged();
     }
 
 }

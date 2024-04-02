@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.applandeo.materialcalendarview.CalendarDay;
+import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener;
+import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
 import com.example.clarity.R;
 import com.example.clarity.adapters.CalendarEventAdapter;
 import com.example.clarity.model.Event; // PLACEHOLDER for data source
@@ -27,6 +30,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import kotlin.jvm.functions.Function1;
+
 /**
  * CalendarFragment handles all logic for Monthly view, which is the default view
  */
@@ -36,15 +41,19 @@ public class CalendarFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1"; private static final String ARG_PARAM2 = "param2";
 
     private String mParam1; private String mParam2;
-    private Calendar calendar;
     private TextView aabbcc;
     private RecyclerView monthlyRecyclerView;
     private RecyclerView agendaRecyclerView;
+    private CalendarEventAdapter adapterMonthly;
+    private CalendarEventAdapter adapterAgenda;
     private com.applandeo.materialcalendarview.CalendarView calendarView;
-    private List<Event> eventList = new ArrayList<>(); // placeholder Event list for data source
+    private TextView monthLabelTextView;
+    private List<Event> dataSource = new ArrayList<>(); // placeholder Event list for data source
     public enum CalendarDisplayState {MONTHLY_VIEW, AGENDA_VIEW}
     private CalendarDisplayState calendarDisplayState;
     private ImageView displayToggle; // to toggle between monthly view and agenda view
+    private final String[] intToMonth = new String[] {"JANUARY", "FEBRUARY", "MARCH", "APRIL",
+            "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "NOVEMBER", "DECEMBER"}; // to map integers to strings
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -85,38 +94,52 @@ public class CalendarFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        // RECYCLER VIEW SET-UP
-        // Placeholder for data source
-        Calendar upop = Calendar.getInstance();
-        setDate(upop, 2, 1, 2023);
-        Calendar toilet = Calendar.getInstance();
-        setDate(toilet, 3, 1, 2023);
-
-        eventList.add(new Event("UPOP", "1300-1500", "Think Tank 3", upop));
-        eventList.add(new Event("ML Workshop", "1100-1900", "Classroom 1", upop));
-        eventList.add(new Event("Career Fair", "1500-2000", "Student Centre", upop));
-        eventList.add(new Event("Lame Event", "1200-1300", "Somewhere", upop));
-        eventList.add(new Event("Toilet Break", "1500-1501", "Toilet", toilet));
-
         // get reference to all UI elements
         calendarView = view.findViewById(R.id.calendarView);
         aabbcc = view.findViewById(R.id.AABBCC);
-        calendar = Calendar.getInstance(); // calendar is like datetime in python
         displayToggle = view.findViewById(R.id.displayToggle);
         monthlyRecyclerView = view.findViewById(R.id.monthlyRecycler);
+        monthLabelTextView = view.findViewById(R.id.monthLabel);
 
         // other variables
         calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
 
-        // Set up RecyclerView and adapter for monthly view
+        // Initialize placeholder data source //
+        Calendar upop = setDate(Calendar.getInstance(), 4, 4, 2024);
+        Calendar ml = setDate(Calendar.getInstance(), 3, 4, 2024);
+        Calendar cf = setDate(Calendar.getInstance(), 4, 4, 2024);
+        Calendar le = setDate(Calendar.getInstance(), 5, 4, 2024);
+        Calendar toilet = Calendar.getInstance(); // current date
+
+        dataSource.add(new Event("UPOP", "1300-1500", "Think Tank 3", upop));
+        dataSource.add(new Event("ML Workshop", "1100-1900", "Classroom 1", ml));
+        dataSource.add(new Event("Career Fair", "1500-2000", "Student Centre", cf));
+        dataSource.add(new Event("Lame Event", "1200-1300", "Somewhere", le));
+        dataSource.add(new Event("Toilet Break", "1500-1501", "Toilet", toilet));
+
+        // Fetch current date (for initialization purposes)
+        Calendar today = Calendar.getInstance();
+        monthLabelTextView.setText(intToMonth[today.get(Calendar.MONTH)] + " " + today.get(Calendar.YEAR));
+        List<Event> eventsToday = new ArrayList<>();
+        for (Event e: dataSource) {
+            Calendar c = e.getDate();
+            if (today.get(Calendar.YEAR) == c.get(Calendar.YEAR) &&
+                    today.get(Calendar.MONTH) == c.get(Calendar.MONTH) &&
+                    today.get(Calendar.DAY_OF_MONTH) == c.get(Calendar.DAY_OF_MONTH)) {
+                eventsToday.add(e);
+            }
+        }
+
+
+        // Monthly View: RecyclerView and adapter
         monthlyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Linear Scroll
-        CalendarEventAdapter adapterMonthly = new CalendarEventAdapter(getActivity(), eventList, calendarDisplayState);
+        adapterMonthly = new CalendarEventAdapter(getActivity(), eventsToday, calendarDisplayState);
         monthlyRecyclerView.setAdapter(adapterMonthly);
 
-        // Set up RecyclerView and adapter for agenda view
+        // Agenda View: RecyclerView and adapter
         agendaRecyclerView = view.findViewById(R.id.agendaRecycler);
         agendaRecyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Linear Scroll
-        CalendarEventAdapter adapterAgenda = new CalendarEventAdapter(getActivity(), eventList, CalendarDisplayState.AGENDA_VIEW);
+        adapterAgenda = new CalendarEventAdapter(getActivity(), dataSource, CalendarDisplayState.AGENDA_VIEW);
         agendaRecyclerView.setAdapter(adapterAgenda);
 
         return view; // Inflate the layout for this fragment
@@ -137,56 +160,49 @@ public class CalendarFragment extends Fragment {
         // set default view
         showMonthlyView();
 
-        // TODO: fix this ryan
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        calendarView.setOnCalendarDayClickListener(new OnCalendarDayClickListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                Log.d("CalendarFragment", "date set");
+            public void onClick(@NonNull CalendarDay calendarDay) {
+                Calendar selectedDate = calendarDay.getCalendar();
+                int year = selectedDate.get(Calendar.YEAR);
+                int month = selectedDate.get(Calendar.MONTH); // January is 0 (not 1)
+                int dayOfMonth = selectedDate.get(Calendar.DAY_OF_MONTH);
+                aabbcc.setText(String.valueOf(dayOfMonth+"/"+ (month+1) +"/"+year));
 
-                aabbcc.setText(String.valueOf(dayOfMonth+"/"+ (month + 1) +"/"+year));
-                Calendar selectedDate = Calendar.getInstance();
-//                Log.d("CalendarFragment", dayOfMonth + "/" + (month + 1) + "/" + year);
-                setDate(selectedDate, dayOfMonth, month+1, year);
-//                Log.d("CalendarFragment", String.valueOf(selectedDate.get(Calendar.DAY_OF_WEEK)));
-                List<Event> subEventList = new ArrayList<>();
-
-//                Log.d("CalendarFragment", year + String.valueOf(selectedDate.get(Calendar.YEAR)));
-                for (Event e: eventList) {
-//                    Log.d("CalendarFragment", e.getName() +e.getDate().get(Calendar.YEAR)+e.getDate().get(Calendar.MONTH)+e.getDate().get(Calendar.DAY_OF_MONTH));
-
-//                    Log.d("CalendarFragment", selectedDate.toString());
-
-                    if (selectedDate.get(Calendar.YEAR) == e.getDate().get(Calendar.YEAR) &&
-                            selectedDate.get(Calendar.MONTH) == e.getDate().get(Calendar.MONTH) &&
-                            selectedDate.get(Calendar.DAY_OF_MONTH) == e.getDate().get(Calendar.DAY_OF_MONTH)) {
-                        subEventList.add(e);
+                // Fetch events with given date
+                List<Event> eventList = new ArrayList<>();
+                for (Event e: dataSource) {
+                    Calendar c = e.getDate();
+                    if (year == c.get(Calendar.YEAR) &&
+                            month == c.get(Calendar.MONTH) &&
+                            dayOfMonth == c.get(Calendar.DAY_OF_MONTH)) {
+                        eventList.add(e);
                     }
                 }
 
-                // Set up RecyclerView and adapter
-                monthlyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Linear Scroll
-                CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), subEventList, calendarDisplayState);
-                Log.d("CalendarFragment", adapter.getEventList());
-                monthlyRecyclerView.setAdapter(adapter);
+                adapterMonthly.setData(eventList); // Update the RecyclerView
             }
         });
+
+        // Update month label in purple header bar on calendar page change
+        calendarView.setOnForwardPageChangeListener(new calendarPageChangeListener());
+        calendarView.setOnPreviousPageChangeListener(new calendarPageChangeListener());
 
         displayToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("CalendarFragment", "displayToggle");
 
+                // Switch between Monthly view and Agenda view (Toggles visibility of View objects)
                 switch (calendarDisplayState) {
                     case AGENDA_VIEW:
                         displayToggle.setImageResource(R.drawable.monthly_view);
                         calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
-
                         showMonthlyView();
                         break;
                     case MONTHLY_VIEW:
                         displayToggle.setImageResource(R.drawable.agenda_view);
                         calendarDisplayState = CalendarDisplayState.AGENDA_VIEW;
-
                         showAgendaView();
                         break;
                 }
@@ -199,7 +215,7 @@ public class CalendarFragment extends Fragment {
     // Helper functions:
 
     // sets date for Calendar object
-    public void setDate(Calendar date, int day, int month, int year) {
+    public Calendar setDate(Calendar date, int day, int month, int year) {
         date.set(Calendar.YEAR, year);
         date.set(Calendar.MONTH, month - 1); // JANUARY is 0
         date.set(Calendar.DAY_OF_MONTH, day);
@@ -207,14 +223,15 @@ public class CalendarFragment extends Fragment {
         // seconds and milliseconds don't matter
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
+        return date;
     }
-    public void getDate() {
-        long date = calendarView.getDate();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-        calendar.setTimeInMillis(date);
-        String selected_date = simpleDateFormat.format(calendar.getTime());
-        Toast.makeText(getActivity(), selected_date, Toast.LENGTH_SHORT).show();
-    }
+//    public void getDate() {
+//        long date = calendarView.getDate();
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+//        calendar.setTimeInMillis(date);
+//        String selected_date = simpleDateFormat.format(calendar.getTime());
+//        Toast.makeText(getActivity(), selected_date, Toast.LENGTH_SHORT).show();
+//    }
 
     /**
      * Hides Agenda view UI then display Monthly view UI
@@ -238,8 +255,20 @@ public class CalendarFragment extends Fragment {
         monthlyRecyclerView.setVisibility(View.GONE);
         aabbcc.setVisibility(View.GONE);
 
-        // show Agenda view UIt
+        // show Agenda view UI
         agendaRecyclerView.setVisibility(View.VISIBLE);
     }
+
+    // Listener for Calendar Page change (changing between months
+    class calendarPageChangeListener implements OnCalendarPageChangeListener {
+        @Override
+        public void onChange() {
+            Calendar c = calendarView.getCurrentPageDate();
+            monthLabelTextView.setText(intToMonth[c.get(Calendar.MONTH)] + " " + c.get(Calendar.YEAR));
+        }
+    }
 }
+
+
+
 
