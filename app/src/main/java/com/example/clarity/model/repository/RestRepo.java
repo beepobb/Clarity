@@ -18,7 +18,8 @@ import java.lang.Runnable;
 
 public class RestRepo {
     //################STATIC METHODS################/
-    static String endPoint = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/user";
+    static String endPointUser = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/user";
+    static String endPointPost = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/post";
     private final Executor executor;
 
     public RestRepo(Executor executor) {
@@ -107,10 +108,10 @@ public class RestRepo {
         });
     }
 
-    public static User getUser(String username, String password) {
+    public User getUser(String username, String password) {
         try {
             String urlQuery = "?username="+username+"&password="+password;
-            JSONObject tmp = urlGet(endPoint,urlQuery);
+            JSONObject tmp = urlGet(endPointUser,urlQuery);
             System.out.println(tmp);
             return new User(tmp.getInt("id"), tmp.getString("username"),tmp.getString("password"),tmp.getString("role"),tmp.getString("email"),tmp.getString("created_at"));
         }
@@ -130,20 +131,79 @@ public class RestRepo {
         });
     }
 
-    public static String addUser(String username, String password, String email, String role) {
+    public String addUser(String username, String password, String email, String role) {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("username", username);
         data.put("password", password);
         data.put("email", email);
         data.put("role", role);
         try {
-            return urlPost(endPoint, new JSONObject(data));
+            return urlPost(endPointUser, new JSONObject(data));
         }
         catch(Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
+
+
+    //################POST METHODS################/
+    // NULL indicates failed authentication
+    public void getPostRequest(int post_id, RepositoryCallback<Post> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Post response = getPost(String.valueOf(post_id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    public Post getPost(String post_id) {
+        try {
+            String urlQuery = "?id="+post_id;
+            JSONObject tmp = urlGet(endPointPost,urlQuery);
+            System.out.println(tmp);
+            return new Post(tmp.getInt("id"), tmp.getInt("author_id"),tmp.getString("event_start")
+                    ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
+                    ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"));
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void addPostRequest(int author_id, String event_start, String event_end, String image_url, String title,
+                               String location, String description,RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                String response = addPost(author_id, event_start, event_end, image_url, title, location, description);
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    public String addPost(int author_id, String event_start, String event_end, String image_url, String title,
+                          String location, String description) {
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("author_id", String.valueOf(author_id));
+        data.put("event_start", event_start);
+        data.put("event_end", event_end);
+        data.put("image_url", image_url);
+        data.put("title", title);
+        data.put("location", location);
+        data.put("description", description);
+        try {
+            return urlPost(endPointPost, new JSONObject(data));
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
 
 
 
