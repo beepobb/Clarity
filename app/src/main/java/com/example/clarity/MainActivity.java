@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 
 import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
@@ -16,6 +15,7 @@ import com.example.clarity.NavBarFragments.Profile.Profile;
 import com.example.clarity.databinding.ActivityMainBinding;
 
 import com.example.clarity.model.data.User;
+import com.example.clarity.model.data.Post;
 import com.example.clarity.model.repository.RestRepo;
 
 import java.util.concurrent.ExecutorService;
@@ -30,23 +30,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+<<<<<<< HEAD
         replaceFragment(new CalendarFragment());
-
-        data.getUserRequest("junjie", "junjie", new RestRepo.RepositoryCallback<User>() {
-            @Override
-            public void onComplete(User result) {
-                System.out.println(result.getEmail());
-            }
-        });
-
-        data.addUserRequest("junjie1", "junjie1", "junjie1", "junjie1", new RestRepo.RepositoryCallback<String>() {
-            @Override
-            public void onComplete(String result) {
-                System.out.println(result);
-            }
-        });
-
-
+=======
+        replaceFragment(new Discover());
+>>>>>>> b149a27c533ebcad2b0d412690d844279e6fc663
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
