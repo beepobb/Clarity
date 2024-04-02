@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
+    <!--FrameLayout only allow fragment to be loaded programmatically and also allow fragment to be
+    replaced by transaction.replace(). This method is used in MainActivity.
+    -->
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="0dp"

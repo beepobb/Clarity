@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.StrictMode;
 
-import com.example.clarity.NavBarFragments.Calendar;
+import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
 import com.example.clarity.NavBarFragments.Discover;
 import com.example.clarity.NavBarFragments.Favourites;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new Discover());
+        replaceFragment(new CalendarFragment());
 
         data.getUserRequest("junjie", "junjie", new RestRepo.RepositoryCallback<User>() {
             @Override
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemID == R.id.Create) {
                 replaceFragment(new Create());
             } else if (itemID == R.id.Calendar) {
-                replaceFragment(new Calendar());
+                replaceFragment(new CalendarFragment());
             } else if (itemID == R.id.Profile) {
                 replaceFragment(new Profile());
             }
@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Loads fragment associated with the bottom nav bar
+     * @param fragment Discover, Favourites, Create, CalendarFragment, Profile
+     */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
