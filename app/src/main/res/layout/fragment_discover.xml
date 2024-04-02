@@ -5,10 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".NavBarFragments.Discover">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
+        android:id="@+id/tags"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Discover" />
+        android:layout_marginTop="110dp">
+    </FrameLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tag_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="70dp"
+        android:background="#FDFAFF"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
+        android:src="@drawable/clarity_logo" />
 </FrameLayout>
