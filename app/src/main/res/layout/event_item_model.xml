@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- Your UI elements go here -->
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

@@ -10,17 +10,15 @@ import android.view.ViewGroup;
 
 import com.example.clarity.R;
 import java.util.ArrayList;
-
-public class Career_tag_fragment extends Fragment{
-
+public class Campus_life_tag_fragment extends Fragment {
     ArrayList<Event_model> list_of_event= new ArrayList<>();
-    int[] images = {R.drawable.event_placeholder1, R.drawable.event_placeholder2, R.drawable.event_placeholder3,
-            R.drawable.event_placeholder4, R.drawable.event_placeholder5, R.drawable.event_placeholder6};
+    int[] images = {R.drawable.event_placeholder2, R.drawable.event_placeholder1, R.drawable.event_placeholder5,
+            R.drawable.event_placeholder4, R.drawable.event_placeholder3, R.drawable.event_placeholder6};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View viewroot = inflater.inflate(R.layout.tag_fragment_career, container, false);
-        RecyclerView recyclerView = viewroot.findViewById(R.id.Career);
+        View viewroot = inflater.inflate(R.layout.tag_fragment_campus_life, container, false);
+        RecyclerView recyclerView = viewroot.findViewById(R.id.Campus_life);
         setUpEventList();
         Event_adapter adapter = new Event_adapter(requireContext(), list_of_event );
         recyclerView.setAdapter(adapter);
@@ -39,8 +37,6 @@ public class Career_tag_fragment extends Fragment{
 
         for(int i = 0; i<name.length; i++){
             list_of_event.add(new Event_model(name[i], time[i], description[i], location[i], images[i]));
-
-
         }
 
     }

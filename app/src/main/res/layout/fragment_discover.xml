@@ -3,18 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".NavBarFragments.Discover">
 
     <FrameLayout
         android:id="@+id/tags"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="110dp"> <!-- Adjust the top margin as needed -->
-
-        <!-- Add content to the nested FrameLayout if needed -->
-
+        android:layout_marginTop="110dp">
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tag_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="70dp"
+        android:background="#FDFAFF"/>
 
     <ImageView
         android:id="@+id/imageView"
@@ -23,68 +27,4 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="18dp"
         android:src="@drawable/clarity_logo" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Button_Career"
-        android:layout_width="59dp"
-        android:layout_height="26dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="70dp"
-        android:background="@drawable/tag_rectangle"
-        android:paddingStart="0.1dp"
-        android:paddingTop="0.1dp"
-        android:paddingEnd="0.1dp"
-        android:paddingBottom="0.1dp"
-        android:text="Career"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Button_Campus_life"
-        android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginStart="90dp"
-        android:textColor="#967ADC"
-        android:background="@drawable/tag_unselect_rectangle"
-        android:paddingStart="0.1dp"
-        android:paddingTop="0.1dp"
-        android:paddingEnd="0.1dp"
-        android:paddingBottom="0.1dp"
-        android:text="Campus Life"
-        android:textSize="12sp" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Button_Fifth_row"
-        android:layout_width="73dp"
-        android:layout_height="26dp"
-        android:layout_marginStart="192dp"
-        android:layout_marginTop="70dp"
-        android:textColor="#967ADC"
-        android:background="@drawable/tag_unselect_rectangle"
-        android:paddingStart="0.1dp"
-        android:paddingTop="0.1dp"
-        android:paddingEnd="0.1dp"
-        android:paddingBottom="0.1dp"
-        android:text="Fifth Row"
-        android:textSize="12sp" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Button_Competition"
-        android:layout_width="95dp"
-        android:layout_height="26dp"
-        android:layout_marginStart="280dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="18dp"
-        android:background="@drawable/tag_unselect_rectangle"
-        android:paddingStart="0.1dp"
-        android:paddingTop="0.1dp"
-        android:paddingEnd="0.1dp"
-        android:paddingBottom="0.1dp"
-        android:text="Competition"
-        android:textColor="#967ADC"
-        android:textSize="12sp" />
-
-
-
 </FrameLayout>
