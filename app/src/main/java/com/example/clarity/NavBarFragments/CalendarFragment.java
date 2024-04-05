@@ -1,5 +1,6 @@
 package com.example.clarity.NavBarFragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,9 +21,11 @@ import android.widget.Toast;
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener;
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
+import com.example.clarity.MainActivity;
 import com.example.clarity.R;
 import com.example.clarity.adapters.CalendarEventAdapter;
 import com.example.clarity.model.Event; // PLACEHOLDER for data source
+import com.example.clarity.model.repository.RestRepo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +52,7 @@ public class CalendarFragment extends Fragment {
     private com.applandeo.materialcalendarview.CalendarView calendarView;
     private TextView monthLabelTextView;
     private List<Event> dataSource = new ArrayList<>(); // placeholder Event list for data source
+    private RestRepo db;
     public enum CalendarDisplayState {MONTHLY_VIEW, AGENDA_VIEW}
     private CalendarDisplayState calendarDisplayState;
     private ImageView displayToggle; // to toggle between monthly view and agenda view
@@ -103,6 +107,13 @@ public class CalendarFragment extends Fragment {
 
         // other variables
         calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
+        Activity activity = getActivity();
+
+        // Fetch database (RestRepo instance)
+//        if (activity != null) {
+//            // Example: Accessing activity's method
+//            db = ((MainActivity) activity).database;
+//        }
 
         // Initialize placeholder data source //
         Calendar upop = setDate(Calendar.getInstance(), 4, 4, 2024);

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Application;
 import android.os.Bundle;
 
 import com.example.clarity.NavBarFragments.CalendarFragment;
@@ -26,8 +27,8 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
-    ExecutorService executorService = Executors.newFixedThreadPool(2);
-    RestRepo data = RestRepo.getInstance(executorService);
+    public RestRepo database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +37,19 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new CalendarFragment());
         replaceFragment(new Discover());
 
-        data.getAllPostRequest(new RestRepo.RepositoryCallback<ArrayList<Post>>() {
+        database = ((MyApplication) getApplicationContext()).getDatabase();
+
+        // Example of how to use RestRepo database
+        database.getAllPostRequest(new RestRepo.RepositoryCallback<ArrayList<Post>>() {
             @Override
             public void onComplete(ArrayList<Post> result) {
+                // The callback function that will execute AFTER result is fetched
+                // All code to be executed after results are fetched should be placed in this callback
                 System.out.println(result);
             }
         });
+
+
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
