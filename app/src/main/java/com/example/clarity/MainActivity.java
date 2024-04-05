@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     RestRepo data = new RestRepo(executorService);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
