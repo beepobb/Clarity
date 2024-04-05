@@ -52,7 +52,7 @@ public class CalendarFragment extends Fragment {
     public enum CalendarDisplayState {MONTHLY_VIEW, AGENDA_VIEW}
     private CalendarDisplayState calendarDisplayState;
     private ImageView displayToggle; // to toggle between monthly view and agenda view
-    private final String[] intToMonth = new String[] {"JANUARY", "FEBRUARY", "MARCH", "APRIL",
+    private final String[] intToMonth = {"JANUARY", "FEBRUARY", "MARCH", "APRIL",
             "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "NOVEMBER", "DECEMBER"}; // to map integers to strings
 
     public CalendarFragment() {
@@ -264,7 +264,9 @@ public class CalendarFragment extends Fragment {
         @Override
         public void onChange() {
             Calendar c = calendarView.getCurrentPageDate();
-            monthLabelTextView.setText(intToMonth[c.get(Calendar.MONTH)] + " " + c.get(Calendar.YEAR));
+            // TODO: Something is wrong with the intToMonth converter (causes crashes when switching to a new year)
+            //monthLabelTextView.setText(intToMonth[c.get(Calendar.MONTH)] + " " + c.get(Calendar.YEAR));
+            monthLabelTextView.setText(c.get(Calendar.MONTH) + " " + c.get(Calendar.YEAR));
         }
     }
 }

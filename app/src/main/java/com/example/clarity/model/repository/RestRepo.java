@@ -30,9 +30,18 @@ public class RestRepo {
     static String endPointFavourites = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/favourites";
     static String endPointTags = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/tags";
     private final Executor executor;
+    private static RestRepo instance; // single instance
 
-    public RestRepo(Executor executor) {
+    // Singleton Design Pattern: only one instance of RestRepo across activities
+    private RestRepo(Executor executor) {
         this.executor = executor;
+    }
+
+    public static RestRepo getInstance(Executor executor) {
+        if (instance == null) {
+            instance = new RestRepo(executor);
+        }
+        return instance;
     }
 
     public interface RepositoryCallback<T> {

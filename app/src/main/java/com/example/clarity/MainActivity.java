@@ -27,8 +27,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     ExecutorService executorService = Executors.newFixedThreadPool(2);
-    RestRepo data = new RestRepo(executorService);
-
+    RestRepo data = RestRepo.getInstance(executorService);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         replaceFragment(new CalendarFragment());
         replaceFragment(new Discover());
+
+        data.getAllPostRequest(new RestRepo.RepositoryCallback<ArrayList<Post>>() {
+            @Override
+            public void onComplete(ArrayList<Post> result) {
+                System.out.println(result);
+            }
+        });
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
