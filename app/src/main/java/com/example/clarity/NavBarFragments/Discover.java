@@ -19,12 +19,13 @@ import com.example.clarity.NavBarFragments.Tag_fragments.Career_tag_fragment;
 import com.example.clarity.NavBarFragments.Tag_fragments.Competition_tag_fragment;
 import com.example.clarity.NavBarFragments.Tag_fragments.Fifth_row_tag_fragment;
 import com.example.clarity.R;
-import com.example.clarity.model.data.User;
-import com.example.clarity.model.repository.RestRepo;
+
 import java.util.*;
 
 public class Discover extends Fragment {
     ArrayList<tag_button_model> tag_buttons = new ArrayList<>();
+    // for tag button creation
+    public enum EventTags {CAREER, CAMPUS_LIFE, FIFTH_ROW, COMPETITION, WORKSHOP}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,8 +33,10 @@ public class Discover extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_discover, container, false);
         FragmentManager fragmentManager = getChildFragmentManager();
-        RecyclerView tag_recycler = rootView.findViewById(R.id.tag_buttons);
-        setUpTagButtons();
+
+        // set up tag button recycler
+        RecyclerView tag_recycler = rootView.findViewById(R.id.tag_recycler);
+
         Tag_button_adapter tagButtonAdapter = new Tag_button_adapter(requireContext(), tag_buttons, fragmentManager);
         tag_recycler.setAdapter(tagButtonAdapter);
         tag_recycler.setLayoutManager(new LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL, false));
@@ -44,7 +47,7 @@ public class Discover extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Add the nested fragment to the container within the parent fragment's layout
-        fragmentTransaction.add(R.id.tags, new Career_tag_fragment());
+//        fragmentTransaction.add(R.id.tags, new Career_tag_fragment());
 
         // Commit the transaction
         fragmentTransaction.commit();
@@ -53,33 +56,33 @@ public class Discover extends Fragment {
         Log.d("Buttons List Size", String.valueOf(buttonsList.size()));
 
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<Fragment> fragmentList = new ArrayList<>();
-                fragmentList.add(new Career_tag_fragment());
-                fragmentList.add(new Campus_life_tag_fragment());
-                fragmentList.add(new Fifth_row_tag_fragment());
-                fragmentList.add(new Competition_tag_fragment());
-                int count = 0;
-                for (Button button : buttonsList){
-                    if (v == button) {
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.tags, fragmentList.get(count));
-                        fragmentTransaction.commit();
-                        button.setBackgroundResource(R.drawable.tag_rectangle);
-                        button.setTextColor(Color.parseColor("#FDFAFF"));
-                    }
-                    else {
-                        button.setBackgroundResource(R.drawable.tag_unselect_rectangle);
-                        button.setTextColor(Color.parseColor("#967ADC"));
-                    }
-                    count +=1;
-                }
-            }
-        };
+//        View.OnClickListener listener = new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ArrayList<Fragment> fragmentList = new ArrayList<>();
+//                fragmentList.add(new Career_tag_fragment());
+//                fragmentList.add(new Campus_life_tag_fragment());
+//                fragmentList.add(new Fifth_row_tag_fragment());
+//                fragmentList.add(new Competition_tag_fragment());
+//                int count = 0;
+//                for (Button button : buttonsList){
+//                    if (v == button) {
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                        fragmentTransaction.replace(R.id.tags, fragmentList.get(count));
+//                        fragmentTransaction.commit();
+//                        button.setBackgroundResource(R.drawable.tag_rectangle);
+//                        button.setTextColor(Color.parseColor("#FDFAFF"));
+//                    }
+//                    else {
+//                        button.setBackgroundResource(R.drawable.tag_unselect_rectangle);
+//                        button.setTextColor(Color.parseColor("#967ADC"));
+//                    }
+//                    count +=1;
+//                }
+//            }
+//        };
         for (Button button : buttonsList) {
-            button.setOnClickListener(listener);
+//            button.setOnClickListener(listener);
         }
         return rootView;
     }

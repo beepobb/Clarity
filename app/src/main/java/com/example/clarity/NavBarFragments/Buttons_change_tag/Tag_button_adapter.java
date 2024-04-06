@@ -62,7 +62,7 @@ public class Tag_button_adapter extends RecyclerView.Adapter<Tag_button_adapter.
                 for (Button button : buttonsList){
                     if (v == button) {
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.tags, fragmentList.get(count));
+//                        fragmentTransaction.replace(R.id.tags, fragmentList.get(count));
                         fragmentTransaction.commit();
                         button.setBackgroundResource(R.drawable.tag_rectangle);
                         button.setTextColor(Color.parseColor("#FDFAFF"));
