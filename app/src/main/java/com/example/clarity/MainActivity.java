@@ -40,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
         database = ((MyApplication) getApplicationContext()).getDatabase();
 
         // Example of how to use RestRepo database
-        database.getAllPostRequest(new RestRepo.RepositoryCallback<ArrayList<Post>>() {
+        ArrayList<Integer> post_id_list = new ArrayList<Integer>();
+        post_id_list.add(4);
+        post_id_list.add(13);
+        database.getPostsRequest(post_id_list, new RestRepo.RepositoryCallback<ArrayList<Post>>() {
             @Override
             public void onComplete(ArrayList<Post> result) {
                 // The callback function that will execute AFTER result is fetched
