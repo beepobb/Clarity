@@ -188,6 +188,44 @@ public class RestRepo {
         });
     }
 
+    // Getting multiple post
+    public void getPostsRequest(ArrayList<Integer> post_id_list, RepositoryCallback<ArrayList<Post>> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<String> casted = new  ArrayList<String>();
+                for(Integer ea:post_id_list) {
+                    casted.add(String.valueOf(ea));
+                }
+                String post_id_string = String.join( ",", casted);
+                ArrayList<Post> response = getMultiplePost(post_id_string);
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private ArrayList<Post> getMultiplePost(String post_id_list) {
+        try {
+            String urlQuery = "?post_id_list="+post_id_list;
+            JSONObject tmpList = urlGet(endPointPost,urlQuery);
+            ArrayList<Post> result = new ArrayList<Post>();
+            for (Iterator<String> it = tmpList.keys(); it.hasNext(); ) {
+                JSONObject tmp = tmpList.getJSONObject(it.next());
+                result.add(
+                        new Post(tmp.getInt("id"), tmp.getInt("author_id"),tmp.getString("event_start")
+                                ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
+                                ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"))
+                );
+
+            }
+            return result;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
     private Post getOnePost(String post_id) {
         try {
             String urlQuery = "?id="+post_id;
@@ -224,18 +262,19 @@ public class RestRepo {
     }
 
     public void addPostRequest(int author_id, String event_start, String event_end, String image_url, String title,
-                               String location, String description,RepositoryCallback<String> callback) {
+                               String location, String description, ArrayList<String> tags, RepositoryCallback<String> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                String response = addPost(author_id, event_start, event_end, image_url, title, location, description);
+                String response = addPost(author_id, event_start, event_end, image_url, title, location, description, tags);
                 callback.onComplete(response);
             }
         });
     }
 
     private String addPost(int author_id, String event_start, String event_end, String image_url, String title,
-                          String location, String description) {
+                          String location, String description, ArrayList<String> tags) {
+        String listString = String.join(", ", tags);
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("author_id", String.valueOf(author_id));
         data.put("event_start", event_start);
@@ -244,6 +283,7 @@ public class RestRepo {
         data.put("title", title);
         data.put("location", location);
         data.put("description", description);
+        data.put("tag_list", listString);
         try {
             return urlPost(endPointPost, new JSONObject(data));
         }
@@ -330,7 +370,6 @@ public class RestRepo {
                                 ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
                                 ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"))
                 );
-
             }
             return result;
         }
