@@ -41,14 +41,14 @@ public class Profile extends Fragment {
     private Dialog dialog;
     private Button cancelAction, resetCalendar;
     private View view;
-    private List<Interest> interestList = new ArrayList<>();
-    private RecyclerView recyclerView;
+//    private List<Interest> interestList = new ArrayList<>();
+//    private RecyclerView recyclerView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        recyclerView = view.findViewById(R.id.recyclerView);
+//        recyclerView = view.findViewById(R.id.recyclerView);
         // Return the inflated layout
         return view;
     }
@@ -56,7 +56,7 @@ public class Profile extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageButton editProfile = view.findViewById(R.id.buttonEditProfile);
+        ImageButton editProfile = view.findViewById(R.id.editFAB);
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,13 +78,13 @@ public class Profile extends Fragment {
         dialog.setCancelable(false); // if user clicks outside alert box it will not disappear
 
         //set dialog box for reset calendar, reset account and delete account
-        ProfileAlertBox resetCalendarAlertBox = new ProfileAlertBox(R.id.resetCalendarConstraintLayout, dialog, view);
+        ProfileAlertBox resetCalendarAlertBox = new ProfileAlertBox(R.id.buttonResetCalendar, dialog, view);
         resetCalendarAlertBox.createAlert("This action permanently deletes the calendar");
 
-        ProfileAlertBox resetAccountAlertBox = new ProfileAlertBox(R.id.resetAccountConstraintLayout, dialog, view);
+        ProfileAlertBox resetAccountAlertBox = new ProfileAlertBox(R.id.buttonDeleteAccount, dialog, view);
         resetAccountAlertBox.createAlert("This action permanently deletes all data except username and account type");
 
-        ProfileAlertBox deleteAccountAlertBox = new ProfileAlertBox(R.id.deleteAccountConstraintLayout, dialog, view);
+        ProfileAlertBox deleteAccountAlertBox = new ProfileAlertBox(R.id.buttonAbout, dialog, view);
         deleteAccountAlertBox.createAlert("This action permanently deletes the account and you cannot retrieve it");
 
         // TODO: change image logo for settings in fragment_profile.xml
@@ -110,16 +110,16 @@ public class Profile extends Fragment {
 
         // RECYCLER VIEW SET-UP
         // Placeholder for data source
-        interestList.add(new Interest("Technology"));
-        interestList.add(new Interest("Event"));
-        interestList.add(new Interest("Poop"));
-        interestList.add(new Interest("Workshop"));
-        interestList.add(new Interest("Seminar"));
-
-        // Set up RecyclerView and adapter
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        ProfileInterestAdapter adapter = new ProfileInterestAdapter(getActivity(), interestList);
-        recyclerView.setAdapter(adapter);
+//        interestList.add(new Interest("Technology"));
+//        interestList.add(new Interest("Event"));
+//        interestList.add(new Interest("Poop"));
+//        interestList.add(new Interest("Workshop"));
+//        interestList.add(new Interest("Seminar"));
+//
+//        // Set up RecyclerView and adapter
+//        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+//        ProfileInterestAdapter adapter = new ProfileInterestAdapter(getActivity(), interestList);
+//        recyclerView.setAdapter(adapter);
 
     }
 }

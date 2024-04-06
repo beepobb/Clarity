@@ -39,4 +39,8 @@
 
     <!-- Styles for Profile Fragment -->
     <style name="ProfileBanner"><item name="android:background">@color/purple</item></style>
+    <style name="ProfileButton">
+        <item name="backgroundTint">@color/light_grey</item>
+        <item name="android:textColor">@color/wolf_grey</item>
+    </style>
 </resources>
