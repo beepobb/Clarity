@@ -5,10 +5,12 @@ RepositoryCallback<String> callback)
 
 public void getOnePostRequest(int post_id, RepositoryCallback<Post> callback)
 
+public void getPostsRequest(ArrayList<Integer> post_id_list, RepositoryCallback<ArrayList<Post>> callback)
+
 public void getAllPostRequest(RepositoryCallback<ArrayList<Post>> callback)
 
 public void addPostRequest(int author_id, String event_start, String event_end, String image_url, String title,
-String location, String description,RepositoryCallback<String> callback)
+String location, String description, ArrayList<String> tags, RepositoryCallback<String> callback)
 
 public void getFavouritesRequest(int user_id, RepositoryCallback<ArrayList<Post>> callback)
 
