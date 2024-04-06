@@ -1,101 +1,106 @@
 package com.example.clarity.NavBarFragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.clarity.NavBarFragments.Buttons_change_tag.Tag_button_adapter;
-import com.example.clarity.NavBarFragments.Buttons_change_tag.tag_button_model;
-import com.example.clarity.NavBarFragments.Tag_fragments.Campus_life_tag_fragment;
-import com.example.clarity.NavBarFragments.Tag_fragments.Career_tag_fragment;
-import com.example.clarity.NavBarFragments.Tag_fragments.Competition_tag_fragment;
-import com.example.clarity.NavBarFragments.Tag_fragments.Fifth_row_tag_fragment;
+
 import com.example.clarity.R;
+import com.example.clarity.model.data.Post;
 
 import java.util.*;
 
 public class Discover extends Fragment {
-    ArrayList<tag_button_model> tag_buttons = new ArrayList<>();
     // for tag button creation
-    public enum EventTags {CAREER, CAMPUS_LIFE, FIFTH_ROW, COMPETITION, WORKSHOP}
+    public enum EventTags {
+        CAREER, CAMPUS_LIFE, FIFTH_ROW, COMPETITION, WORKSHOP
+    }
+
+    private EventTags currentTagFilter; // used to toggle the events listed
+
+    // stores info for buttons and events UI
+    List<EventTags> tagButtons;
+    List<Post> eventList;
+
+    private RecyclerView tagRecycler;
+    private RecyclerView eventRecycler;
+    private TagButtonAdapter tagButtonAdapter;
+    private DiscoverEventAdapter discoverEventAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_discover, container, false);
-        FragmentManager fragmentManager = getChildFragmentManager();
+        View view = inflater.inflate(R.layout.fragment_discover, container, false);
+//        FragmentManager fragmentManager = getChildFragmentManager();
+
+        // get reference to UI elements
+        tagRecycler = view.findViewById(R.id.tag_recycler);
+        eventRecycler = view.findViewById(R.id.event_recycler);
+
+        // initialise values
+        tagButtons = Arrays.asList(EventTags.values());
+        eventList = new ArrayList<>();
+        Log.d("DiscoverFragment", tagButtons.toString());
+        Post p1 = new Post(4,
+                2,
+                "2024-04-04 04:51:21",
+                "None",
+                "hello",
+                "First post 3",
+                "STUD3",
+                "What is this?3",
+                "2024-04-02 05:21:25");
+        Post p2 = new Post(1,
+                2,
+                "2024-04-02 04:51:21",
+                "2024-05-02 04:51:21",
+                "hello",
+                "First post",
+                "STUD",
+                "What is this?",
+                "2024-04-02 04:51:21");
+        eventList.add(p1);
+        eventList.add(p2);
 
         // set up tag button recycler
-        RecyclerView tag_recycler = rootView.findViewById(R.id.tag_recycler);
+        tagRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        tagButtonAdapter = new TagButtonAdapter(getActivity(), tagButtons);
+        tagRecycler.setAdapter(tagButtonAdapter);
 
-        Tag_button_adapter tagButtonAdapter = new Tag_button_adapter(requireContext(), tag_buttons, fragmentManager);
-        tag_recycler.setAdapter(tagButtonAdapter);
-        tag_recycler.setLayoutManager(new LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL, false));
+        // set up event recycler
+        eventRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        discoverEventAdapter = new DiscoverEventAdapter(getActivity(), eventList);
+        eventRecycler.setAdapter(discoverEventAdapter);
 
+        return view;
+    }
 
-        // Get the FragmentManager and begin a transaction
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        // onViewCreated is executed after onCreateView
+        super.onViewCreated(view, savedInstanceState);
+        Log.i("DiscoverFragment", "onViewCreate");
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // bind button click listeners
 
-        // Add the nested fragment to the container within the parent fragment's layout
-//        fragmentTransaction.add(R.id.tags, new Career_tag_fragment());
-
-        // Commit the transaction
-        fragmentTransaction.commit();
-
-        ArrayList<Button> buttonsList = tagButtonAdapter.getButtonsList();
-        Log.d("Buttons List Size", String.valueOf(buttonsList.size()));
-
-
-//        View.OnClickListener listener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ArrayList<Fragment> fragmentList = new ArrayList<>();
-//                fragmentList.add(new Career_tag_fragment());
-//                fragmentList.add(new Campus_life_tag_fragment());
-//                fragmentList.add(new Fifth_row_tag_fragment());
-//                fragmentList.add(new Competition_tag_fragment());
-//                int count = 0;
-//                for (Button button : buttonsList){
-//                    if (v == button) {
-//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                        fragmentTransaction.replace(R.id.tags, fragmentList.get(count));
-//                        fragmentTransaction.commit();
-//                        button.setBackgroundResource(R.drawable.tag_rectangle);
-//                        button.setTextColor(Color.parseColor("#FDFAFF"));
-//                    }
-//                    else {
-//                        button.setBackgroundResource(R.drawable.tag_unselect_rectangle);
-//                        button.setTextColor(Color.parseColor("#967ADC"));
-//                    }
-//                    count +=1;
-//                }
-//            }
-//        };
-        for (Button button : buttonsList) {
-//            button.setOnClickListener(listener);
-        }
-        return rootView;
     }
 
     public void setUpTagButtons() {
-        String[] name = new String[5];
-        name[0] = "CAREER";
-        name[1] = "CAMPUS_LIFE";
-        name[2] = "FIFTH_ROW";
-        name[3] = "COMPETITION";
-        name[4] = "WORKSHOP";
-        for(int i = 0; i<name.length; i++){
-            tag_buttons.add(new tag_button_model(name[i]));
+        String[] name = {EventTags.CAREER.toString(),
+                EventTags.CAMPUS_LIFE.toString(),
+                EventTags.FIFTH_ROW.toString(),
+                EventTags.COMPETITION.toString(),
+                EventTags.WORKSHOP.toString()};
+        for (String s : name) {
+//            tag_buttons.add(new tag_button_model(s));
         }
     }
 }
