@@ -8,10 +8,9 @@ import java.util.Set;
 
 public class PreferenceUtils {
     /*
-     * Class for managing user preferences (persistent storage)
+     * Singleton class for managing user preferences (persistent storage)
      * --------------------------------------------------------
-     * Designed to be instantiated (non-static) for efficiency purposes
-     * Instantiate a single instance and use it to manage all fetches/updates to user preferences
+     * Fetch instance and use it to manage all fetches/updates to user preferences
      */
 
 
@@ -19,10 +18,11 @@ public class PreferenceUtils {
     private static final String PREF_NAME = "ClarityAppPreferences";
     private static final String KEY_CAL_POST_IDS = "calendarPostIds";
     private static final String KEY_THEME = "appTheme";
+    private static PreferenceUtils instance;
 
     // Instance attributes:
     private final SharedPreferences sharedPreferences;
-    private final Set<Integer> calendarPostIds;
+    private final Set<Integer> calendarPostIds; // Set prevents duplicates
 
     /*
      * Methods for events (posts) saved to Calendar
@@ -34,7 +34,14 @@ public class PreferenceUtils {
      * Note: when these methods are executed from a fragment, pass in getActivity() as context
      */
 
-    public PreferenceUtils(Context context) {
+    public static PreferenceUtils getInstance(Context context) {
+        if (instance == null) {
+            instance = new PreferenceUtils(context.getApplicationContext());
+        }
+        return instance;
+    }
+
+    private PreferenceUtils(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         calendarPostIds = new HashSet<>();
 
@@ -69,4 +76,14 @@ public class PreferenceUtils {
         editor.putStringSet(KEY_CAL_POST_IDS, stringSet);
         editor.apply();
     }
+
+    public void resetCalendar(){
+        // Resets userPrefs (you will still need to commit changes after)
+        calendarPostIds.clear();
+    }
+
+    public Set<Integer> getCalendarPostIds() {
+        return calendarPostIds;
+    }
+
 }

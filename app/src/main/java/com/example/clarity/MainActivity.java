@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
@@ -15,6 +17,7 @@ import com.example.clarity.NavBarFragments.Favourites;
 import com.example.clarity.NavBarFragments.Profile.Profile;
 import com.example.clarity.databinding.ActivityMainBinding;
 
+import com.example.clarity.model.PreferenceUtils;
 import com.example.clarity.model.data.Tag;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
@@ -38,18 +41,6 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new Discover());
 
         database = ((MyApplication) getApplicationContext()).getDatabase();
-
-        // Example of how to use RestRepo database
-        database.getAllPostRequest(new RestRepo.RepositoryCallback<ArrayList<Post>>() {
-            @Override
-            public void onComplete(ArrayList<Post> result) {
-                // The callback function that will execute AFTER result is fetched
-                // All code to be executed after results are fetched should be placed in this callback
-                System.out.println(result);
-            }
-        });
-
-
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {

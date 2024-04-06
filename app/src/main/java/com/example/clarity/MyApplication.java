@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 public class MyApplication extends Application {
     /*
     Custom Application class for maintaining global application state.
-    Will instantiate when application first starts.
+    Will instantiate when application first starts (is a singleton class).
     Things initialized here remain for entire application life cycle.
     Add [android:name=".MyApplication"] to the AndroidManifest
      */
@@ -22,4 +22,5 @@ public class MyApplication extends Application {
     public RestRepo getDatabase() {
         return database;
     }
+    public Executor getExecutor() { return executor; }
 }

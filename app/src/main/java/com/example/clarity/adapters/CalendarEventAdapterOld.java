@@ -1,7 +1,6 @@
 package com.example.clarity.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,25 +14,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.R;
 import com.example.clarity.model.Event; // Placeholder Event Class
-import com.example.clarity.model.data.Post;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
-public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdapter.EventViewHolder>{
+/// OLD ADAPTER THAT USED THE PLACEHOLDER Event CLASS BEFORE DATABASE WAS IMPLEMENTED
+public class CalendarEventAdapterOld extends RecyclerView.Adapter<CalendarEventAdapterOld.EventViewHolder>{
     // Take data from the source and convert it to individual views to be displayed
     private Context context;
-    private List<Post> eventList;
+    private List<Event> eventList;
     private String[] daysOfWeekConverter;
     private CalendarFragment.CalendarDisplayState calendarDisplayState;
-
-    public CalendarEventAdapter(Context context, CalendarFragment.CalendarDisplayState calendarDisplayState){
+    public CalendarEventAdapterOld(Context context, List<Event> eventList, CalendarFragment.CalendarDisplayState calendarDisplayState){
         this.context = context;
-        this.eventList = new ArrayList<>(); // list of Post objects (to populate RecyclerView)
-
-        // map Calendar days of week int constant to string values for agenda view:
+        this.eventList = eventList; // Placeholder: list of Event objects (to populate RecyclerView)
+        // map Calendar days of week int constant to string values for agenda view
         this.daysOfWeekConverter = new String[] {"Error", "WED", "THU", "FRI", "SAT", "SUN", "MON", "TUE"};
         this.calendarDisplayState = calendarDisplayState;
     }
@@ -78,14 +73,14 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         // RecyclerView calls this to bind a EventViewHolder to data
 
-        Post event = eventList.get(position); // only get events from the shownEventsList
+        Event event = eventList.get(position); // get an Event object from our data source (eventList)
 
-        // Bind Event object data to the EventViewHolder i.e. fill in data
-        holder.eventNameTextView.setText(event.getTitle());
-        holder.eventTimeTextView.setText(event.getEvent_start());
-        holder.eventLocationTextView.setText(event.getLocation());
-//        holder.eventDayNumber.setText(String.valueOf(event.getDate().get(Calendar.DAY_OF_MONTH)));
-//        holder.eventDay.setText(daysOfWeekConverter[event.getDate().get(Calendar.DAY_OF_MONTH)]);
+        // Bind Event object data to the EventViewHolder ie fill in data
+        holder.eventNameTextView.setText(event.getName());
+        holder.eventTimeTextView.setText(event.getTime());
+        holder.eventLocationTextView.setText(event.getPlace());
+        holder.eventDayNumber.setText(String.valueOf(event.getDate().get(Calendar.DAY_OF_MONTH)));
+        holder.eventDay.setText(daysOfWeekConverter[event.getDate().get(Calendar.DAY_OF_MONTH)]);
 
         // hide elements based on monthly or agenda view
         if (this.calendarDisplayState == CalendarFragment.CalendarDisplayState.MONTHLY_VIEW) {
@@ -118,12 +113,14 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         return eventList.size();
     }
 
-    public void updateEventList(List<Post> eventList) {
+    public void setData(List<Event> eventList){
+        // Update the items in the RecyclerView
         this.eventList = eventList;
         notifyDataSetChanged();
     }
 
 }
+
 
 
 
