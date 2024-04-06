@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of how to use RestRepo database
         ArrayList<Integer> post_id_list = new ArrayList<Integer>();
-        post_id_list.add(4);
+        post_id_list.add(1);
         post_id_list.add(13);
         database.getPostsRequest(post_id_list, new RestRepo.RepositoryCallback<ArrayList<Post>>() {
             @Override

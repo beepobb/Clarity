@@ -198,7 +198,7 @@ public class RestRepo {
                     casted.add(String.valueOf(ea));
                 }
                 String post_id_string = String.join( ",", casted);
-                ArrayList<Post> response = getAllPost();
+                ArrayList<Post> response = getMultiplePost(post_id_string);
                 callback.onComplete(response);
             }
         });
@@ -206,7 +206,7 @@ public class RestRepo {
 
     private ArrayList<Post> getMultiplePost(String post_id_list) {
         try {
-            String urlQuery = "?ids="+post_id_list;
+            String urlQuery = "?post_id_list="+post_id_list;
             JSONObject tmpList = urlGet(endPointPost,urlQuery);
             ArrayList<Post> result = new ArrayList<Post>();
             for (Iterator<String> it = tmpList.keys(); it.hasNext(); ) {
