@@ -2,4 +2,13 @@
     <string name="app_name">Clarity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="night_fiest">
+        Night Fiesta
+    </string>
+    <string name="february_20">
+24 February 2024 | 1800 - 2130
+</string>
+    <string name="sutd_campus">
+SUTD Campus Centre
+</string>
 </resources>

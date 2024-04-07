@@ -1,14 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NavBarFragments.Create">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Create" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:padding="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Event"
+            android:fontFamily="@style/create_even"
+            android:layout_gravity="center" />
+        <TextView
+            android:id="@+id/thumbnail"
+            android:layout_width="39dp"
+            android:layout_height="9dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="35dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:text="Thumbnail"
+            android:textSize="8sp"
+            android:textColor="#6338CD"
+            android:gravity="top"
+            />
+        <TextView
+            android:id="@+id/add_your_ev"
+            android:layout_width="74dp"
+            android:layout_height="7dp"
+            android:layout_marginLeft="35dp"
+            android:text="Add your event photo here"
+            android:textSize = "6sp"
+            android:textColor="#434A54"
+            android:gravity="top"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="0dp"
+            android:padding="15dp">
 
-</FrameLayout>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/placeholder_image"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Event Name"
+                    android:textAlignment="center"
+                    android:textColor="#6338CD"
+                    android:textSize="8sp"
+                    android:layout_marginLeft="22dp"/>
+            <EditText
+                android:id="@+id/nUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event name"
+                android:inputType="text"
+                android:textSize="8sp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:background="@drawable/edittext_box_background" >
+            </EditText>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tags"
+                android:textAlignment="center"
+                android:textColor="#6338CD"
+                android:textSize="8sp"
+                android:layout_marginLeft="22dp"/>
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="22dp"
+
+                />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+
+
