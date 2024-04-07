@@ -65,4 +65,9 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
     public int getItemCount() {
         return buttonNameList.size();
     }
+
+    // TODO: programmatically generate tags based on what tags is in db
+    public void updateTags() {
+
+    }
 }

@@ -66,4 +66,24 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
     public int getItemCount() {
         return eventList.size();
     }
+
+    public void updateEventList(List<Post> eventList) {
+        this.eventList = eventList;
+        notifyDataSetChanged();
+    }
+
+    // Helper functions to format Strings for TextView in each card
+    // TODO: cut off title if its too long
+    private String formatTitle() {
+        return "";
+    }
+
+    // TODO: this function is used in onBindViewHolder
+    private String formatDate() {
+        return "";
+    }
+
+    private String formatTime() {
+        return "";
+    }
 }
