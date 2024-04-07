@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="choices">
+        <item>SUTD Student</item>
+        <item>SUTD Staff</item>
+        <item>SUTD Fifth Row</item>
+        <item>Public</item>
+    </string-array>
+</resources>

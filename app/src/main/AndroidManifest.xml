@@ -25,6 +25,12 @@
         </activity>
 
         <activity
+            android:name=".ui.login.CreateNewAccountView"
+            android:exported="true"
+            android:label="CreateNewAccountView">
+        </activity>
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
         </activity>
