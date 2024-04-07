@@ -164,7 +164,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:background="@drawable/purple_rectangle"
-        android:enabled="false"
+        android:enabled="true"
         android:text="Sign In"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
