@@ -50,11 +50,13 @@ public class CreateNewAccountView extends AppCompatActivity {
             if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 // Display an error message if any field is empty
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             // Additional validation logic can be added here (e.g., check if passwords match)
             if (!password.equals(confirmPassword)) {
                 Toast.makeText(this, "Password does not match", Toast.LENGTH_SHORT).show();
+                return;
             }
             // Proceed with account creation (e.g., send data to server or store locally)
             // Once the account is successfully created, you may navigate to another activity
