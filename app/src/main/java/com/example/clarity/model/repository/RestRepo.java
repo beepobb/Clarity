@@ -12,9 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -374,6 +374,31 @@ public class RestRepo {
             return result;
         }
         catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void getAllPostsWithTagRequest(RepositoryCallback<ArrayList<Tag>> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Tag> response = getAllPostsWithTag();
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private ArrayList<Tag> getAllPostsWithTag() {
+        try {
+            JSONObject tmpList = urlGet(endPointTags, "");
+            ArrayList<Tag> result = new ArrayList<>();
+            for (Iterator<String> it = tmpList.keys(); it.hasNext(); ) {
+                JSONObject tmp = tmpList.getJSONObject(it.next());
+                result.add(new Tag(tmp.getInt("post_id"), tmp.getString("tag_category")));
+            }
+            return result;
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
