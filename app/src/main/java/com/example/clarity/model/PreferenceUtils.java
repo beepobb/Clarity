@@ -17,12 +17,14 @@ public class PreferenceUtils {
     // Static attributes (define your keys here):
     private static final String PREF_NAME = "ClarityAppPreferences";
     private static final String KEY_CAL_POST_IDS = "calendarPostIds";
+    private static final String SESSION_TOKEN = "sessionToken";
     private static final String KEY_THEME = "appTheme";
     private static PreferenceUtils instance;
 
     // Instance attributes:
     private final SharedPreferences sharedPreferences;
     private final Set<Integer> calendarPostIds; // Set prevents duplicates
+    private String sessionToken;
 
     /*
      * Methods for events (posts) saved to Calendar
@@ -50,8 +52,12 @@ public class PreferenceUtils {
         for (String postIdString: stringSet) {
             calendarPostIds.add(Integer.parseInt(postIdString));
         }
+
+        // Load in login session token
+        sessionToken = sharedPreferences.getString(SESSION_TOKEN, ""); // empty string returned if no session token found
     }
 
+    // CALENDAR METHODS //
     public void addToCalendar(int postId) {
         calendarPostIds.add(postId);
     }
@@ -85,5 +91,18 @@ public class PreferenceUtils {
     public Set<Integer> getCalendarPostIds() {
         return calendarPostIds;
     }
+
+
+    // SESSION TOKEN METHODS //
+    public String getSessionToken() {return sessionToken;}
+    private void saveSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
+
+        // Save to local storage
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SESSION_TOKEN, sessionToken);
+        editor.apply();
+    }
+
 
 }

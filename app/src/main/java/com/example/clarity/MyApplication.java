@@ -2,6 +2,8 @@ package com.example.clarity;
 
 import android.app.Application;
 
+import com.example.clarity.model.PreferenceUtils;
+import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 
 import java.util.concurrent.Executor;
@@ -15,12 +17,22 @@ public class MyApplication extends Application {
     Add [android:name=".MyApplication"] to the AndroidManifest
      */
 
+
     // Initialize Threads and Database on application start
     private final Executor executor = Executors.newFixedThreadPool(2);
     private final RestRepo database = RestRepo.getInstance(executor);
 
+    private User appUser;
+
+    // Database methods //
     public RestRepo getDatabase() {
         return database;
     }
     public Executor getExecutor() { return executor; }
+
+    // Logged-in user methods //
+    public User getAppUser() { return appUser; }
+    public void saveAppUser(User user) {
+        appUser = user;
+    }
 }

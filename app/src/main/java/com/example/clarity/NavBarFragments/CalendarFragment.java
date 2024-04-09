@@ -15,10 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener;
@@ -26,8 +24,6 @@ import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
 import com.example.clarity.MainActivity;
 import com.example.clarity.R;
 import com.example.clarity.adapters.CalendarEventAdapter;
-import com.example.clarity.adapters.CalendarEventAdapterOld;
-import com.example.clarity.model.Event; // PLACEHOLDER for data source
 import com.example.clarity.model.PreferenceUtils;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.repository.RestRepo;
@@ -100,12 +96,6 @@ public class CalendarFragment extends Fragment {
         }
 
         Log.i(TAG, "onCreate run");
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         // Fetch database (RestRepo instance)
         Activity activity = getActivity();
@@ -114,6 +104,39 @@ public class CalendarFragment extends Fragment {
             db = ((MainActivity) activity).database;
         }
 
+        savedEventsList = new MutableLiveData<>(new ArrayList<>());
+        prefUtils = PreferenceUtils.getInstance(getActivity());
+        calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
+        selectedDate = Calendar.getInstance(); // get current date
+
+        // INITIALIZE //
+        // ONLY FOR TESTING: Sample code to (temporarily) save events to userPrefs local storage
+        prefUtils.addToCalendar(13);
+        prefUtils.addToCalendar(4);
+        prefUtils.addToCalendar(1);
+        // without prefUtils.commitCalendarUpdates(), these changes are not saved to local file
+
+        // Fetch saved events from local storage (sharedPrefs):
+        db.getPostsRequest(new ArrayList<Integer>(prefUtils.getCalendarPostIds()), new RestRepo.RepositoryCallback<ArrayList<Post>>() {
+            @Override
+            public void onComplete(ArrayList<Post> result) {
+
+                // Update savedEventsList (Mutable Live Data containing Array List of Post objects)
+                if (result != null) {
+                    // TODO: Perhaps sort result (by start date) before storing?
+                    savedEventsList.postValue(result); // postValue used as this will be executed on worker thread
+                }
+                // Observer will be notified - RecyclerView will update accordingly
+            }
+        });
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
+
         // get reference to all UI elements
         calendarView = view.findViewById(R.id.calendarView);
         aabbcc = view.findViewById(R.id.AABBCC);
@@ -121,12 +144,6 @@ public class CalendarFragment extends Fragment {
         monthlyRecyclerView = view.findViewById(R.id.monthlyRecycler);
         agendaRecyclerView = view.findViewById(R.id.agendaRecycler);
         monthLabelTextView = view.findViewById(R.id.monthLabel);
-
-        // other attributes
-        savedEventsList = new MutableLiveData<>(new ArrayList<>());
-        calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
-        prefUtils = PreferenceUtils.getInstance(getActivity());
-        selectedDate = Calendar.getInstance(); // get current date
 
         // Set up RecyclerViews (Monthly and Agenda)
         monthlyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Linear Scroll
@@ -138,8 +155,10 @@ public class CalendarFragment extends Fragment {
         adapterAgenda = new CalendarEventAdapter(getActivity(), CalendarDisplayState.AGENDA_VIEW);
         agendaRecyclerView.setAdapter(adapterAgenda);
 
+        // Initialize month label
+        monthLabelTextView.setText(intToMonth[selectedDate.get(Calendar.MONTH)] + " " + selectedDate.get(Calendar.YEAR));
 
-        // Set up observer for savedEventsList
+        // Set up observer for savedEventsList (must be placed here because view objects are touched)
         savedEventsList.observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
@@ -150,32 +169,9 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-
-        // INITIALIZE //
-        Calendar today = Calendar.getInstance();
-        monthLabelTextView.setText(intToMonth[today.get(Calendar.MONTH)] + " " + today.get(Calendar.YEAR));
-
-        // Fetch saved events from local storage (sharedPrefs):
-        ArrayList<Integer> savedIds = new ArrayList<Integer>(prefUtils.getCalendarPostIds());
-
-        // Sample code to (temporarily) save events to userPrefs local storage
-        prefUtils.addToCalendar(13);
-        prefUtils.addToCalendar(4);
-        prefUtils.addToCalendar(1);
-        // without prefUtils.commitCalendarUpdates(), these changes are not saved to local file
-
-        db.getPostsRequest(savedIds, new RestRepo.RepositoryCallback<ArrayList<Post>>() {
-            @Override
-            public void onComplete(ArrayList<Post> result) {
-
-                // Update savedEventsList (Mutable Live Data containing Array List of Post objects)
-                if (result != null) {
-                    savedEventsList.postValue(result); // postValue used as this will be executed on worker thread
-                }
-                // Observer will be notified - RecyclerView will update accordingly
-
-            }
-        });
+        // Precaution in case DB loads (savedEventsList updated) before observer is assigned.
+        updateMonthlyRecycler();
+        updateAgendaRecycler();
 
         return view; // Inflate the layout for this fragment
     }
@@ -192,14 +188,14 @@ public class CalendarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.i(TAG, "onViewCreate");
 
-        // set default view
+        // set default view (monthly)
         showMonthlyView();
 
         calendarView.setOnCalendarDayClickListener(new OnCalendarDayClickListener() {
             @Override
             public void onClick(@NonNull CalendarDay calendarDay) {
                 selectedDate = calendarDay.getCalendar();
-                updateMonthlyRecycler();
+                updateMonthlyRecycler(); // Only display events on selected day
             }
         });
 
@@ -286,6 +282,7 @@ public class CalendarFragment extends Fragment {
         displayToggle.setImageResource(R.drawable.monthly_view);
         calendarView.setVisibility(View.VISIBLE);
         monthlyRecyclerView.setVisibility(View.VISIBLE);
+        monthLabelTextView.setVisibility(View.VISIBLE);
         aabbcc.setVisibility(View.VISIBLE);
     }
 
@@ -297,6 +294,7 @@ public class CalendarFragment extends Fragment {
         calendarView.setVisibility(View.GONE);
         monthlyRecyclerView.setVisibility(View.GONE);
         aabbcc.setVisibility(View.GONE);
+        monthLabelTextView.setVisibility(View.GONE);
 
         // show Agenda view UI
         displayToggle.setImageResource(R.drawable.agenda_view);

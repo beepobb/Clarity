@@ -1,7 +1,6 @@
 package com.example.clarity.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.R;
-import com.example.clarity.model.Event; // Placeholder Event Class
 import com.example.clarity.model.data.Post;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdapter.EventViewHolder>{
