@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+
+import android.widget.EditText;
 import android.widget.Toast;
 
 import android.view.LayoutInflater;
@@ -25,6 +27,13 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import java.util.Calendar;
+import android.util.Log;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+
 import com.example.clarity.R;
 
 public class Create extends Fragment {
@@ -33,6 +42,8 @@ public class Create extends Fragment {
     ArrayAdapter<String> adapterTags;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
+    private EditText editTextDate, editTextTime;
+    private Calendar calendar;
     private View rootView; // Declare as class-level field
 
 //    private ChipGroup chipGroup;
@@ -80,6 +91,28 @@ public class Create extends Fragment {
         // Launch the gallery picker when the ImageView is clicked
         selectedImageView.setOnClickListener(view -> selectImage());
 
+        editTextDate = rootView.findViewById(R.id.editTextDate);
+        editTextTime = rootView.findViewById(R.id.editTextTime);
+        calendar = Calendar.getInstance();
+        editTextDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+
+        editTextTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
+            }
+        });
+        String dateString = editTextDate.getText().toString().trim();
+        String timeString = editTextTime.getText().toString().trim();
+        String dateTimeString = dateString + " " + timeString;
+        Log.d("DateTimeConcatenation", "Concatenated DateTime: " + dateTimeString);
+        // im trying to retrieve data that user enters and format it into our ISO format, but havent success
+
         return rootView;
     }
 
@@ -89,5 +122,36 @@ public class Create extends Fragment {
         if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
             imageActivityResultLauncher.launch(intent);
         }
+    }
+
+    private void showDatePickerDialog() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        editTextDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
+    }
+    private void showTimePickerDialog() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                requireActivity(),
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        editTextTime.setText(hourOfDay + ":" + minute);
+                    }
+                },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true // 24-hour format
+        );
+        timePickerDialog.show();
     }
 }
