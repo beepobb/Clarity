@@ -21,14 +21,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -57,7 +49,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="30dp"
             android:paddingTop="20dp"
-            android:text="Night Fiesta"
+            android:text="@string/event_name"
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -69,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="30dp"
-            android:text="24 February 2024 | 1800 - 2130 "
+            android:text="@string/event_date_time"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/nightfiesta"
             app:layout_constraintTop_toBottomOf="@+id/nightfiesta" />
@@ -88,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="7dp"
-            android:text="SUTD Campus Centre"
+            android:text="@string/event_location"
             app:layout_constraintStart_toEndOf="@+id/pin"
             app:layout_constraintTop_toBottomOf="@+id/datentime" />
 
@@ -96,7 +88,7 @@
             android:id="@+id/add_button"
             android:layout_width="17dp"
             android:layout_height="17dp"
-            android:layout_marginStart="150dp"
+            android:layout_marginStart="100dp"
             android:background="@drawable/plus_button"
             android:textOff=""
             android:textOn=""
@@ -163,9 +155,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:background="@drawable/tag_rectangle"
-            android:text="#carnival "
+            android:text="@string/tag1"
             android:textColor="#967ADC"
-            android:textSize="6sp"
+            android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/tags"
             app:layout_constraintTop_toBottomOf="@+id/tags" />
 
@@ -173,24 +165,12 @@
             android:id="@+id/rect_tag_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="20dp"
             android:background="@drawable/tag_rectangle"
-            android:text="#for all "
+            android:text="@string/tag2"
             android:textColor="#967ADC"
-            android:textSize="6sp"
-            app:layout_constraintStart_toStartOf="@+id/rect_tag_1"
-            app:layout_constraintTop_toBottomOf="@+id/tags" />
-
-        <TextView
-            android:id="@+id/rect_tag_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:background="@drawable/tag_rectangle"
-            android:text="#tech "
-            android:textColor="#967ADC"
-            android:textSize="6sp"
-            app:layout_constraintStart_toStartOf="@+id/rect_tag_2"
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@+id/rect_tag_1"
             app:layout_constraintTop_toBottomOf="@+id/tags" />
 
         <TextView
@@ -203,6 +183,7 @@
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/rect_tag_1"/>
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -223,21 +204,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/root"
-                    android:paddingStart="10dp"
-
-                    />
+                    android:paddingStart="10dp"/>
 
                 <TextView
                     android:id="@+id/orgName"
                     android:layout_width="232dp"
                     android:layout_height="42dp"
+                    android:layout_marginTop="24dp"
                     android:paddingStart="10dp"
                     android:paddingTop="15dp"
                     android:text="@string/org_name"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:textColor="#000000"
                     app:layout_constraintStart_toEndOf="@id/org_pic"
-                    app:layout_constraintTop_toTopOf="@id/organiser" />
+                    app:layout_constraintTop_toBottomOf="@id/organiser" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

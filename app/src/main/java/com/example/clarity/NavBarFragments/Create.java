@@ -24,8 +24,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.MultiAutoCompleteTextView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -37,44 +39,34 @@ import android.widget.TimePicker;
 import com.example.clarity.R;
 
 public class Create extends Fragment {
-    String[] tags = {"Career","Campus Life","Fifth Row","Competition","Workshop"};
-    AutoCompleteTextView autoCompleteTextView; // Declare as class-level field
+
+    private AutoCompleteTextView mAutoCompleteTextView; // Declare as class-level field
+    private MultiAutoCompleteTextView mMultiAutoCompleteTextView;
     ArrayAdapter<String> adapterTags;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
     private EditText editTextDate, editTextTime;
     private Calendar calendar;
-    private View rootView; // Declare as class-level field
-
-//    private ChipGroup chipGroup;
-
+    private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create, container, false);
         selectedImageView = rootView.findViewById(R.id.placeHolder);
-        //chipGroup = rootView.findViewById(R.id.chipGroup);
 
-        // Initialize AutoCompleteTextView and adapter
-        autoCompleteTextView = rootView.findViewById(R.id.autoCompleteTextView);
-        adapterTags = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, tags);
-        autoCompleteTextView.setAdapter(adapterTags);
+        mMultiAutoCompleteTextView = rootView.findViewById(R.id.multiAutoCompleteTextView);
+        String[] tags = {"Career", "Campus Life", "Fifth Row", "Competition", "Workshop"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, tags);
 
-        // Add chips dynamically
-//        for (String tag : tags) {
-//            Chip chip = new Chip(requireContext());
-//            chip.setText(tag);
-//            chip.setCheckable(true);
-//            chip.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-//                if (isChecked && chipGroup.getCheckedChipIds().size() > 3) {
-//                    // Uncheck the chip if more than 3 are selected
-//                    chip.setChecked(false);
-//                    Toast.makeText(requireContext(), "You can select up to 3 tags.", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//            chipGroup.addView(chip);
-//        }
+        // Set adapter to MultiAutoCompleteTextView
+        mMultiAutoCompleteTextView.setAdapter(adapter);
+
+        // Set tokenizer to separate multiple selections by comma or semicolon
+        mMultiAutoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+
+        // Set threshold for filtering
+        mMultiAutoCompleteTextView.setThreshold(1);
 
         // Set up image selection
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),

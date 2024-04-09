@@ -125,15 +125,16 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/purple_line"
         app:layout_constraintTop_toBottomOf="@+id/tag_choose"
-        android:hint="Select tags"
+        android:hint="Select Tags"
+
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:hint="Select"/>
+        <MultiAutoCompleteTextView
+            android:id="@+id/multiAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Select Tags"
+            android:inputType="textMultiLine" />
 <!--        <com.google.android.material.chip.ChipGroup-->
 
 <!--            android:layout_width="match_parent"-->
