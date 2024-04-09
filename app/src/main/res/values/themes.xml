@@ -14,9 +14,10 @@
 
     <style name="Theme.Clarity" parent="Base.Theme.Clarity" />
 
-    <style name="RoundFAB" parent="">
+    <style name="RoundFAB" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="cornerFamily">rounded</item>
         <item name="android:radius">40dp</item>
+        <item name="backgroundTint">#B9A3F3</item>
     </style>
 
     <style name="ScreenBackground"><item name="android:background">@color/off_white</item></style>

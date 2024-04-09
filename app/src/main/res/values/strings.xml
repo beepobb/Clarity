@@ -2,7 +2,7 @@
     <string name="app_name">Clarity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string-array name = "Event_name">
+    <string-array name="Event_name">
         <item>Event1</item>
         <item>Event2</item>
         <item>Event3</item>
@@ -11,7 +11,7 @@
         <item>Event6</item>
     </string-array>
 
-    <string-array name = "time">
+    <string-array name="time">
         <item>12/3/1234</item>
         <item>34/6/3466</item>
         <item>92/4/2947</item>
@@ -20,7 +20,7 @@
         <item>2/5/0001</item>
     </string-array>
 
-    <string-array name = "Description">
+    <string-array name="Description">
         <item>Event1 is fun</item>
         <item>Event2 is boring</item>
         <item>Event3 is for undergraduate</item>
@@ -29,7 +29,7 @@
         <item>Event6 praise</item>
     </string-array>
 
-    <string-array name = "Location">
+    <string-array name="Location">
         <item>Albert Hong Theater</item>
         <item>MPH(Multi-purpose-hall)</item>
         <item>Building2 Level 1</item>
@@ -37,6 +37,14 @@
         <item>Library level 1</item>
         <item>Dance Studio 2</item>
     </string-array>
+
+    <string-array name="dropdown_options">
+        <item>SUTD Student</item>
+        <item>SUTD Staff</item>
+        <item>Public</item>
+        <!-- Add more options as needed -->
+    </string-array>
+
 
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
@@ -51,4 +59,20 @@
     <string name="profile_alert">Hold up! Is this a mistake?</string>
     <string name="oops">Oops</string>
     <string name="editProfile">editProfile</string>
+    <string name="title_activity_edit_profile">EditProfileActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
