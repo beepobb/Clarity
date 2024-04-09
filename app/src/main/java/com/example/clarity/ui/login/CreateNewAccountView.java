@@ -16,9 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.clarity.MainActivity;
-import com.example.clarity.R;
 import com.example.clarity.databinding.CreateNewBinding;
-//implement circle crop
+
 public class CreateNewAccountView extends AppCompatActivity {
     private CreateNewBinding binding;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
