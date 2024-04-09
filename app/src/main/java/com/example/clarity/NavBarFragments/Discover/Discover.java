@@ -1,4 +1,4 @@
-package com.example.clarity.NavBarFragments;
+package com.example.clarity.NavBarFragments.Discover;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -25,37 +25,10 @@ import com.example.clarity.model.repository.RestRepo;
 import java.util.*;
 
 public class Discover extends Fragment implements TagButtonUpdateEventsClickListener {
-    // for tag button creation
-    public enum EventTags {
-        CAREER, CAMPUS_LIFE, FIFTH_ROW, COMPETITION, WORKSHOP;
-
-        @NonNull
-        @Override
-        public String toString() {
-            switch (this) {
-                case CAREER:
-                    return "Career";
-                case WORKSHOP:
-                    return "Workshop";
-                case FIFTH_ROW:
-                    return "Fifth Row";
-                case CAMPUS_LIFE:
-                    return "Campus Life";
-                case COMPETITION:
-                    return "Competition";
-                default:
-                    return "ERROR";
-            }
-        }
-    }
-
-    private EventTags currentTagState; // used to toggle the events listed
-
     // stores info for buttons and events UI
     private List<EventTags> tagButtons;
     private List<Post> eventList;
     private MutableLiveData<List<Post>> eventListLive;
-    private MutableLiveData<List<Integer>> tagButtonsLive;
 
     // UI elements
     private RecyclerView tagRecycler;
@@ -64,20 +37,11 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
     private DiscoverEventAdapter discoverEventAdapter;
 
     private RestRepo db; // reference for db
-
-    // tags and event link
-    private HashMap<EventTags, ArrayList<Integer>> tagsEventMapping;
+    private HashMap<EventTags, ArrayList<Integer>> tagsEventMapping; // tags and event link
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_discover, container, false);
 
         // get reference to db
         Activity activity = getActivity();
@@ -86,20 +50,25 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
             db = ((MainActivity) activity).database;
         }
 
-        // get reference to UI elements
-        tagRecycler = view.findViewById(R.id.tag_recycler);
-        eventRecycler = view.findViewById(R.id.event_recycler);
-
         // initialise values
         tagButtons = Arrays.asList(EventTags.values());
         eventList = new ArrayList<>();
-        currentTagState = EventTags.CAREER;
         eventListLive = new MutableLiveData<>(new ArrayList<>());
-        tagButtonsLive = new MutableLiveData<>(new ArrayList<>());
         tagsEventMapping = new HashMap<>();
         for (EventTags e : EventTags.values()) {
             tagsEventMapping.put(e, new ArrayList<>());
         }
+    }
+
+    // create UI here
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_discover, container, false);
+
+        // get reference to UI elements
+        tagRecycler = view.findViewById(R.id.tag_recycler);
+        eventRecycler = view.findViewById(R.id.event_recycler);
 
         // set up tag button recycler
         tagRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -110,7 +79,25 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
         eventRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         discoverEventAdapter = new DiscoverEventAdapter(getActivity(), eventList);
         eventRecycler.setAdapter(discoverEventAdapter);
-//        Log.d("EESONG", eventList.toString());
+
+        // set up observer for eventListLive, will update UI when data comes in
+        eventListLive.observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+            @Override
+            public void onChanged(List<Post> posts) {
+                Log.d("DiscoverFragment", "observer called");
+                updateEventRecycler();
+            }
+        });
+
+        return view;
+    }
+
+    // put db calls here to avoid calling db everytime screen is changed to fragment
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        // onViewCreated is executed after onCreateView
+        super.onViewCreated(view, savedInstanceState);
+        Log.i("DiscoverFragment", "onViewCreate");
 
         // get all Posts from db
         db.getAllPostRequest(new RestRepo.RepositoryCallback<ArrayList<Post>>() {
@@ -123,23 +110,15 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
             }
         });
 
-        // set up observer for eventListLive, will update UI when data comes in
-        eventListLive.observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
-            @Override
-            public void onChanged(List<Post> posts) {
-                Log.d("DiscoverFragment", "observer called");
-                updateEventRecycler();
-            }
-        });
-
         // get tags and events
         db.getAllPostsWithTagRequest(new RestRepo.RepositoryCallback<ArrayList<Tag>>() {
             @Override
             public void onComplete(ArrayList<Tag> result) {
-                Log.d("DiscoverFragment", "db getAllPostsWithTagRequest onComplete "+result.toString());
+                Log.d("DiscoverFragment", "db getAllPostsWithTagRequest onComplete "+ result.toString());
                 for (Tag tag : result) {
                     Integer post_id = tag.getPost_id();
                     String tag_category = tag.getTag_category();
+                    // TODO: change this after the DB has new tag category values
                     if (tag_category.equals("fifthrow") || tag_category.equals("FIFTH_ROW")) {
                         tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
                     } else if (tag_category.equals("CAREER")) {
@@ -148,18 +127,6 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
                 }
             }
         });
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // onViewCreated is executed after onCreateView
-        super.onViewCreated(view, savedInstanceState);
-        Log.i("DiscoverFragment", "onViewCreate");
-
-        // TODO: bind button click listeners for eventRecycler
-
     }
 
     // Helper function
@@ -174,7 +141,7 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
     @Override
     public void onButtonClick(int position) {
         Toast.makeText(getActivity(), "TAG BUTTON CLICKED "+tagButtons.get(position).toString(), Toast.LENGTH_SHORT).show();
-        Log.d("EESONG", tagButtons.get(position).toString());
+        Log.d("DiscoverFragment", tagButtons.get(position).toString());
 
         EventTags buttonPressed = tagButtons.get(position);
 

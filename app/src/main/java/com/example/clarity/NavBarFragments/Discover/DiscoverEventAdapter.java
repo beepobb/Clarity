@@ -1,4 +1,4 @@
-package com.example.clarity.NavBarFragments;
+package com.example.clarity.NavBarFragments.Discover;
 
 import android.content.Context;
 import android.util.Log;

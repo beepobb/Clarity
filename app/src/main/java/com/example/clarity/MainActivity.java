@@ -5,25 +5,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.Application;
 import android.os.Bundle;
 
 import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
-import com.example.clarity.NavBarFragments.Discover;
+import com.example.clarity.NavBarFragments.Discover.Discover;
 import com.example.clarity.NavBarFragments.Favourites;
 import com.example.clarity.NavBarFragments.Profile.Profile;
 import com.example.clarity.databinding.ActivityMainBinding;
 
-import com.example.clarity.model.data.Tag;
-import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.repository.RestRepo;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
@@ -34,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new CalendarFragment());
         replaceFragment(new Discover());
 
         database = ((MyApplication) getApplicationContext()).getDatabase();

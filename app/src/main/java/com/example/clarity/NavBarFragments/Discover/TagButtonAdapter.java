@@ -1,4 +1,4 @@
-package com.example.clarity.NavBarFragments;
+package com.example.clarity.NavBarFragments.Discover;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,13 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagButtonViewHolder>{
-
     private Context context;
-    private List<Discover.EventTags> buttonNameList; // store name of buttons
+    private List<EventTags> buttonNameList; // store name of buttons
+
+    public List<Button> getButtonsList() {
+        return buttonsList;
+    }
+
     private List<Button> buttonsList; // store references to Button views
     private final String logCatTag = "TagButtonAdapter";
     private TagButtonUpdateEventsClickListener tagButtonUpdateEventsClickListener;
-    public TagButtonAdapter(Context context, List<Discover.EventTags> buttonNameList, TagButtonUpdateEventsClickListener tagButtonUpdateEventsClickListener) {
+    public TagButtonAdapter(Context context, List<EventTags> buttonNameList, TagButtonUpdateEventsClickListener tagButtonUpdateEventsClickListener) {
         Log.d(logCatTag, "TagButtonAdapter");
         this.context = context;
         this.buttonNameList = buttonNameList;
@@ -53,7 +57,7 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
         // RecyclerView calls this to bind a EventViewHolder to data
         Log.d(logCatTag, "onBindViewHolder");
 
-        Discover.EventTags buttonName = buttonNameList.get(position);
+        EventTags buttonName = buttonNameList.get(position);
         buttonsList.add(holder.button);
         int pos = position;
 
@@ -61,7 +65,7 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
         holder.button.setText(buttonName.toString());
 
         // bind click listener
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Update UI for all buttons based on what button was clicked
@@ -87,8 +91,5 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
     @Override
     public int getItemCount() {
         return buttonNameList.size();
-    }
-
-    public void updateTags() {
     }
 }
