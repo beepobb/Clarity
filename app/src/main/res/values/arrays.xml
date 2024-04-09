@@ -9,4 +9,11 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+    
+    <string-array name="choices">
+        <item>SUTD Student</item>
+        <item>SUTD Staff</item>
+        <item>SUTD Fifth Row</item>
+        <item>Public</item>
+    </string-array>
 </resources>
