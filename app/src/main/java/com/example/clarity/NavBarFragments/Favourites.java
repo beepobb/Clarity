@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.clarity.MainActivity;
+import com.example.clarity.NavBarFragments.Discover.DiscoverEventAdapter;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.User;

@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clarity.MainActivity;
-import com.example.clarity.NavBarFragments.DiscoverEventAdapter;
+import com.example.clarity.NavBarFragments.Discover.DiscoverEventAdapter;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.User;
