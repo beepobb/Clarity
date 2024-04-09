@@ -19,7 +19,6 @@ import com.example.clarity.databinding.CreateNewBinding;
 import org.w3c.dom.Text;
 
 public class CreateNewAccountView extends AppCompatActivity {
-    private LoginViewModel loginViewModel;
     private CreateNewBinding binding;
 
     @Override
@@ -30,6 +29,7 @@ public class CreateNewAccountView extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         final TextView CreateAccountTextView = binding.textView4;
+        final TextView choiceTextView = binding.textView5;
         final Spinner choicesSpinner = binding.spinner;
         final TextView usernameTextView = binding.textView1;
         final EditText usernameEditText = binding.username;

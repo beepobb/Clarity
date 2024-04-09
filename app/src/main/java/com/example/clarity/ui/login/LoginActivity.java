@@ -26,8 +26,6 @@ import android.widget.Toast;
 
 import com.example.clarity.MainActivity;
 import com.example.clarity.R;
-import com.example.clarity.ui.login.LoginViewModel;
-import com.example.clarity.ui.login.LoginViewModelFactory;
 import com.example.clarity.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
