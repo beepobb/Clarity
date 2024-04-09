@@ -3,6 +3,8 @@ package com.example.clarity.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.lifecycle.MutableLiveData;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +25,7 @@ public class PreferenceUtils {
 
     // Instance attributes:
     private final SharedPreferences sharedPreferences;
+    private final MutableLiveData<Set<Integer>> calendarPostIdsLiveData;
     private final Set<Integer> calendarPostIds; // Set prevents duplicates
     private String sessionToken;
 
@@ -45,19 +48,24 @@ public class PreferenceUtils {
 
     private PreferenceUtils(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        calendarPostIds = new HashSet<>();
+        calendarPostIdsLiveData = new MutableLiveData<>(new HashSet<>());
 
-        // Load in posts (events) saved to calendar
+        // Load in posts (events) saved to calendar from local storage (user prefs)
         Set<String> stringSet = sharedPreferences.getStringSet(KEY_CAL_POST_IDS, new HashSet<>());
+
+        calendarPostIds = calendarPostIdsLiveData.getValue();
         for (String postIdString: stringSet) {
+            assert calendarPostIds != null;
             calendarPostIds.add(Integer.parseInt(postIdString));
         }
+        calendarPostIdsLiveData.setValue(calendarPostIds); // Simply to trigger observer(s) for calendarPostIdsLiveData
 
         // Load in login session token
         sessionToken = sharedPreferences.getString(SESSION_TOKEN, ""); // empty string returned if no session token found
     }
 
     // CALENDAR METHODS //
+    // Note: run commitCalendarUpdates() to commit changes made by addToCalendar, removeFromCalendar and resetCalendar.
     public void addToCalendar(int postId) {
         calendarPostIds.add(postId);
     }
@@ -66,12 +74,18 @@ public class PreferenceUtils {
         calendarPostIds.remove(postId);
     }
 
+    public void resetCalendar(){
+        // Resets userPrefs (you will still need to commit changes after)
+        calendarPostIds.clear();
+    }
+
     public boolean inCalendar(int postId) {
         return calendarPostIds.contains(postId);
     }
 
     public void commitCalendarUpdates() {
         // Commits changes made by addToCalendar and removeFromCalendar to local storage (sharedPreferences file)
+        // and triggers all observers for calendarPostIdsLiveData (i.e. there is an update to saved ids)
 
         Set<String> stringSet = new HashSet<>();
         for (int postId: calendarPostIds) {
@@ -81,16 +95,13 @@ public class PreferenceUtils {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet(KEY_CAL_POST_IDS, stringSet);
         editor.apply();
-    }
-
-    public void resetCalendar(){
-        // Resets userPrefs (you will still need to commit changes after)
-        calendarPostIds.clear();
+        calendarPostIdsLiveData.setValue(calendarPostIds); // Trigger observers
     }
 
     public Set<Integer> getCalendarPostIds() {
         return calendarPostIds;
     }
+    public MutableLiveData<Set<Integer>> getCalendarLiveData() { return calendarPostIdsLiveData; }
 
 
     // SESSION TOKEN METHODS //

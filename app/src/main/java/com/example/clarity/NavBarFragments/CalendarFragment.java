@@ -34,6 +34,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 import kotlin.jvm.functions.Function1;
 
@@ -109,26 +110,11 @@ public class CalendarFragment extends Fragment {
         calendarDisplayState = CalendarDisplayState.MONTHLY_VIEW;
         selectedDate = Calendar.getInstance(); // get current date
 
-        // INITIALIZE //
-        // ONLY FOR TESTING: Sample code to (temporarily) save events to userPrefs local storage
-        prefUtils.addToCalendar(13);
-        prefUtils.addToCalendar(4);
-        prefUtils.addToCalendar(1);
-        // without prefUtils.commitCalendarUpdates(), these changes are not saved to local file
+        prefUtils.commitCalendarUpdates();
+        /*
+        Initially load in database in onCreate (if no future changes, no need touch anything)
 
-        // Fetch saved events from local storage (sharedPrefs):
-        db.getPostsRequest(new ArrayList<Integer>(prefUtils.getCalendarPostIds()), new RestRepo.RepositoryCallback<ArrayList<Post>>() {
-            @Override
-            public void onComplete(ArrayList<Post> result) {
-
-                // Update savedEventsList (Mutable Live Data containing Array List of Post objects)
-                if (result != null) {
-                    // TODO: Perhaps sort result (by start date) before storing?
-                    savedEventsList.postValue(result); // postValue used as this will be executed on worker thread
-                }
-                // Observer will be notified - RecyclerView will update accordingly
-            }
-        });
+         */
 
     }
 
@@ -158,21 +144,6 @@ public class CalendarFragment extends Fragment {
         // Initialize month label
         monthLabelTextView.setText(intToMonth[selectedDate.get(Calendar.MONTH)] + " " + selectedDate.get(Calendar.YEAR));
 
-        // Set up observer for savedEventsList (must be placed here because view objects are touched)
-        savedEventsList.observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
-            @Override
-            public void onChanged(List<Post> posts) {
-                // TODO: Update UI (RecyclerView) when data source is updated
-                Log.d(TAG, "onChanged: Observer called (savedEventsList updated)");
-                updateMonthlyRecycler();
-                updateAgendaRecycler();
-            }
-        });
-
-        // Precaution in case DB loads (savedEventsList updated) before observer is assigned.
-        updateMonthlyRecycler();
-        updateAgendaRecycler();
-
         return view; // Inflate the layout for this fragment
     }
 
@@ -184,12 +155,56 @@ public class CalendarFragment extends Fragment {
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // onViewCreated is executed after onCreateView
+        // onViewCreated is executed after onCreateView (after Views have been set up)
         super.onViewCreated(view, savedInstanceState);
         Log.i(TAG, "onViewCreate");
 
         // set default view (monthly)
         showMonthlyView();
+
+        // Set up observer for savedEventsList (must be placed after view objects are loaded)
+        savedEventsList.observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+            @Override
+            public void onChanged(List<Post> posts) {
+                // TODO: Update UI (RecyclerView) when data source is updated
+                Log.d(TAG, "onChanged: Observer called (savedEventsList updated)");
+                updateMonthlyRecycler();
+                updateAgendaRecycler();
+            }
+        });
+
+        // Set up observer for saved ids (from sharedPrefs)
+        // When there is an update to saved ids (events saved to calendar), load new posts from database
+        prefUtils.getCalendarLiveData().observe(getViewLifecycleOwner(), new Observer<Set<Integer>>() {
+            @Override
+            public void onChanged(Set<Integer> integers) {
+                // Load Posts from database with ids saved in local storage (userPrefs)
+                db.getPostsRequest(new ArrayList<Integer>(prefUtils.getCalendarPostIds()), new RestRepo.RepositoryCallback<ArrayList<Post>>() {
+                    @Override
+                    public void onComplete(ArrayList<Post> result) {
+
+                        // Update savedEventsList (Mutable Live Data containing Array List of Post objects)
+                        if (result != null) {
+                            // TODO: Perhaps sort result (by start date) before storing?
+                            savedEventsList.postValue(result); // postValue used as this will be executed on worker thread
+                        }
+                        // savedEventsList observer will be notified - RecyclerView will update accordingly
+                    }
+                });
+            }
+        });
+
+        // ONLY FOR TESTING: Sample code to (temporarily) save events to userPrefs local storage
+        prefUtils.addToCalendar(13);
+        prefUtils.addToCalendar(4);
+        prefUtils.addToCalendar(1);
+
+        prefUtils.commitCalendarUpdates(); // Initialization: trigger observer to load in database (initialization)
+
+
+        // Precaution in case DB loads (savedEventsList updated) before observer is assigned.
+        updateMonthlyRecycler();
+        updateAgendaRecycler();
 
         calendarView.setOnCalendarDayClickListener(new OnCalendarDayClickListener() {
             @Override
