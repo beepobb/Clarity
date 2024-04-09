@@ -21,46 +21,48 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
-    public RestRepo database;
+    public RestRepo database; // for all fragments to access
+
+    // Fragments
+    private Fragment discoverFragment;
+    private Fragment favouritesFragment;
+    private Fragment createFragment;
+    private Fragment calendarFragment;
+    private Fragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new Discover());
 
+        // Database instance
         database = ((MyApplication) getApplicationContext()).getDatabase();
 
-        // Example of how to use RestRepo database
-        ArrayList<Integer> post_id_list = new ArrayList<Integer>();
-        post_id_list.add(1);
-        post_id_list.add(13);
-        database.getPostsRequest(post_id_list, new RestRepo.RepositoryCallback<ArrayList<Post>>() {
-            @Override
-            public void onComplete(ArrayList<Post> result) {
-                // The callback function that will execute AFTER result is fetched
-                // All code to be executed after results are fetched should be placed in this callback
-                System.out.println(result);
-            }
-        });
+        // Initialize Fragments
+        discoverFragment = new Discover();
+        favouritesFragment = new Favourites();
+        createFragment = new Create();
+        calendarFragment = new CalendarFragment();
+        profileFragment = new Profile();
 
-
+        // Default fragment is Discover:
+        showFragment(new Discover());
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemID = item.getItemId();
 
             if (itemID == R.id.Discover) {
-                replaceFragment(new Discover());
+                showFragment(discoverFragment);
             } else if (itemID == R.id.Favourites) {
-                replaceFragment(new Favourites());
+                showFragment(favouritesFragment);
             } else if (itemID == R.id.Create) {
-                replaceFragment(new Create());
+                showFragment(createFragment);
             } else if (itemID == R.id.Calendar) {
-                replaceFragment(new CalendarFragment());
+                showFragment(calendarFragment);
             } else if (itemID == R.id.Profile) {
-                replaceFragment(new Profile());
+                showFragment(profileFragment);
             }
             return true;
         });
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
      * Loads fragment associated with the bottom nav bar
      * @param fragment Discover, Favourites, Create, CalendarFragment, Profile
      */
-    private void replaceFragment(Fragment fragment) {
+    private void showFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);

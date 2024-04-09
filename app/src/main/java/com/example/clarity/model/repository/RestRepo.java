@@ -247,9 +247,9 @@ public class RestRepo {
             for (Iterator<String> it = tmpList.keys(); it.hasNext(); ) {
                 JSONObject tmp = tmpList.getJSONObject(it.next());
                 result.add(
-                    new Post(tmp.getInt("id"), tmp.getInt("author_id"),tmp.getString("event_start")
-                        ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
-                        ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"))
+                        new Post(tmp.getInt("id"), tmp.getInt("author_id"),tmp.getString("event_start")
+                                ,tmp.getString("event_end"),tmp.getString("image_url"),tmp.getString("title")
+                                ,tmp.getString("location"),tmp.getString("description"),tmp.getString("created_at"))
                 );
 
             }
