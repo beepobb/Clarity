@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:cardCornerRadius="10dp"
         app:cardElevation="7dp"
-        app:cardBackgroundColor="#F7FAFA">
+        app:cardBackgroundColor="@color/off_white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -36,8 +36,8 @@
                 android:text="TextView"
                 android:textSize="16dp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/imageView2"
-                app:layout_constraintTop_toTopOf="@id/imageView2" />
+                app:layout_constraintStart_toEndOf="@id/eventImage"
+                app:layout_constraintTop_toTopOf="@id/eventImage" />
 
             <TextView
                 android:id="@+id/eventDate"
@@ -72,7 +72,7 @@
                 app:layout_constraintTop_toBottomOf="@id/eventTime" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/eventImage"
                 android:layout_width="105dp"
                 android:layout_height="105dp"
                 android:padding="10dp"
@@ -85,7 +85,7 @@
                 android:layout_width="18dp"
                 android:layout_height="12dp"
                 app:layout_constraintBottom_toBottomOf="@+id/eventDate"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="@+id/eventImage"
                 app:layout_constraintStart_toStartOf="@+id/eventDate"
                 app:layout_constraintTop_toBottomOf="@+id/eventName"
                 app:srcCompat="@drawable/baseline_calendar_today_24" />
@@ -96,7 +96,7 @@
                 android:layout_height="14dp"
                 app:layout_constraintBottom_toTopOf="@+id/eventLocation"
                 app:layout_constraintEnd_toEndOf="@+id/calendar"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/eventImage"
                 app:layout_constraintTop_toBottomOf="@+id/eventDate"
                 app:srcCompat="@drawable/baseline_access_time_24" />
 
@@ -107,7 +107,7 @@
                 android:layout_marginEnd="51dp"
                 app:layout_constraintBottom_toBottomOf="@+id/eventLocation"
                 app:layout_constraintEnd_toStartOf="@+id/eventLocation"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/eventImage"
                 app:layout_constraintTop_toTopOf="@+id/eventLocation"
                 app:srcCompat="@drawable/baseline_location_on_24" />
         </androidx.constraintlayout.widget.ConstraintLayout>
