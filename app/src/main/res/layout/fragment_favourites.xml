@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/profilePicture"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
@@ -33,7 +33,9 @@
             app:tint="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favouriteRecyclerView"
             android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
             android:layout_height="639dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

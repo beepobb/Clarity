@@ -9,6 +9,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,16 +20,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clarity.MainActivity;
+import com.example.clarity.NavBarFragments.DiscoverEventAdapter;
 import com.example.clarity.R;
+import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Profile extends Fragment {
     private User user;
@@ -36,14 +44,22 @@ public class Profile extends Fragment {
             buttonDoneProfile, buttonLogOut;
     private View view;
     private RestRepo db;
-    private TextView username;
+    private TextView username,role;
+    ImageView profilePicture;
     ImageButton editProfile;
     ProfileAlertBox resetCalendarAlertBox, resetAccountAlertBox, deactivateAccountAlertBox;
     TextView description;
 
-//    private List<Interest> interestList = new ArrayList<>();
-//    private RecyclerView recyclerView;
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Fetch database (RestRepo instance)
+        Activity activity = getActivity();
+        if (activity != null) {
+            // Example: Accessing activity's method
+            db = ((MainActivity) activity).database;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,18 +68,12 @@ public class Profile extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Context context = requireContext();
 
-        // Fetch database (RestRepo instance)
-        Activity activity = getActivity();
-        if (activity != null) {
-            // Example: Accessing activity's method
-            db = ((MainActivity) activity).database;
-        }
-
         //dummy user
         user = new User(3, "ifalltower", "jeui3ug4i836", "SUTD Student",
                 "test@gmail.com", "2024-04-01 06:35:23");
 
         username = view.findViewById(R.id.username);
+        role = view.findViewById(R.id.role);
         editProfile = view.findViewById(R.id.editFAB);
         buttonChangePassword = view.findViewById(R.id.buttonChangePassword);
         buttonLogOut = view.findViewById(R.id.buttonLogOut);
@@ -108,6 +118,7 @@ public class Profile extends Fragment {
 
 
         username.setText(user.getUsername());
+        role.setText(user.getRole());
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

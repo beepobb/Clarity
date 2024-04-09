@@ -19,10 +19,10 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/profile_circle_base"
             android:backgroundTint="?attr/profile_circle"
+            android:contentDescription="Purple circle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="Purple circle" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/profileWhiteBg"
@@ -44,10 +44,8 @@
             android:src="@drawable/placeholder_profile"
             app:layout_constraintBottom_toBottomOf="@+id/circleBg"
             app:layout_constraintEnd_toEndOf="@+id/circleBg"
-            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="@+id/circleBg"
             app:layout_constraintTop_toTopOf="@+id/circleBg"
-            app:layout_constraintVertical_bias="0.536"
             android:contentDescription="Profile photo" />
 
         <TextView
@@ -64,7 +62,22 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="@+id/circleBg"
             app:layout_constraintTop_toTopOf="@+id/circleBg"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.677" />
+
+        <TextView
+            android:id="@+id/role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:text="role"
+            android:textColor="@color/white"
+            android:textSize="6pt"
+            app:layout_constraintBottom_toTopOf="@+id/placeholderProfilePic"
+            app:layout_constraintEnd_toEndOf="@+id/circleBg"
+            app:layout_constraintHorizontal_bias="0.507"
+            app:layout_constraintStart_toStartOf="@+id/circleBg"
+            app:layout_constraintTop_toTopOf="@+id/circleBg"
+            app:layout_constraintVertical_bias="0.4" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/RoundFAB"
