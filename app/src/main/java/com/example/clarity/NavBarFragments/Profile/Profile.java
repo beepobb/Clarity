@@ -1,5 +1,6 @@
 package com.example.clarity.NavBarFragments.Profile;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,13 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,105 +16,182 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.clarity.MainActivity;
+import com.example.clarity.NavBarFragments.DiscoverEventAdapter;
 import com.example.clarity.R;
-import com.example.clarity.adapters.CalendarEventAdapter;
-import com.example.clarity.adapters.ProfileInterestAdapter;
-import com.example.clarity.model.Interest;
+import com.example.clarity.model.data.Post;
+import com.example.clarity.model.data.User;
+import com.example.clarity.model.repository.RestRepo;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Profile extends Fragment {
-    private Dialog dialog;
-    private Button cancelAction, resetCalendar;
+    private User user;
+    private Dialog changePasswordDialog,alertDialog,editProfileDialog;
+    private Button buttonChangePassword,buttonCancel,buttonConfirm,buttonAbout,buttonDonePassword,
+            buttonDoneProfile, buttonLogOut;
     private View view;
-    private List<Interest> interestList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    private RestRepo db;
+    private TextView username,role;
+    ImageView profilePicture;
+    ImageButton editProfile;
+    ProfileAlertBox resetCalendarAlertBox, resetAccountAlertBox, deactivateAccountAlertBox;
+    TextView description;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Fetch database (RestRepo instance)
+        Activity activity = getActivity();
+        if (activity != null) {
+            // Example: Accessing activity's method
+            db = ((MainActivity) activity).database;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        // Return the inflated layout
+        Context context = requireContext();
+
+        //dummy user
+        user = new User(3, "ifalltower", "jeui3ug4i836", "SUTD Student",
+                "test@gmail.com", "2024-04-01 06:35:23");
+
+        username = view.findViewById(R.id.username);
+        role = view.findViewById(R.id.role);
+        editProfile = view.findViewById(R.id.editFAB);
+        buttonChangePassword = view.findViewById(R.id.buttonChangePassword);
+        buttonLogOut = view.findViewById(R.id.buttonLogOut);
+
+        changePasswordDialog = new Dialog(context);
+        changePasswordDialog.setContentView(R.layout.change_password_box);
+        changePasswordDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        changePasswordDialog.getWindow().setBackgroundDrawableResource(R.drawable.alert_bg);
+        changePasswordDialog.setCancelable(false);
+
+        alertDialog = new Dialog(context);
+        alertDialog.setContentView(R.layout.alert_box);
+        alertDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.alert_bg);
+        alertDialog.setCancelable(false); // if user clicks outside alert box it will not disappear
+
+        // Edit Profile Pop-up Window
+        editProfileDialog = new Dialog(context);
+        editProfileDialog.setContentView(R.layout.edit_profile_box);
+        editProfileDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        editProfileDialog.getWindow().setBackgroundDrawableResource(R.drawable.alert_bg);
+        editProfileDialog.setCancelable(false); // if user clicks outside alert box it will not disappear
+
+        buttonDonePassword = changePasswordDialog.findViewById(R.id.buttonDone);
+        buttonCancel = alertDialog.findViewById(R.id.buttonCancel);
+        buttonConfirm = alertDialog.findViewById(R.id.buttonConfirm);
+        buttonDoneProfile = editProfileDialog.findViewById(R.id.buttonDone);
+
+        Spinner spinner = editProfileDialog.findViewById(R.id.editAccountType);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.dropdown_options, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageButton editProfile = view.findViewById(R.id.buttonEditProfile);
+        Log.i("ProfileCreated", "onViewCreated");
+
+
+
+        username.setText(user.getUsername());
+        role.setText(user.getRole());
+        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changePasswordDialog.show();
+            }
+        });
+
+        buttonDonePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText oldPassword, newPassword, cfmPassword;
+                oldPassword = changePasswordDialog.findViewById(R.id.oldPassword);
+                newPassword = changePasswordDialog.findViewById(R.id.newPassword);
+                cfmPassword = changePasswordDialog.findViewById(R.id.cfmPassword);
+                //TODO: check if old password tally
+                //TODO: check if new password tally with confirm password
+                //TODO: update password if no issues, throw error if password does not match
+                changePasswordDialog.dismiss();
+            }
+        });
+
+        //set dialog box for reset calendar, reset account and delete account
+        resetCalendarAlertBox = new ProfileAlertBox(R.id.buttonResetCalendar, alertDialog, view);
+        resetCalendarAlertBox.createAlert("This action permanently deletes the calendar");
+
+        deactivateAccountAlertBox = new ProfileAlertBox(R.id.buttonDeactivateAccount, alertDialog, view);
+        deactivateAccountAlertBox.createAlert("This action permanently deletes the account and you cannot retrieve it");
+
+        // initialise dialog buttons,
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss(); //close alert box
+            }
+        });
+
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                description = alertDialog.findViewById(R.id.action_description);
+                //TODO: if deactivate account -> delete account from database and lock user out
+                //TODO: if reset calendar -> remove all added events from local storage
+                //TODO: toast/alert when done
+                description.setText(""); // Placeholder action
+            }
+        });
+
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditProfile profile = new EditProfile();
-                if (getActivity( )!=null) {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, profile).commit();
-                }else{
+                if (getActivity( )==null) {
                     Log.i("null", "null activity");
                 }
-                Toast.makeText(getContext(), "Activity detected",Toast.LENGTH_SHORT).show();
+                editProfileDialog.show();
+                Toast.makeText(getContext(), "edit profile dialog box",Toast.LENGTH_SHORT).show();
             }
         });
 
-        Context context = requireContext();
-        dialog = new Dialog(context);
-        dialog.setContentView(R.layout.alert_box);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.alert_bg);
-        dialog.setCancelable(false); // if user clicks outside alert box it will not disappear
-
-        //set dialog box for reset calendar, reset account and delete account
-        ProfileAlertBox resetCalendarAlertBox = new ProfileAlertBox(R.id.resetCalendarConstraintLayout, dialog, view);
-        resetCalendarAlertBox.createAlert("This action permanently deletes the calendar");
-
-        ProfileAlertBox resetAccountAlertBox = new ProfileAlertBox(R.id.resetAccountConstraintLayout, dialog, view);
-        resetAccountAlertBox.createAlert("This action permanently deletes all data except username and account type");
-
-        ProfileAlertBox deleteAccountAlertBox = new ProfileAlertBox(R.id.deleteAccountConstraintLayout, dialog, view);
-        deleteAccountAlertBox.createAlert("This action permanently deletes the account and you cannot retrieve it");
-
-        // TODO: change image logo for settings in fragment_profile.xml
-
-        // initialise dialog buttons
-        cancelAction = dialog.findViewById(R.id.buttonCancelAction);
-        resetCalendar = dialog.findViewById(R.id.buttonResetCalendar);
-
-        cancelAction.setOnClickListener(new View.OnClickListener() {
+        buttonDoneProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss(); //close alert box
+                // TODO: update username and role to database
+                editProfileDialog.dismiss();
             }
         });
 
-        resetCalendar.setOnClickListener(new View.OnClickListener() {
+        buttonLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView description = dialog.findViewById(R.id.action_description);
-                description.setText("");
+                //TODO: clear global variable that stores user object
+                //TODO: go back to login page
             }
         });
-
-        // RECYCLER VIEW SET-UP
-        // Placeholder for data source
-        interestList.add(new Interest("Technology"));
-        interestList.add(new Interest("Event"));
-        interestList.add(new Interest("Poop"));
-        interestList.add(new Interest("Workshop"));
-        interestList.add(new Interest("Seminar"));
-
-        // Set up RecyclerView and adapter
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        ProfileInterestAdapter adapter = new ProfileInterestAdapter(getActivity(), interestList);
-        recyclerView.setAdapter(adapter);
 
     }
 }

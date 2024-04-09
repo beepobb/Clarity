@@ -24,10 +24,12 @@
         app:cardBackgroundColor="@color/off_white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/EventCard"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
+                style="@style/EventTitle"
                 android:id="@+id/eventName"
                 android:layout_width="232dp"
                 android:layout_height="42dp"
@@ -40,6 +42,7 @@
                 app:layout_constraintTop_toTopOf="@id/eventImage" />
 
             <TextView
+                style="@style/EventDetails"
                 android:id="@+id/eventDate"
                 android:layout_width="234dp"
                 android:layout_height="18dp"
@@ -52,6 +55,7 @@
 
 
             <TextView
+                style="@style/EventDetails"
                 android:id="@+id/eventTime"
                 android:layout_width="234dp"
                 android:layout_height="16dp"
@@ -62,6 +66,7 @@
                 app:layout_constraintTop_toBottomOf="@id/eventDate" />
 
             <TextView
+                style="@style/EventDetails"
                 android:id="@+id/eventLocation"
                 android:layout_width="222dp"
                 android:layout_height="17dp"
