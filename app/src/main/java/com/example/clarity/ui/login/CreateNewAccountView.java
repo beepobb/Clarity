@@ -9,14 +9,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.clarity.MainActivity;
-import com.example.clarity.databinding.ActivityLoginBinding;
+import com.example.clarity.R;
 import com.example.clarity.databinding.CreateNewBinding;
-
-import org.w3c.dom.Text;
 
 public class CreateNewAccountView extends AppCompatActivity {
     private CreateNewBinding binding;
@@ -44,6 +41,7 @@ public class CreateNewAccountView extends AppCompatActivity {
         // Add functionality to handle account creation
         // For example, set up a button click listener to create an account
         loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
 
                 String username = usernameEditText.getText().toString();

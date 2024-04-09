@@ -5,17 +5,17 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="35dp"
+    android:paddingTop="35dp"
+    android:paddingRight="35dp"
+    android:paddingBottom="35dp"
     tools:context=".ui.login.LoginActivity">
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:padding="10dp"
         android:selectAllOnFocus="true"
         android:text="Create Account"
@@ -26,57 +26,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:selectAllOnFocus="true"
-        android:text="Username"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/username"
+    <ImageView
+        android:id="@+id/add_image"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/baseline_add_circle_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.887"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:entries="@array/choices"
         android:background="@drawable/box_outline"
+        android:entries="@array/choices"
         app:layout_constraintBottom_toTopOf="@+id/enter_password"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.144"
-        tools:layout_editor_absoluteX="16dp" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:selectAllOnFocus="true"
-        android:text="I am registering as:"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintVertical_bias="0.196"
+        tools:layout_editor_absoluteX="35dp" />
 
     <EditText
         android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="204dp"
+        android:layout_marginTop="228dp"
         android:background="@drawable/box_outline"
-        android:inputType="textNoSuggestions"
         android:hint="Username"
+        android:inputType="textNoSuggestions"
         android:padding="8dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,16 +76,16 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.285" />
 
     <EditText
         android:id="@+id/email"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="308dp"
+        android:layout_marginTop="316dp"
         android:background="@drawable/box_outline"
-        android:inputType="textEmailAddress"
         android:hint="Must include @XXXX.sg"
+        android:inputType="textEmailAddress"
         android:padding="8dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,17 +106,17 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enter_password"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.285"
         tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/enter_password"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="412dp"
+        android:layout_marginTop="404dp"
         android:background="@drawable/box_outline"
-        android:inputType="textPassword"
         android:hint="At least one number and one symbol"
+        android:inputType="textPassword"
         android:padding="8dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -158,23 +137,55 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.285"
         tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/confirm_password"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="520dp"
+        android:layout_marginTop="492dp"
         android:background="@drawable/box_outline"
-        android:inputType="textPassword"
         android:hint="Enter same password"
+        android:inputType="textPassword"
         android:padding="8dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:selectAllOnFocus="true"
+        android:text="I am registering as:"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:selectAllOnFocus="true"
+        android:text="Username"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintVertical_bias="0.889"
+        tools:ignore="HardcodedText" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/login"
@@ -187,8 +198,9 @@
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirm_password"
-        app:layout_constraintVertical_bias="0.285" />
+        app:layout_constraintVertical_bias="0.712" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
