@@ -1,22 +1,30 @@
 package com.example.clarity.ui.login;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.clarity.MainActivity;
 import com.example.clarity.R;
 import com.example.clarity.databinding.CreateNewBinding;
+import com.yalantis.ucrop.UCrop;
+import java.io.File;
 
 public class CreateNewAccountView extends AppCompatActivity {
     private CreateNewBinding binding;
+    private ActivityResultLauncher<Intent> imageActivityResultLauncher;
+    private ImageView selectedImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +33,7 @@ public class CreateNewAccountView extends AppCompatActivity {
         binding = CreateNewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        final ImageView NewImageView = binding.addImage;
         final TextView CreateAccountTextView = binding.textView4;
         final TextView choiceTextView = binding.textView5;
         final Spinner choicesSpinner = binding.spinner;
@@ -38,6 +47,21 @@ public class CreateNewAccountView extends AppCompatActivity {
         final EditText confirmEditText = binding.confirmPassword;
         final Button loginButton = binding.login;
 
+        selectedImageView = NewImageView;
+        imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            Uri selectedImageUri = data.getData();
+                            // Load the selected image into the ImageView
+                            selectedImageView.setImageURI(selectedImageUri);
+                        }
+                    }
+                });
+
+// Launch the gallery picker when the ImageView is clicked
+        selectedImageView.setOnClickListener(view -> selectImage());
         // Add functionality to handle account creation
         // For example, set up a button click listener to create an account
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -69,5 +93,16 @@ public class CreateNewAccountView extends AppCompatActivity {
                 // Example: startActivity(new Intent(CreateNewAccountView.this, MainActivity.class));
             }
         });
+    }
+    public void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        if (intent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
+            File destination = new File(getCacheDir(), "temp.jpg");
+            UCrop.of(data.getData(), Uri.fromFile(destination))
+                    .withAspectRatio(1, 1) // Set aspect ratio to 1:1 for circular cropping
+                    .withMaxResultSize(500, 500) // Set max size for cropped image
+                    .start(this);
+        }
     }
 }
