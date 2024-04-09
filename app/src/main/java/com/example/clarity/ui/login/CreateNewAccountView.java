@@ -18,8 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.clarity.MainActivity;
 import com.example.clarity.R;
 import com.example.clarity.databinding.CreateNewBinding;
-import com.yalantis.ucrop.UCrop;
-import java.io.File;
 
 public class CreateNewAccountView extends AppCompatActivity {
     private CreateNewBinding binding;
@@ -98,11 +96,7 @@ public class CreateNewAccountView extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         if (intent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
-            File destination = new File(getCacheDir(), "temp.jpg");
-            UCrop.of(data.getData(), Uri.fromFile(destination))
-                    .withAspectRatio(1, 1) // Set aspect ratio to 1:1 for circular cropping
-                    .withMaxResultSize(500, 500) // Set max size for cropped image
-                    .start(this);
+            imageActivityResultLauncher.launch(intent);
         }
     }
 }
