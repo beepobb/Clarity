@@ -75,4 +75,37 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="night_fiest">
+        Night Fiesta
+    </string>
+    <string name="february_20">
+24 February 2024 | 1800 - 2130
+</string>
+    <string name="sutd_campus">
+SUTD Campus Centre
+</string>
+    <string name="event_descrip">
+        Looking for something special to do during the Lantern Festival? GET READY because the COOLEST event ever is almost here!!\n
+
+Imagine this:\n
+
+INSANE Performances\n
+HEART-THUMPING Games\n
+EXCLUSIVE Merchandise\n
+EPIC Prizes\n
+
+It is THE place to be!\n
+
+Save the date: 24th Feb, 6:00 PM - 9:30 PM, SUTD Campus Centre right after Open House Day 1! \n
+
+Let us turn up and make some epic memories together in the light. This is not just an event; it is our vibe, our night! \n
+
+    </string>
+    <string name="org_name">ROOT (Student Government) </string>
+    <string name="event_name">Night Fiesta</string>
+    <string name="event_date_time">24 February 2024 | 1800 - 2130 </string>
+    <string name="event_location">SUTD Campus Centre</string>
+    <string name="tag1">#Campus Life  </string>
+    <string name="tag2">#Fifth row  </string>
 </resources>
