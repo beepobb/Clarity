@@ -11,7 +11,7 @@ import java.util.Set;
 public class PreferenceUtils {
     /*
      * Singleton class for managing user preferences (persistent storage)
-     * --------------------------------------------------------
+     * -----------------------------------------------------------------
      * Fetch instance and use it to manage all fetches/updates to user preferences
      */
 
