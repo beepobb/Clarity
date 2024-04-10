@@ -1,8 +1,11 @@
 package com.example.clarity.ui.login;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +25,8 @@ import com.example.clarity.MyApplication;
 import com.example.clarity.databinding.CreateNewBinding;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
+
+import java.io.FileNotFoundException;
 
 public class CreateNewAccountView extends AppCompatActivity {
     private CreateNewBinding binding;
@@ -43,9 +48,9 @@ public class CreateNewAccountView extends AppCompatActivity {
             @Override
             public void onChanged(String string) {
                 // When string is fetched (addUserRequest): switch to MainActivity
+                Toast.makeText(getApplicationContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(CreateNewAccountView.this, MainActivity.class);
                 startActivity(intent);
-
             }
         });
 
@@ -72,6 +77,14 @@ public class CreateNewAccountView extends AppCompatActivity {
                             Uri selectedImageUri = data.getData();
                             // Load the selected image into the ImageView
                             selectedImageView.setImageURI(selectedImageUri);
+                            try {
+                                //TODO: check getApplicationContext()
+                                Bitmap bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(selectedImageUri));
+                                selectedImageView.setImageBitmap(bitmap);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     }
                 });
@@ -102,20 +115,22 @@ public class CreateNewAccountView extends AppCompatActivity {
                     return;
                 }
 
+                if (!email.contains("@")) {
+                    Toast.makeText(getApplicationContext(), "Must be a valid email", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!(password.length() >= 8)) {
+                    Toast.makeText(getApplicationContext(), "Must be more than 8 characters", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 database.addUserRequest(username, password, email, role, new RestRepo.RepositoryCallback<String>() {
                     @Override
                     public void onComplete(String result) {
                         stringMutableLiveData.postValue(result);
                     }
                 });
-
-                // Proceed with account creation (e.g., send data to server or store locally)
-                // Once the account is successfully created, you may navigate to another activity
-                // or display a success message
-                Toast.makeText(getApplicationContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
-                Intent go_to_main = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(go_to_main);
-                // Example: startActivity(new Intent(CreateNewAccountView.this, MainActivity.class));
             }
         });
     }

@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                    ((MyApplication) getApplicationContext()).saveAppUser(user); // save logged-in user
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
@@ -74,7 +75,6 @@ public class LoginActivity extends AppCompatActivity {
                         userLiveData.postValue(data); // use postValue as this is executed in worker thread
                     }
                 });
-                Log.d("xy is a bitch", "onClick: after");
             }
         });
 
@@ -84,17 +84,6 @@ public class LoginActivity extends AppCompatActivity {
                 createNewAccount();
             }
         });
-    }
-
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        Intent go_to_main = new Intent(this, MainActivity.class);
-        startActivity(go_to_main);
-    }
-
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
     private void createNewAccount(){
