@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="AppTheme">
         <!-- Define a theme attribute -->
-        <attr name="profile_circle" format="color"/>
-        <attr name="profile_container" format="color"/>
+        <attr name="profile_circle" format="color" />
+        <attr name="profile_container" format="color" />
     </declare-styleable>
     <!-- Base application theme. -->
     <style name="Base.Theme.Clarity" parent="Theme.Material3.DayNight.NoActionBar">
@@ -20,28 +20,77 @@
         <item name="backgroundTint">#B9A3F3</item>
     </style>
 
-    <style name="ScreenBackground"><item name="android:background">@color/off_white</item></style>
-    <style name="Container"><item name="android:strokeColor">@color/light_grey</item></style>
-    <style name="Accent1"><item name="android:textColor">@color/dark_purple</item></style>
-    <style name="Subtitle"><item name="android:textColor">@color/wolf_grey</item></style>
-    <style name="Typography"><item name="android:textColor">@color/grey</item></style>
+    <style name="ScreenBackground">
+        <item name="android:background">@color/off_white</item>
+    </style>
+
+    <style name="Container">
+        <item name="android:strokeColor">@color/light_grey</item>
+    </style>
+
+    <style name="Accent1">
+        <item name="android:textColor">@color/dark_purple</item>
+    </style>
+
+    <style name="Subtitle">
+        <item name="android:textColor">@color/wolf_grey</item>
+    </style>
+
+    <style name="Typography">
+        <item name="android:textColor">@color/grey</item>
+    </style>
 
     <!-- Styles for Event Fragment -->
-    <style name="EventTitle"><item name="android:textColor">@color/black</item></style>
-    <style name="EventDetails"><item name="android:textColor">@color/wolf_grey</item></style>
-    <style name="EventCard"><item name="cardBackgroundColor">@color/light_grey</item></style>
+    <style name="EventTitle">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="EventDetails">
+        <item name="android:textColor">@color/wolf_grey</item>
+    </style>
+
+    <style name="EventCard">
+        <item name="cardBackgroundColor">@color/light_grey</item>
+    </style>
 
     <!-- Styles for Calendar Fragment -->
-    <style name="CalendarEventCard"><item name="cardBackgroundColor">@color/purple_tint</item></style>
-    <style name="CalendarBanner"><item name="android:background">@color/purple_tint</item></style>
-    <style name="CalendarEventDateContainer"><item name="android:background">#F2DFFF</item></style>
-    <style name="CalendarEventMainText"><item name="android:textColor">@color/dark_purple</item></style>
-    <style name="CalendarEventSubText"><item name="android:textColor">@color/purple</item></style>
+    <style name="CalendarEventCard">
+        <item name="cardBackgroundColor">@color/purple_tint</item>
+    </style>
+
+    <style name="CalendarBanner">
+        <item name="android:background">@color/purple_tint</item>
+    </style>
+
+    <style name="CalendarEventDateContainer">
+        <item name="android:background">#F2DFFF</item>
+    </style>
+
+    <style name="CalendarEventMainText">
+        <item name="android:textColor">@color/dark_purple</item>
+    </style>
+
+    <style name="CalendarEventSubText">
+        <item name="android:textColor">@color/purple</item>
+    </style>
 
     <!-- Styles for Profile Fragment -->
-    <style name="ProfileBanner"><item name="android:background">@color/purple</item></style>
+    <style name="ProfileBanner">
+        <item name="android:background">@color/purple</item>
+    </style>
+
     <style name="ProfileButton">
         <item name="backgroundTint">@color/light_grey</item>
         <item name="android:textColor">@color/wolf_grey</item>
+    </style>
+
+    <!-- Styles for Discover Fragment -->
+    <style name="DiscoverTagButtonPressed">
+        <item name="android:drawable">@drawable/tag_select_rectangle</item>
+        <item name="android:color">@color/white</item>
+    </style>
+    <style name="DiscoverTagButtonDefault">
+        <item name="android:drawable">@drawable/tag_unselect_rectangle</item>
+        <item name="android:color">@color/accent_1</item>
     </style>
 </resources>

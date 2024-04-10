@@ -73,7 +73,7 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
                     // when button clicked, change background color and text color
                     if (view == button) {
                         Log.d(logCatTag, view.toString());
-                        button.setBackgroundResource(R.drawable.tag_rectangle);
+                        button.setBackgroundResource(R.drawable.tag_select_rectangle);
                         button.setTextColor(ContextCompat.getColor(context, R.color.white));
 
                         // updates eventRecycler in Discover Fragment
