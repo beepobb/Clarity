@@ -5,6 +5,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+<<<<<<< HEAD
+import android.app.Application;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+=======
+>>>>>>> d5f3ef786de987cc102cce65c94c96447f0f5b2c
 import android.os.Bundle;
 
 import com.example.clarity.NavBarFragments.CalendarFragment;
@@ -17,6 +23,11 @@ import com.example.clarity.databinding.ActivityMainBinding;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.repository.RestRepo;
 
+<<<<<<< HEAD
+import java.io.File;
+import java.lang.reflect.Array;
+=======
+>>>>>>> d5f3ef786de987cc102cce65c94c96447f0f5b2c
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
