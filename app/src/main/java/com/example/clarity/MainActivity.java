@@ -5,57 +5,75 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+<<<<<<< HEAD
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+=======
+>>>>>>> d5f3ef786de987cc102cce65c94c96447f0f5b2c
 import android.os.Bundle;
 
 import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
-import com.example.clarity.NavBarFragments.Discover;
+import com.example.clarity.NavBarFragments.Discover.Discover;
 import com.example.clarity.NavBarFragments.Favourites;
 import com.example.clarity.NavBarFragments.Profile.Profile;
 import com.example.clarity.databinding.ActivityMainBinding;
 
-import com.example.clarity.model.data.Tag;
-import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.repository.RestRepo;
 
+<<<<<<< HEAD
 import java.io.File;
 import java.lang.reflect.Array;
+=======
+>>>>>>> d5f3ef786de987cc102cce65c94c96447f0f5b2c
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
-    public RestRepo database;
+    public RestRepo database; // for all fragments to access
+
+    // Fragments
+    private Fragment discoverFragment;
+    private Fragment favouritesFragment;
+    private Fragment createFragment;
+    private Fragment calendarFragment;
+    private Fragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new CalendarFragment());
-        replaceFragment(new Discover());
 
+        // Database instance
         database = ((MyApplication) getApplicationContext()).getDatabase();
+
+        // Initialize Fragments
+        discoverFragment = new Discover();
+        favouritesFragment = new Favourites();
+        createFragment = new Create();
+        calendarFragment = new CalendarFragment();
+        profileFragment = new Profile();
+
+        // Default fragment is Discover:
+        showFragment(new Discover());
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemID = item.getItemId();
 
             if (itemID == R.id.Discover) {
-                replaceFragment(new Discover());
+                showFragment(discoverFragment);
             } else if (itemID == R.id.Favourites) {
-                replaceFragment(new Favourites());
+                showFragment(favouritesFragment);
             } else if (itemID == R.id.Create) {
-                replaceFragment(new Create());
+                showFragment(createFragment);
             } else if (itemID == R.id.Calendar) {
-                replaceFragment(new CalendarFragment());
+                showFragment(calendarFragment);
             } else if (itemID == R.id.Profile) {
-                replaceFragment(new Profile());
+                showFragment(profileFragment);
             }
             return true;
         });
@@ -65,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
      * Loads fragment associated with the bottom nav bar
      * @param fragment Discover, Favourites, Create, CalendarFragment, Profile
      */
-    private void replaceFragment(Fragment fragment) {
+    private void showFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
