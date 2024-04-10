@@ -14,14 +14,21 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.clarity.MainActivity;
+import com.example.clarity.MyApplication;
 import com.example.clarity.databinding.CreateNewBinding;
+import com.example.clarity.model.data.User;
+import com.example.clarity.model.repository.RestRepo;
 
 public class CreateNewAccountView extends AppCompatActivity {
     private CreateNewBinding binding;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
+    private RestRepo database;
+    private MutableLiveData<String> stringMutableLiveData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,18 @@ public class CreateNewAccountView extends AppCompatActivity {
 
         binding = CreateNewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        database = ((MyApplication) getApplicationContext()).getDatabase();
+        stringMutableLiveData = new MutableLiveData<>(); // contains null at this step
+        stringMutableLiveData.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String string) {
+                // When string is fetched (addUserRequest): switch to MainActivity
+                Intent intent = new Intent(CreateNewAccountView.this, MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         final ImageView NewImageView = binding.addImage;
         final TextView CreateAccountTextView = binding.textView4;
@@ -65,6 +84,7 @@ public class CreateNewAccountView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String role = choicesSpinner.getSelectedItem().toString();
                 String username = usernameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
@@ -81,6 +101,14 @@ public class CreateNewAccountView extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                database.addUserRequest(username, password, email, role, new RestRepo.RepositoryCallback<String>() {
+                    @Override
+                    public void onComplete(String result) {
+                        stringMutableLiveData.postValue(result);
+                    }
+                });
+
                 // Proceed with account creation (e.g., send data to server or store locally)
                 // Once the account is successfully created, you may navigate to another activity
                 // or display a success message

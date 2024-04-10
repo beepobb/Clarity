@@ -5,7 +5,10 @@ import android.os.Bundle;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,11 +16,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.clarity.MainActivity;
+import com.example.clarity.MyApplication;
 import com.example.clarity.R;
 import com.example.clarity.databinding.ActivityLoginBinding;
+import com.example.clarity.model.data.User;
+import com.example.clarity.model.repository.RestRepo;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
+    private RestRepo database;
+    private MutableLiveData<User> userLiveData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +33,23 @@ public class LoginActivity extends AppCompatActivity {
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        database = ((MyApplication) getApplicationContext()).getDatabase();
+        userLiveData = new MutableLiveData<>(); // contains null at this step
+        userLiveData.observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                // When user object is fetched (getUserRequest): switch to MainActivity
+                if (user == null) {
+                    Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
@@ -43,10 +68,13 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
-                Intent go_to_main = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(go_to_main);
+                database.getUserRequest(username, password, new RestRepo.RepositoryCallback<User>() {
+                    @Override
+                    public void onComplete(User data) {
+                        userLiveData.postValue(data); // use postValue as this is executed in worker thread
+                    }
+                });
+                Log.d("xy is a bitch", "onClick: after");
             }
         });
 
@@ -60,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
         Intent go_to_main = new Intent(this, MainActivity.class);
         startActivity(go_to_main);
