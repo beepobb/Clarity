@@ -1,5 +1,111 @@
 <resources>
     <string name="app_name">Clarity</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="Event_name">
+        <item>Event1</item>
+        <item>Event2</item>
+        <item>Event3</item>
+        <item>Event4</item>
+        <item>Event5</item>
+        <item>Event6</item>
+    </string-array>
+
+    <string-array name="time">
+        <item>12/3/1234</item>
+        <item>34/6/3466</item>
+        <item>92/4/2947</item>
+        <item>39/5/2057</item>
+        <item>4/25/6212</item>
+        <item>2/5/0001</item>
+    </string-array>
+
+    <string-array name="Description">
+        <item>Event1 is fun</item>
+        <item>Event2 is boring</item>
+        <item>Event3 is for undergraduate</item>
+        <item>Event4 is happening today</item>
+        <item>Event5 is smoke free</item>
+        <item>Event6 praise</item>
+    </string-array>
+
+    <string-array name="Location">
+        <item>Albert Hong Theater</item>
+        <item>MPH(Multi-purpose-hall)</item>
+        <item>Building2 Level 1</item>
+        <item>Think Tank 20</item>
+        <item>Library level 1</item>
+        <item>Dance Studio 2</item>
+    </string-array>
+
+    <string-array name="dropdown_options">
+        <item>SUTD Student</item>
+        <item>SUTD Staff</item>
+        <item>Public</item>
+        <!-- Add more options as needed -->
+    </string-array>
+
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <string name="profile_alert">Hold up! Is this a mistake?</string>
+    <string name="oops">Oops</string>
+    <string name="editProfile">editProfile</string>
+    <string name="title_activity_edit_profile">EditProfileActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="night_fiest">
+        Night Fiesta
+    </string>
+    <string name="february_20">
+24 February 2024 | 1800 - 2130
+</string>
+    <string name="sutd_campus">
+SUTD Campus Centre
+</string>
+    <string name="event_descrip">
+        Looking for something special to do during the Lantern Festival? GET READY because the COOLEST event ever is almost here!!\n
+
+Imagine this:\n
+
+INSANE Performances\n
+HEART-THUMPING Games\n
+EXCLUSIVE Merchandise\n
+EPIC Prizes\n
+
+It is THE place to be!\n
+
+Save the date: 24th Feb, 6:00 PM - 9:30 PM, SUTD Campus Centre right after Open House Day 1! \n
+
+Let us turn up and make some epic memories together in the light. This is not just an event; it is our vibe, our night! \n
+
+    </string>
+    <string name="org_name">ROOT (Student Government) </string>
+    <string name="event_name">Night Fiesta</string>
+    <string name="event_date_time">24 February 2024 | 1800 - 2130 </string>
+    <string name="event_location">SUTD Campus Centre</string>
+    <string name="tag1">#Campus Life  </string>
+    <string name="tag2">#Fifth row  </string>
 </resources>

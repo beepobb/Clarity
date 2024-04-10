@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendarEventCard"
+    app:cardBackgroundColor="@color/white"
+    app:cardPreventCornerOverlap="false"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="true"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_marginLeft="7dp"
+    android:layout_marginRight="7dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <TextView
+            android:id="@+id/calendarEventNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="20dp"
+            android:text="Event Name Here"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/calendarClockImageView"
+            android:layout_width="19dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="56dp"
+            android:src="@drawable/baseline_access_time_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/calendarLocationImageView"
+            android:layout_width="19dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="56dp"
+            android:src="@drawable/baseline_location_on_24"
+            app:layout_constraintStart_toEndOf="@+id/calendarEventTimeTextView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/calendarEventLocationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="54dp"
+            android:text="Event Location Here"
+            app:layout_constraintStart_toEndOf="@+id/calendarLocationImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/calendarEventTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="54dp"
+            android:text="1300 - 1800"
+            app:layout_constraintStart_toEndOf="@+id/calendarClockImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:background="@color/calendar_label_red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/eventDateLabel"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:background="@color/calendar_label_date"
+            android:rotation="180"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/eventDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="DAY"
+            android:textColor="@color/accent_2"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/eventDayNumber"
+            app:layout_constraintStart_toStartOf="@+id/eventDayNumber"
+            app:layout_constraintTop_toBottomOf="@+id/eventDayNumber" />
+
+        <TextView
+            android:id="@+id/eventDayNumber"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="01"
+            android:textColor="@color/accent_1"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/eventDateLabel"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/eventDateLabel"
+            app:layout_constraintTop_toTopOf="@+id/eventDateLabel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
