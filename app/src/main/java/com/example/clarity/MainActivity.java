@@ -7,19 +7,16 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.clarity.NavBarFragments.CalendarFragment;
+import com.example.clarity.NavBarFragments.Calendar.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
 import com.example.clarity.NavBarFragments.Discover.Discover;
 import com.example.clarity.NavBarFragments.Favourites;
 import com.example.clarity.NavBarFragments.Profile;
-import com.example.clarity.databinding.ActivityMainBinding;
 
-import com.example.clarity.model.data.Post;
+import com.example.clarity.databinding.ActivityMainBinding;
 import com.example.clarity.model.repository.RestRepo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {

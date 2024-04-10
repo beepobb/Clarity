@@ -1,7 +1,6 @@
-package com.example.clarity.NavBarFragments;
+package com.example.clarity.NavBarFragments.Calendar;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,7 +24,6 @@ import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener;
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
 import com.example.clarity.MainActivity;
 import com.example.clarity.R;
-import com.example.clarity.adapters.CalendarEventAdapter;
 import com.example.clarity.model.PreferenceUtils;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.repository.RestRepo;
@@ -95,7 +93,6 @@ public class CalendarFragment extends Fragment {
         }
 
         Log.i(TAG, "onCreate run");
-        Toast.makeText(getActivity(), "Calendar onCreate", Toast.LENGTH_SHORT).show();
 
         // Fetch database (RestRepo instance)
         Activity activity = getActivity();
@@ -167,6 +164,7 @@ public class CalendarFragment extends Fragment {
                 updateMonthlyRecycler();
                 updateAgendaRecycler();
 
+                // Adds graphical element on days with saved events
                 List<CalendarDay> calendarDays = new ArrayList<>();
                 for (Post post: savedEventsList.getValue()) {
                     CalendarDay cday = new CalendarDay(post.getEventStart());
@@ -184,18 +182,7 @@ public class CalendarFragment extends Fragment {
             public void onChanged(Set<Integer> integers) {
                 // Load Posts from database with ids saved in local storage (userPrefs)
                 Log.d(TAG, "getCalendarLiveData observer triggered");
-                db.getPostsRequest(new ArrayList<Integer>(prefUtils.getCalendarPostIds()), new RestRepo.RepositoryCallback<ArrayList<Post>>() {
-                    @Override
-                    public void onComplete(ArrayList<Post> result) {
-
-                        // Update savedEventsList (Mutable Live Data containing Array List of Post objects)
-                        if (result != null) {
-                            // TODO: Perhaps sort result (by start date) before storing?
-                            savedEventsList.postValue(result); // postValue used as this will be executed on worker thread
-                        }
-                        // savedEventsList observer will be notified - RecyclerView will update accordingly
-                    }
-                });
+                loadCalendarPostsFromDatabase();
             }
         });
 
@@ -253,11 +240,15 @@ public class CalendarFragment extends Fragment {
             public void onComplete(ArrayList<Post> result) {
 
                 // Update savedEventsList (Mutable Live Data containing Array List of Post objects)
-                if (result != null) {
-                    // TODO: Perhaps sort result (by start date) before storing?
-                    savedEventsList.postValue(result); // postValue used as this will be executed on worker thread
+                if (result == null) {
+                    result = new ArrayList<>(); // set it to be an empty list rather than null
                 }
-                // savedEventsList observer will be notified - RecyclerView will update accordingly
+
+                // TODO: Perhaps sort result (by start date) before storing?
+                savedEventsList.postValue(result); // postValue used as this will be executed on worker thread
+                Log.d(TAG, "loadCalendarPostsFromDatabase: savedEventsList updated");
+
+                // savedEventsList observer will be notified - UI (RecyclerView) will update accordingly
             }
         });
     }
