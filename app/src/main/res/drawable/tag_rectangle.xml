@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- button_background.xml -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="#967ADC"/>
-    <corners android:radius="24dp"/>
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape = "rectangle">
+            <solid android:color="#ffffff" />
+            <corners android:radius="26dp" />
+            <stroke
+                android:width="0.2dp"
+                android:color="#967ADC" />
+
+
+        </shape>
+    </item>
+
+</selector>

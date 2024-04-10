@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="night_fiesta_description"
+                android:src="@drawable/night_fiesta"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/background_white"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginTop="200dp"
+            android:src="@drawable/rectangle_3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/nightfiesta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:paddingTop="20dp"
+            android:text="@string/event_name"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/background_white"
+            app:layout_constraintTop_toTopOf="@id/background_white" />
+
+        <TextView
+            android:id="@+id/datentime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:text="@string/event_date_time"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/nightfiesta"
+            app:layout_constraintTop_toBottomOf="@+id/nightfiesta" />
+
+        <ImageView
+            android:id="@+id/pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="25dp"
+            android:src="@drawable/baseline_location_on_24"
+            app:layout_constraintStart_toStartOf="@+id/datentime"
+            app:layout_constraintTop_toBottomOf="@+id/datentime" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="7dp"
+            android:text="@string/event_location"
+            app:layout_constraintStart_toEndOf="@+id/pin"
+            app:layout_constraintTop_toBottomOf="@+id/datentime" />
+
+        <ToggleButton
+            android:id="@+id/add_button"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="100dp"
+            android:background="@drawable/plus_button"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintStart_toEndOf="@+id/location"
+            app:layout_constraintTop_toTopOf="@+id/location" />
+
+        <ToggleButton
+            android:id="@+id/like_button"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/like_button"
+            android:paddingStart="125dp"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintStart_toEndOf="@+id/add_button"
+            app:layout_constraintTop_toTopOf="@+id/location" />
+
+        <View
+            android:id="@+id/horizontal_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:background="#967ADC"
+            app:layout_constraintTop_toBottomOf="@+id/location" />
+
+        <TextView
+            android:id="@+id/event_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:text="Event Description"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_line" />
+
+        <TextView
+            android:id="@+id/event_des_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:paddingEnd="25dp"
+            android:text="@string/event_descrip"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/event_des" />
+
+        <TextView
+            android:id="@+id/tags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:text="Tags"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/event_des_text" />
+
+        <TextView
+            android:id="@+id/rect_tag_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:background="@drawable/tag_rectangle"
+            android:text="@string/tag1"
+            android:textColor="#967ADC"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/tags"
+            app:layout_constraintTop_toBottomOf="@+id/tags" />
+
+        <TextView
+            android:id="@+id/rect_tag_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/tag_rectangle"
+            android:text="@string/tag2"
+            android:textColor="#967ADC"
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@+id/rect_tag_1"
+            app:layout_constraintTop_toBottomOf="@+id/tags" />
+
+        <TextView
+            android:id="@+id/organiser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:text="Meet The Organisers"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/rect_tag_1"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintStart_toStartOf="@+id/organiser"
+            app:layout_constraintTop_toBottomOf="@+id/organiser"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="7dp"
+            app:cardBackgroundColor="#F7FAFA">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/org_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/root"
+                    android:paddingStart="10dp"/>
+
+                <TextView
+                    android:id="@+id/orgName"
+                    android:layout_width="232dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="24dp"
+                    android:paddingStart="10dp"
+                    android:paddingTop="15dp"
+                    android:text="@string/org_name"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@id/org_pic"
+                    app:layout_constraintTop_toBottomOf="@id/organiser" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
