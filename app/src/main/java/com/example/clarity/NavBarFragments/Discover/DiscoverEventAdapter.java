@@ -57,6 +57,7 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
 
         // bind all content to UI
 //        holder.eventImage.setImageResource(1);
+
         // String formatting for CardView
         String rawName = event_details.getTitle();
         String rawStartTime = event_details.getEvent_start();

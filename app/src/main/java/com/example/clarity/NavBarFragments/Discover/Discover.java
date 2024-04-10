@@ -118,11 +118,17 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
                 for (Tag tag : result) {
                     Integer post_id = tag.getPost_id();
                     String tag_category = tag.getTag_category();
-                    // TODO: change this after the DB has new tag category values
-                    if (tag_category.equals("fifthrow") || tag_category.equals("FIFTH_ROW")) {
+
+                    if (tag_category.equals(EventTags.FIFTH_ROW.name())) {
                         tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
-                    } else if (tag_category.equals("CAREER")) {
+                    } else if (tag_category.equals(EventTags.CAREER.name())) {
                         tagsEventMapping.get(EventTags.CAREER).add(post_id);
+                    } else if (tag_category.equals(EventTags.WORKSHOP.name())) {
+                        tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
+                    } else if (tag_category.equals(EventTags.CAMPUS_LIFE.name())) {
+                        tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
+                    } else if (tag_category.equals(EventTags.COMPETITION.name())) {
+                        tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
                     }
                 }
             }
