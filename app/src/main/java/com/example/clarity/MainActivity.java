@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment createFragment;
     private Fragment calendarFragment;
     private Fragment profileFragment;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +38,22 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Debugging
+        Toast.makeText(this, "MainActivity onCreate called", Toast.LENGTH_SHORT).show();
+
         // Database instance
         database = ((MyApplication) getApplicationContext()).getDatabase();
 
-        // Initialize Fragments
+        // Initialize Fragments and Fragment Manager
         discoverFragment = new Discover();
         favouritesFragment = new Favourites();
         createFragment = new Create();
         calendarFragment = new CalendarFragment();
         profileFragment = new Profile();
+        fragmentManager = getSupportFragmentManager();
 
         // Default fragment is Discover:
-        showFragment(new Discover());
+        showFragment(discoverFragment);
 
         // set click listeners to nav bar
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -73,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
      * @param fragment Discover, Favourites, Create, CalendarFragment, Profile
      */
     private void showFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
