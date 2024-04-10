@@ -11,7 +11,7 @@ import com.example.clarity.NavBarFragments.CalendarFragment;
 import com.example.clarity.NavBarFragments.Create;
 import com.example.clarity.NavBarFragments.Discover.Discover;
 import com.example.clarity.NavBarFragments.Favourites;
-import com.example.clarity.NavBarFragments.Profile.Profile;
+import com.example.clarity.NavBarFragments.Profile;
 import com.example.clarity.databinding.ActivityMainBinding;
 
 import com.example.clarity.model.repository.RestRepo;
