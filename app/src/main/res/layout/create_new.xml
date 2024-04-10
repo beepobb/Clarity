@@ -5,203 +5,189 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="35dp"
-    android:paddingTop="35dp"
-    android:paddingRight="35dp"
-    android:paddingBottom="35dp"
+    android:padding="35dp"
     tools:context=".ui.login.LoginActivity">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:padding="10dp"
-        android:selectAllOnFocus="true"
-        android:text="Create Account"
-        android:textColor="#967ADC"
-        android:textSize="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/add_image"
-        android:layout_width="92dp"
-        android:layout_height="92dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/RoundedShapeAppearance"
-        app:srcCompat="@drawable/baseline_add_circle_24" />
-
-    <Spinner
-        android:id="@+id/spinner"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/box_outline"
-        android:entries="@array/choices"
-        app:layout_constraintBottom_toTopOf="@+id/enter_password"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.185"
-        tools:layout_editor_absoluteX="35dp" />
-
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="228dp"
-        android:background="@drawable/box_outline"
-        android:hint="Username"
-        android:inputType="textNoSuggestions"
-        android:padding="8dp"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:selectAllOnFocus="true"
-        android:text="Email"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/email"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="316dp"
-        android:background="@drawable/box_outline"
-        android:hint="Must include @"
-        android:inputType="textEmailAddress"
-        android:padding="8dp"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView4"
+            style="@style/CreateAccountHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Account"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You’re one step closer to Clarity!"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <ImageView
+            style="@style/ProfileBg"
+            android:id="@+id/profileBg"
+            android:layout_width="108dp"
+            android:layout_height="109dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/profile_circle_base"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearance" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/add_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/baseline_image_24"
+            app:tint="@color/grey"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearance"
+            app:layout_constraintBottom_toBottomOf="@+id/profileBg"
+            app:layout_constraintEnd_toEndOf="@+id/profileBg"
+            app:layout_constraintStart_toStartOf="@+id/profileBg"
+            app:layout_constraintTop_toTopOf="@+id/profileBg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:selectAllOnFocus="true"
-        android:text="Confirm password"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/confirm_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enter_password"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="HardcodedText" />
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        tools:layout_editor_absoluteX="35dp">
 
-    <EditText
-        android:id="@+id/enter_password"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="404dp"
-        android:background="@drawable/box_outline"
-        android:hint="Must contain at least 8 characters"
-        android:inputType="textPassword"
-        android:padding="8dp"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:selectAllOnFocus="true"
+            android:text="I am registering as:"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/spinner"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:selectAllOnFocus="true"
-        android:text="Password"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/enter_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="HardcodedText" />
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/CreateAccountFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/choices"
+            android:padding="8dp" />
 
-    <EditText
-        android:id="@+id/confirm_password"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="492dp"
-        android:background="@drawable/box_outline"
-        android:hint="Enter same password"
-        android:inputType="textPassword"
-        android:padding="8dp"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingBottom="5dp"
+            android:selectAllOnFocus="true"
+            android:text="Username"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:selectAllOnFocus="true"
-        android:text="I am registering as:"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="HardcodedText" />
+        <EditText
+            android:id="@+id/username"
+            style="@style/CreateAccountFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions"
+            android:padding="9dp"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:selectAllOnFocus="true"
-        android:text="Username"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/username"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingBottom="5dp"
+            android:selectAllOnFocus="true"
+            android:text="Email"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/login"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:background="@drawable/purple_rectangle"
-        android:enabled="true"
-        android:text="Sign In"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirm_password"
-        app:layout_constraintVertical_bias="0.712" />
+        <EditText
+            android:id="@+id/email"
+            style="@style/CreateAccountFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:padding="9dp"
+            android:selectAllOnFocus="true"
+            android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingBottom="5dp"
+            android:selectAllOnFocus="true"
+            android:text="Password"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/enter_password"
+            style="@style/CreateAccountFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Must contain at least 8 characters"
+            android:inputType="textPassword"
+            android:padding="9dp"
+            android:selectAllOnFocus="true"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingBottom="5dp"
+            android:selectAllOnFocus="true"
+            android:text="Confirm password"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/confirm_password"
+            style="@style/CreateAccountFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter same password"
+            android:inputType="textPassword"
+            android:padding="9dp"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/purple_rectangle"
+            android:enabled="true"
+            android:text="Sign Up"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
