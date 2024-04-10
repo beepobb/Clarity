@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
+import com.example.clarity.model.util.CardFormatter;
 
 import java.util.List;
 
@@ -56,9 +57,18 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
 
         // bind all content to UI
 //        holder.eventImage.setImageResource(1);
-        holder.eventName.setText(event_details.getTitle());
-        holder.eventDate.setText(event_details.getEvent_start());
-        holder.eventTime.setText(event_details.getEvent_start());
+        // String formatting for CardView
+        String rawName = event_details.getTitle();
+        String rawStartTime = event_details.getEvent_start();
+        String rawEndTime = event_details.getEvent_end();
+        String formattedName = CardFormatter.formatTitleDiscover(rawName);
+        String formattedDate = CardFormatter.formatDate(rawStartTime);
+        String formattedTime = CardFormatter.formatTime(rawStartTime, rawEndTime);
+
+        // Set text in UI
+        holder.eventName.setText(formattedName);
+        holder.eventDate.setText(formattedDate);
+        holder.eventTime.setText(formattedTime);
         holder.eventLocation.setText(event_details.getLocation());
     }
 
