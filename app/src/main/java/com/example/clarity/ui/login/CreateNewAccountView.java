@@ -48,8 +48,8 @@ public class CreateNewAccountView extends AppCompatActivity {
             @Override
             public void onChanged(String string) {
                 // When string is fetched (addUserRequest): switch to MainActivity
-                Toast.makeText(getApplicationContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(CreateNewAccountView.this, MainActivity.class);
+                Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(CreateNewAccountView.this, LoginActivity.class);
                 startActivity(intent);
             }
         });

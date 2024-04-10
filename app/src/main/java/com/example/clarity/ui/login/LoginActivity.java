@@ -8,11 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clarity.MainActivity;
@@ -34,11 +37,24 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        final EditText usernameEditText = binding.username;
+        final EditText passwordEditText = binding.password;
+        final Button loginButton = (Button) binding.login;
+        final ImageView imageView = binding.imageView;
+        final Button createButton = (Button) binding.newAccount;
+
+        final ProgressBar progressBar = binding.progressBar;
+
+        final Handler handler = new Handler();
+
         database = ((MyApplication) getApplicationContext()).getDatabase();
         userLiveData = new MutableLiveData<>(); // contains null at this step
+
+
         userLiveData.observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
+
                 // When user object is fetched (getUserRequest): switch to MainActivity
                 if (user == null) {
                     Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
@@ -52,15 +68,40 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
-        final Button loginButton = (Button) binding.login;
-        final ImageView imageView = binding.imageView;
-        final Button createButton = (Button) binding.newAccount;
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Start long operation in a background thread
+                new Thread(new Runnable() {
+                    public void run() {
+                        int progressStatus = 0;
+                        while (progressStatus < 100) {
+                            progressStatus += 1;
+
+                            // Update the progress bar and display the current value
+                            int finalProgressStatus = progressStatus;
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    progressBar.setProgress(finalProgressStatus);
+                                }
+                            });
+
+                            try {
+                                // Sleep for 200 milliseconds to simulate a long operation
+                                Thread.sleep(20);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        // Once the operation is completed, show a toast message
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, "Operation completed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).start();
+
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
@@ -70,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 database.getUserRequest(username, password, new RestRepo.RepositoryCallback<User>() {
+
                     @Override
                     public void onComplete(User data) {
                         userLiveData.postValue(data); // use postValue as this is executed in worker thread
