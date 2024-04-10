@@ -1,6 +1,7 @@
 package com.example.clarity.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.clarity.EventsPageActivity;
 import com.example.clarity.NavBarFragments.CalendarFragment;
+import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdapter.EventViewHolder>{
@@ -80,8 +84,8 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         holder.eventNameTextView.setText(event.getTitle());
         holder.eventTimeTextView.setText(event.getEvent_start());
         holder.eventLocationTextView.setText(event.getLocation());
-//        holder.eventDayNumber.setText(String.valueOf(event.getDate().get(Calendar.DAY_OF_MONTH)));
-//        holder.eventDay.setText(daysOfWeekConverter[event.getDate().get(Calendar.DAY_OF_MONTH)]);
+        holder.eventDayNumber.setText(String.valueOf(event.getEventStart().get(Calendar.DAY_OF_MONTH)));
+        holder.eventDay.setText(daysOfWeekConverter[event.getEventStart().get(Calendar.DAY_OF_MONTH)]);
 
         // hide elements based on monthly or agenda view
         if (this.calendarDisplayState == CalendarFragment.CalendarDisplayState.MONTHLY_VIEW) {
@@ -96,13 +100,19 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
             holder.eventDayNumber.setVisibility(View.VISIBLE);
         }
 
-        // Set on click listener
-        // ViewHolder is not a View, so we access its root view instead
+        // Set on click listener for each item
+        // ViewHolder is not a View, so we access its root view instead (itemView)
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // To be set
-                Toast.makeText(context, holder.eventNameTextView.getText(), Toast.LENGTH_SHORT).show();
+
+                // Go to corresponding events page
+                Intent intent = new Intent(context, EventsPageActivity.class); // Intent for going to events page activity
+
+                // To pass in Post object, we need to wrap it first (Parcelable)
+                PostParcelable postParcelable = new PostParcelable(event); // can be serialized into Parcel
+                intent.putExtra("POST", postParcelable); // pass in wrapped Post
+                context.startActivity(intent);
             }
         });
     }
@@ -115,6 +125,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
     }
 
     public void updateEventList(List<Post> eventList) {
+        // Called when list of events to display on Recycler changes
         this.eventList = eventList;
         notifyDataSetChanged();
     }

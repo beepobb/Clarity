@@ -36,6 +36,16 @@
         </activity>
 
         <activity
+            android:name=".EventsPageActivity"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".NavigatorActivity"
+            android:exported="true">
+        </activity>
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
         </activity>
