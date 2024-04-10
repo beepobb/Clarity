@@ -79,10 +79,6 @@ public class Profile extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Context context = requireContext();
 
-        //dummy user
-        appUser = new User(3, "ifalltower", "jeui3ug4i836", "SUTD Student",
-                "test@gmail.com", "2024-04-01 06:35:23");
-
         username = view.findViewById(R.id.username);
         role = view.findViewById(R.id.role);
         buttonResetCalendar = view.findViewById(R.id.buttonResetCalendar);
