@@ -26,6 +26,10 @@
     <style name="Subtitle"><item name="android:textColor">@color/wolf_grey</item></style>
     <style name="Typography"><item name="android:textColor">@color/grey</item></style>
 
+    <!-- Styles for Log In Fragment -->
+    <style name="LogInFields"><item name="android:background">@drawable/grey_rectangle</item> </style>
+    <style name="LogInSubmit"><item name="android:background">@drawable/purple_rectangle</item></style>
+
     <!-- Styles for Event Fragment -->
     <style name="EventTitle"><item name="android:textColor">@color/black</item></style>
     <style name="EventDetails"><item name="android:textColor">@color/wolf_grey</item></style>
