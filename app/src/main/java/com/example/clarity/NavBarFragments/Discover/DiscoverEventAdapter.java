@@ -1,6 +1,7 @@
 package com.example.clarity.NavBarFragments.Discover;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +16,19 @@ import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.util.CardFormatter;
 
+import java.util.BitSet;
+import java.util.HashMap;
 import java.util.List;
 
 public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAdapter.DiscoverEventViewHolder> {
     private Context context;
     private List<Post> eventList;
+    private HashMap<Integer, Bitmap> eventImageMapping;
 
     public DiscoverEventAdapter(Context context, List<Post> eventList) {
         this.context = context;
         this.eventList = eventList;
+        this.eventImageMapping = new HashMap<>();
     }
     public static class DiscoverEventViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
@@ -54,9 +59,17 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
     public void onBindViewHolder(@NonNull DiscoverEventViewHolder holder, int position) {
         Log.d("DiscoverEventAdapter", "onBindViewHolder");
         Post event_details = eventList.get(position);
+        Integer post_id = event_details.getId();
+        Bitmap bitmap = eventImageMapping.get(post_id);
 
-        // bind all content to UI
-//        holder.eventImage.setImageResource(1);
+        if (bitmap != null) {
+            Log.d("DiscoverEventAdapter", String.valueOf(bitmap.getHeight()) + bitmap.getWidth());
+        } else {
+            Log.d("DiscoverEventAdapter", "bitmap null");
+        }
+
+        // set image to UI
+        holder.eventImage.setImageBitmap(bitmap);
 
         // String formatting for CardView
         String rawName = event_details.getTitle();
@@ -80,6 +93,11 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
 
     public void updateEventList(List<Post> eventList) {
         this.eventList = eventList;
+        notifyDataSetChanged();
+    }
+
+    public void updateEventImageMapping(HashMap<Integer, Bitmap> eventImageMapping) {
+        this.eventImageMapping = eventImageMapping;
         notifyDataSetChanged();
     }
 }

@@ -81,7 +81,7 @@
                 android:layout_width="105dp"
                 android:layout_height="105dp"
                 android:padding="10dp"
-                android:src="@drawable/event_placeholder1"
+                android:src="@drawable/event_placeholder2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
