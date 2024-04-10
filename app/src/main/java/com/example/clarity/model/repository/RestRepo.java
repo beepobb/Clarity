@@ -1,5 +1,9 @@
 package com.example.clarity.model.repository;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Favourite;
@@ -8,6 +12,7 @@ import com.example.clarity.model.data.Tag;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -26,10 +31,12 @@ import com.example.clarity.model.util.MD5;
 
 public class RestRepo {
     //################STATIC METHODS################/
-    static String endPointUser = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/user";
-    static String endPointPost = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/post";
-    static String endPointFavourites = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/favourites";
-    static String endPointTags = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/tags";
+    private final String endPointUser = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/user";
+    private final String endPointPost = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/post";
+    private final String endPointFavourites = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/favourites";
+    private final String endPointTags = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/tags";
+    private final String imageBucket = "https://18ihlowsu4.execute-api.ap-southeast-2.amazonaws.com/beta/sutdclarity";
+
     private final Executor executor;
     private static RestRepo instance; // single instance
 
@@ -80,6 +87,37 @@ public class RestRepo {
         }
     }
 
+    public static String urlGetImage(String targetURL) {
+        HttpURLConnection connection = null;
+        try {
+            //Create connection
+            URL url = new URL(targetURL);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("content-type", "application/json");
+            connection.setDoInput(true);
+            connection.connect();
+            //Get Response
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+            String line;
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            return response.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
     public static String urlPost(String targetURL, JSONObject data) {
         HttpURLConnection connection = null;
         try {
@@ -104,6 +142,43 @@ public class RestRepo {
                 response.append('\r');
             }
             rd.close();
+            return response.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+    public static String urlPutImage(String targetURL, String data) {
+        HttpURLConnection connection = null;
+        try {
+            //Create connection
+            URL url = new URL(targetURL);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setRequestProperty("content-type", "application/json");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+            wr.write(data);
+            wr.flush();
+
+            //Get Response
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+            String line;
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            System.out.println("response" + response.toString() );
             return response.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -261,13 +336,25 @@ public class RestRepo {
         }
     }
 
-    public void addPostRequest(int author_id, String event_start, String event_end, String image_url, String title,
-                               String location, String description, ArrayList<String> tags, RepositoryCallback<String> callback) {
+    public void addPostRequest(int author_id, String event_start, String event_end, String title,
+                               String location, String description, ArrayList<String> tags, Bitmap picture, RepositoryCallback<String> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                String response = addPost(author_id, event_start, event_end, image_url, title, location, description, tags);
-                callback.onComplete(response);
+                try {
+                    String item_hash = MD5.getMd5(Integer.toString(author_id) + title + description);
+                    String filename = item_hash + ".png";
+                    String response = addImage(picture, filename);
+                    String image_url = imageBucket + "/" + filename;
+                    System.out.println(image_url);
+                    response = addPost(author_id, event_start, event_end, image_url, title, location, description, tags);
+                    callback.onComplete(response);
+
+                }
+                catch(Exception e){
+                    System.out.println("error" + e.getMessage());
+                    callback.onComplete("");
+                }
             }
         });
     }
@@ -434,13 +521,76 @@ public class RestRepo {
 
 
     // provide image in a specific type given the url.
-    // UPDATE FROM UI/UX side regarding which type to display.
-    private static void get_image(String url) {
-
+    // UPDATE FROM UI/UX side regarding which type to display
+    public void postImageRequest(Bitmap bmp, String filename, RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                String response = addImage(bmp, filename);
+                callback.onComplete(response);
+            }
+        });
     }
 
+    private String addImage(Bitmap bmp, String filename) {
+        try {
+            String fileType = getFileType(filename);
+            Bitmap.CompressFormat format;
+            if(fileType.equals("png")) {
+                format = Bitmap.CompressFormat.PNG;
+            }
+            else if(fileType.equals("jpeg")) {
+                format = Bitmap.CompressFormat.JPEG;
+            }
+            else{
+                return "";
+            }
+            String image_data = getStringImage(bmp, format);
+            return urlPutImage(imageBucket+"/" +filename ,image_data);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return "";
+        }
+    }
 
+    public void getImageRequest(String url, RepositoryCallback<Bitmap> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onComplete(getImage(url));
+            }
+        });
+    }
 
+    private Bitmap getImage(String url) {
+        try {
+            String encodedImage = urlGetImage(url);
+            return getImageFromString(encodedImage);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
+    private  String getStringImage(Bitmap bmp, Bitmap.CompressFormat format){
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bmp.compress(format, 100, out);
+        byte[] imageBytes = out.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
 
+    private  Bitmap getImageFromString(String encodedImage){
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    private String getFileType(String filename) {
+        int index = filename.lastIndexOf('.');
+        if(index > 0) {
+            return filename.substring(index + 1);
+        }
+        return "";
+    }
 }
