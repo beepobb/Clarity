@@ -60,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
                     ((MyApplication) getApplicationContext()).saveAppUser(user); // save logged-in user
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -88,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             try {
                                 // Sleep for 200 milliseconds to simulate a long operation
-                                Thread.sleep(20);
+                                Thread.sleep(30);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -96,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Once the operation is completed, show a toast message
                         handler.post(new Runnable() {
                             public void run() {
-                                Toast.makeText(LoginActivity.this, "Operation completed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
