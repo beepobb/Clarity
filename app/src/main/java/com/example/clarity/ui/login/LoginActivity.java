@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             try {
                                 // Sleep for 200 milliseconds to simulate a long operation
-                                Thread.sleep(30);
+                                Thread.sleep(25);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }

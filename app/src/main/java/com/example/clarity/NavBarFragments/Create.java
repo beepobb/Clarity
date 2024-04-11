@@ -21,14 +21,17 @@ import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
+import com.example.clarity.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import android.view.LayoutInflater;
@@ -90,6 +93,9 @@ public class Create extends Fragment {
         EditText end_dateEditText = rootView.findViewById(R.id.editTextDate2);
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
+        EditText contactEditText = rootView.findViewById(R.id.contact_text);
+        ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
+        Handler handler = new Handler();
 
         // get reference to db
         Activity activity = getActivity();
@@ -105,10 +111,18 @@ public class Create extends Fragment {
         userLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
-                Toast.makeText(getContext(), "Event succesfully added", Toast.LENGTH_LONG).show();
                 Menu menu = bottomNavigationView.getMenu();
                 MenuItem menuItem = menu.findItem(R.id.Discover);
                 bottomNavigationView.setSelectedItemId(menuItem.getItemId());
+                titleEditText.setText("");
+                tagsEditText.setText("");
+                start_dateEditText.setText("");
+                end_dateEditText.setText("");
+                start_timeEditText.setText("");
+                end_timeEditText.setText("");
+                locationEditText.setText("");
+                descriptionEditText.setText("");
+                progressBar.setVisibility(View.GONE);
             }
         });
 //end
@@ -176,12 +190,6 @@ public class Create extends Fragment {
             }
         });
 
-//        String dateString = editTextDate.getText().toString().trim();
-//        String timeString = editTextTime.getText().toString().trim();
-//        String dateTimeString = dateString + " " + timeString;
-//        Log.d("DateTimeConcatenation", "Concatenated DateTime: " + dateTimeString);
-//        // im trying to retrieve data that user enters and format it into our ISO format, but havent success
-
         //start
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,6 +213,41 @@ public class Create extends Fragment {
                     return;
                 }
 
+                new Thread(new Runnable() {
+                    public void run() {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getContext(), "Please wait for your event to be added", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        int progressStatus = 0;
+                        while (progressStatus < 100) {
+                            progressStatus += 1;
+
+                            // Update the progress bar and display the current value
+                            int finalProgressStatus = progressStatus;
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    progressBar.setProgress(finalProgressStatus);
+                                }
+                            });
+
+                            try {
+                                // Sleep for 200 milliseconds to simulate a long operation
+                                Thread.sleep(40);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        // Once the operation is completed, show a toast message
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getContext(), "Event successfully added", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }).start();
+
                 String start = start_date + " " + start_time;
                 String end = end_date + " " + end_time;
 
@@ -213,6 +256,7 @@ public class Create extends Fragment {
                             @Override
                             public void onComplete(String result) {
                                 userLiveData.postValue(result);
+
                             }
                         });
             }

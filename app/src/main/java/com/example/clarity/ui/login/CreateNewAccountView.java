@@ -51,7 +51,7 @@ public class CreateNewAccountView extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(CreateNewAccountView.this, LoginActivity.class);
                 startActivity(intent);
-                //TODO: kill login page once you start mainactivity
+
             }
         });
 
