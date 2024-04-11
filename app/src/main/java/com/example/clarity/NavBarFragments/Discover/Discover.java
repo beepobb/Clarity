@@ -1,6 +1,7 @@
 package com.example.clarity.NavBarFragments.Discover;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,8 +28,10 @@ import java.util.*;
 public class Discover extends Fragment implements TagButtonUpdateEventsClickListener {
     // stores info for buttons and events UI
     private List<EventTags> tagButtons;
-    private List<Post> eventList;
+
+    // observed data
     private MutableLiveData<List<Post>> eventListLive;
+    private MutableLiveData<HashMap<Integer, Bitmap>> eventImageMappingLive;
 
     // UI elements
     private RecyclerView tagRecycler;
@@ -38,6 +41,8 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
 
     private RestRepo db; // reference for db
     private HashMap<EventTags, ArrayList<Integer>> tagsEventMapping; // tags and event link
+
+    private final String logCatTag = "DiscoverFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,8 +57,8 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
 
         // initialise values
         tagButtons = Arrays.asList(EventTags.values());
-        eventList = new ArrayList<>();
         eventListLive = new MutableLiveData<>(new ArrayList<>());
+        eventImageMappingLive = new MutableLiveData<>(new HashMap<>());
         tagsEventMapping = new HashMap<>();
         for (EventTags e : EventTags.values()) {
             tagsEventMapping.put(e, new ArrayList<>());
@@ -77,14 +82,38 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
 
         // set up event recycler
         eventRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        discoverEventAdapter = new DiscoverEventAdapter(getActivity(), eventList);
+        discoverEventAdapter = new DiscoverEventAdapter(getActivity(), new ArrayList<>()); // pass in empty arraylist
         eventRecycler.setAdapter(discoverEventAdapter);
 
         // set up observer for eventListLive, will update UI when data comes in
         eventListLive.observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
-                Log.d("DiscoverFragment", "observer called");
+                Log.d(logCatTag, "eventListLive observer called");
+
+                HashMap<Integer, Bitmap> tmpMap = new HashMap<>();
+                // get images for every Post object
+                for (Post post : Objects.requireNonNull(eventListLive.getValue())) {
+                    String url = post.getImage_url();
+                    Integer post_id = post.getId();
+                    db.getImageRequest(url, new RestRepo.RepositoryCallback<Bitmap>() {
+                        @Override
+                        public void onComplete(Bitmap result) {
+                            tmpMap.put(post_id, result);
+                            eventImageMappingLive.postValue(tmpMap);
+                        }
+                    });
+                }
+
+                updateEventRecycler();
+            }
+        });
+
+        // set up observer for eventImageMappingLive, update image in cardView
+        eventImageMappingLive.observe(getViewLifecycleOwner(), new Observer<HashMap<Integer, Bitmap>>() {
+            @Override
+            public void onChanged(HashMap<Integer, Bitmap> integerBitmapHashMap) {
+                Log.d(logCatTag, "eventImageMappingLive observer called");
                 updateEventRecycler();
             }
         });
@@ -107,8 +136,13 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
 
                 // update eventListLive, observer (UI) will be notified
                 eventListLive.postValue(result);
+
+
             }
         });
+
+
+
 
         // get tags and events
         db.getAllPostsWithTagRequest(new RestRepo.RepositoryCallback<ArrayList<Tag>>() {
@@ -118,11 +152,17 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
                 for (Tag tag : result) {
                     Integer post_id = tag.getPost_id();
                     String tag_category = tag.getTag_category();
-                    // TODO: change this after the DB has new tag category values
-                    if (tag_category.equals("fifthrow") || tag_category.equals("FIFTH_ROW")) {
+
+                    if (tag_category.equals(EventTags.FIFTH_ROW.name())) {
                         tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
-                    } else if (tag_category.equals("CAREER")) {
+                    } else if (tag_category.equals(EventTags.CAREER.name())) {
                         tagsEventMapping.get(EventTags.CAREER).add(post_id);
+                    } else if (tag_category.equals(EventTags.WORKSHOP.name())) {
+                        tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
+                    } else if (tag_category.equals(EventTags.CAMPUS_LIFE.name())) {
+                        tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
+                    } else if (tag_category.equals(EventTags.COMPETITION.name())) {
+                        tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
                     }
                 }
             }
@@ -132,6 +172,7 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
     // Helper function
     public void updateEventRecycler() {
         discoverEventAdapter.updateEventList(eventListLive.getValue());
+        discoverEventAdapter.updateEventImageMapping(eventImageMappingLive.getValue());
     }
 
     /**
@@ -156,8 +197,10 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
         }
 
         // refresh adapter for event recycler
-        discoverEventAdapter = new DiscoverEventAdapter(getActivity(), subList);
-        eventRecycler.setAdapter(discoverEventAdapter);
+//        discoverEventAdapter = new DiscoverEventAdapter(getActivity(), subList);
+//        eventRecycler.setAdapter(discoverEventAdapter);
+
+        discoverEventAdapter.updateEventList(subList);
     }
 }
 

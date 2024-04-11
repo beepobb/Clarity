@@ -22,7 +22,7 @@ public class MyApplication extends Application {
     private final Executor executor = Executors.newFixedThreadPool(2);
     private final RestRepo database = RestRepo.getInstance(executor);
 
-    private User appUser;
+    private User appUser; // User object for logged in user
 
     // Database methods //
     public RestRepo getDatabase() {

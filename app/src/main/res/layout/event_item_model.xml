@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:cardCornerRadius="10dp"
         app:cardElevation="7dp"
-        app:cardBackgroundColor="@color/off_white">
+        app:cardBackgroundColor="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             style="@style/EventCard"
@@ -81,7 +80,7 @@
                 android:layout_width="105dp"
                 android:layout_height="105dp"
                 android:padding="10dp"
-                android:src="@drawable/event_placeholder1"
+                android:src="@drawable/event_placeholder2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
