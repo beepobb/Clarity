@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    ActivityMainBinding binding;
+    public ActivityMainBinding binding;
     public RestRepo database; // for all fragments to access
 
     // Fragments

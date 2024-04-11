@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                     ((MyApplication) getApplicationContext()).saveAppUser(user); // save logged-in user
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });

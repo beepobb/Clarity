@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer;
 
 import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
+import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
@@ -44,6 +45,9 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -60,11 +64,12 @@ public class Create extends Fragment {
     ArrayAdapter<String> adapterTags;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
-    private EditText editTextDate, editTextTime;
+//    private EditText editTextDate, editTextTime;
     private Calendar calendar;
     private View rootView;
     //start
     private RestRepo database;
+    private User appUser;
     private MutableLiveData<String> userLiveData;
     private BottomNavigationView bottomNavigationView;
     private Bitmap bitmap;
@@ -79,31 +84,31 @@ public class Create extends Fragment {
         ImageView placeholderImageView = rootView.findViewById(R.id.middle_image);
         EditText titleEditText = rootView.findViewById(R.id.editTextValue);
         EditText tagsEditText = rootView.findViewById(R.id.multiAutoCompleteTextView);
-        EditText event_startEditText = rootView.findViewById(R.id.editTextDate);
-        EditText event_endEditText = rootView.findViewById(R.id.editTextTime);
+        EditText start_dateEditText = rootView.findViewById(R.id.editTextDate);
+        EditText start_timeEditText = rootView.findViewById(R.id.editTextTime);
         EditText locationEditText = rootView.findViewById(R.id.location_text);
+        EditText end_dateEditText = rootView.findViewById(R.id.editTextDate2);
+        EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
-        EditText author_idEditText = rootView.findViewById(R.id.contact_text);
 
         // get reference to db
         Activity activity = getActivity();
         if (activity != null) {
             // Example: Accessing activity's method
             database = ((MainActivity) activity).database;
+            bottomNavigationView = ((MainActivity) activity).binding.bottomNavigationView;
         }
+        // logged in user object
+        appUser = ((MyApplication) getActivity().getApplicationContext()).getAppUser();
+        Integer appUser_id = appUser.getId();
         userLiveData = new MutableLiveData<>();
         userLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
-                if (string == null) {
-                    Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(getContext(), "Event succesfully added", Toast.LENGTH_LONG).show();
-                    Menu menu = bottomNavigationView.getMenu();
-                    MenuItem menuItem = menu.findItem(R.id.Discover);
-                    bottomNavigationView.performClick();
-                }
+                Toast.makeText(getContext(), "Event succesfully added", Toast.LENGTH_LONG).show();
+                Menu menu = bottomNavigationView.getMenu();
+                MenuItem menuItem = menu.findItem(R.id.Discover);
+                bottomNavigationView.setSelectedItemId(menuItem.getItemId());
             }
         });
 //end
@@ -144,51 +149,66 @@ public class Create extends Fragment {
         // Launch the gallery picker when the ImageView is clicked
         selectedImageView.setOnClickListener(view -> selectImage());
 
-        editTextDate = rootView.findViewById(R.id.editTextDate);
-        editTextTime = rootView.findViewById(R.id.editTextTime);
         calendar = Calendar.getInstance();
-        editTextDate.setOnClickListener(new View.OnClickListener() {
+        start_dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDatePickerDialog();
+                showDatePickerDialog(start_dateEditText);
+            }
+        });
+        end_dateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(end_dateEditText);
             }
         });
 
-        editTextTime.setOnClickListener(new View.OnClickListener() {
+        start_timeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTimePickerDialog();
+                showTimePickerDialog(start_timeEditText);
             }
         });
-        String dateString = editTextDate.getText().toString().trim();
-        String timeString = editTextTime.getText().toString().trim();
-        String dateTimeString = dateString + " " + timeString;
-        Log.d("DateTimeConcatenation", "Concatenated DateTime: " + dateTimeString);
-        // im trying to retrieve data that user enters and format it into our ISO format, but havent success
+        end_timeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog(end_timeEditText);
+            }
+        });
+
+//        String dateString = editTextDate.getText().toString().trim();
+//        String timeString = editTextTime.getText().toString().trim();
+//        String dateTimeString = dateString + " " + timeString;
+//        Log.d("DateTimeConcatenation", "Concatenated DateTime: " + dateTimeString);
+//        // im trying to retrieve data that user enters and format it into our ISO format, but havent success
 
         //start
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Integer author_id = author_idEditText.getId();
+                Integer author_id = appUser_id;
                 String title = titleEditText.getText().toString();
                 String tagsString = tagsEditText.getText().toString();
                 ArrayList<String> tags = new ArrayList<>(Arrays.asList(tagsString.split(",")));
-
-                String event_start = event_startEditText.getText().toString();
-                String event_end = event_endEditText.getText().toString();
+                String start_date = start_dateEditText .getText().toString();
+                String start_time = start_timeEditText.getText().toString();
+                String end_date = end_dateEditText.getText().toString();
+                String end_time = end_timeEditText.getText().toString();
                 String location = locationEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
-                Log.d("no bitmap", "error");
-                Bitmap image = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                    image = bitmap.asShared();
-                    //TODO: check if asShared() is correct
-                }
-                Log.d("yes bitmap", "error");
 
-                database.addPostRequest(author_id, event_start, event_end, title,
+                Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
+
+                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty()) {
+                    Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String start = start_date + " " + start_time;
+                String end = end_date + " " + end_time;
+
+                database.addPostRequest(author_id, start, end, title,
                         location, description, tags, image, new RestRepo.RepositoryCallback<String>() {
                             @Override
                             public void onComplete(String result) {
@@ -209,13 +229,32 @@ public class Create extends Fragment {
         }
     }
 
-    private void showDatePickerDialog() {
+    private void showDatePickerDialog(final EditText editText) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        editTextDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+                        // Create a LocalDate object from the selected date components
+                        LocalDate selectedDate = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            selectedDate = LocalDate.of(year, month + 1, dayOfMonth);
+                        }
+
+                        // Define the formatter for ISO date format
+                        DateTimeFormatter formatter = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            formatter = DateTimeFormatter.ISO_DATE;
+                        }
+
+                        // Format the selected date using ISO date format
+                        String formattedDate = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            formattedDate = selectedDate.format(formatter);
+                        }
+
+                        // Set the formatted date to the EditText
+                        editText.setText(formattedDate);
                     }
                 },
                 calendar.get(Calendar.YEAR),
@@ -224,13 +263,26 @@ public class Create extends Fragment {
         );
         datePickerDialog.show();
     }
-    private void showTimePickerDialog() {
+//MIGHT HAVE API VERSION ISSUES
+    private void showTimePickerDialog(final EditText editText) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        editTextTime.setText(hourOfDay + ":" + minute);
+                        LocalTime time = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            time = LocalTime.of(hourOfDay, minute);
+                        }
+                        DateTimeFormatter formatter = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            formatter = DateTimeFormatter.ISO_TIME;
+                        }
+                        String formattedTime = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            formattedTime = time.format(formatter);
+                        }
+                        editText.setText(formattedTime);
                     }
                 },
                 calendar.get(Calendar.HOUR_OF_DAY),
