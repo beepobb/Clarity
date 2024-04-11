@@ -127,7 +127,7 @@ public class Create extends Fragment {
         });
 //end
         mMultiAutoCompleteTextView = rootView.findViewById(R.id.multiAutoCompleteTextView);
-        String[] tags = {"Career", "Campus Life", "Fifth Row", "Competition", "Workshop"};
+        String[] tags = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, tags);
 
         // Set adapter to MultiAutoCompleteTextView
