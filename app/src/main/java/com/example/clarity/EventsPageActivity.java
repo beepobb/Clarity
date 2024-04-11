@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -22,6 +23,8 @@ public class EventsPageActivity extends AppCompatActivity {
 
     // TODO: Define Views
     private ImageView eventImageView;
+    private TextView eventNameTextView;
+    private TextView eventLocationTextView;
     private ToggleButton addButtonView;
 
     @Override
@@ -31,6 +34,8 @@ public class EventsPageActivity extends AppCompatActivity {
 
         // TODO: fetch Views
         addButtonView = findViewById(R.id.add_button);
+        eventNameTextView = findViewById(R.id.eventNameView);
+        eventLocationTextView = findViewById(R.id.location);
 
         // Initialize other attributes
         db = ((MyApplication) getApplicationContext()).getDatabase();
@@ -42,6 +47,10 @@ public class EventsPageActivity extends AppCompatActivity {
         PostParcelable postParcelable = intent.getParcelableExtra("POST");
         assert postParcelable != null;
         Post post = postParcelable.getPost();
+
+        // TODO: Bind Post data to Views
+        eventNameTextView.setText(post.getTitle());
+        eventLocationTextView.setText(post.getLocation());
 
 
         // 'Add to Calendar' Toggle Button

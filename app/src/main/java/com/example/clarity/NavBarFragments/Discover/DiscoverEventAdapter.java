@@ -1,6 +1,7 @@
 package com.example.clarity.NavBarFragments.Discover;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.clarity.EventsPageActivity;
+import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.util.CardFormatter;
@@ -84,6 +87,22 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
         holder.eventDate.setText(formattedDate);
         holder.eventTime.setText(formattedTime);
         holder.eventLocation.setText(event_details.getLocation());
+
+        // Set on click listener for each item
+        // ViewHolder is not a View, so we access its root view instead (itemView)
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Go to corresponding events page
+                Intent intent = new Intent(context, EventsPageActivity.class); // Intent for going to events page activity
+
+                // To pass in Post object, we need to wrap it first (Parcelable)
+                PostParcelable postParcelable = new PostParcelable(event_details); // can be serialized into Parcel
+                intent.putExtra("POST", postParcelable); // pass in wrapped Post
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
