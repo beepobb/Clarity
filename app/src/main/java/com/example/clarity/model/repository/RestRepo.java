@@ -195,6 +195,16 @@ public class RestRepo {
     }
     //################USER METHODS################/
     // NULL indicates failed authentication
+    public void checkUserRequest(int id, RepositoryCallback<Boolean> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean response = checkUser(Integer.toString(id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
     public void getUserRequest(String username, String password, RepositoryCallback<User> callback) {
         executor.execute(new Runnable() {
             @Override
@@ -219,23 +229,48 @@ public class RestRepo {
             return null;
         }
     }
+    private Boolean checkUser(String id) {
+        try {
+            String urlQuery = "?id="+id;
+            JSONObject tmp = urlGet(endPointUser,urlQuery);
+            String result = tmp.getString("body");
+            if(result.equals("True")) {
+                return true;
+            }
+            return false;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 
-    public void addUserRequest(String username, String password, String email, String role, RepositoryCallback<String> callback) {
+
+    public void addUserRequest(String username, String password, String email, String role, Bitmap bm, RepositoryCallback<String> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                String response = addUser(username, MD5.getMd5(password), email, role);
-                callback.onComplete(response);
+                try {
+                    String filename = username + ".png";
+                    String url = imageBucket + '/' + filename;
+                    addImage(bm, filename);
+                    String response = addUser(username, MD5.getMd5(password), email, role, url);
+                    callback.onComplete(response);
+                }
+                catch (Exception e) {
+                    callback.onComplete("error");
+                }
             }
         });
     }
 
-    private String addUser(String username, String password, String email, String role) {
+    private String addUser(String username, String password, String email, String role, String profile_pic_url) {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("username", username);
         data.put("password", password);
         data.put("email", email);
         data.put("role", role);
+        data.put("profile_pic_url", profile_pic_url);
         try {
             return urlPost(endPointUser, new JSONObject(data));
         }
