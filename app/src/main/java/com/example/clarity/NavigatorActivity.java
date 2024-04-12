@@ -12,7 +12,6 @@ import com.example.clarity.model.repository.RestRepo;
 import com.example.clarity.ui.login.LoginActivity;
 
 import java.io.IOException;
-import java.io.Serial;
 
 // No views associated with this class - only start-up navigation logic
 public class NavigatorActivity extends AppCompatActivity {
@@ -45,16 +44,15 @@ public class NavigatorActivity extends AppCompatActivity {
             /*
              * IMPORTANT: due to time constraints, we are unable to implement a proper session token
              * system on the database end. Instead, when a user logs into the app for the first time,
-             * we will store the user id as a session token in local storage (sharedPrefs).
-             * Whenever the app is opened, if there is a "session token" (user id) in sharedPrefs,
+             * we will serialize the User object as a session token in local storage (sharedPrefs).
+             * Whenever the app is opened, if there is a "session token" in sharedPrefs,
              * then we simply log in with that user (and skip the log-in page).
              * This "session token" can be cleared by logging out.
              */
 
-            // TODO: serialize whole User object as session token instead, then verify that id exists in database
             try {
                 User appUser = (User) (SerializationUtils.deserializeFromString(sessionToken));
-                // TODO: ensure that the User object exists in database
+                // TODO: ensure that the User object exists in database with database method
                 Log.d(TAG, "Fetched User object from session token");
                 myApplication.saveAppUser(appUser);
                 Intent intent = new Intent(this, MainActivity.class);
