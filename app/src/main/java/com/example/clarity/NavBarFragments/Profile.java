@@ -84,6 +84,7 @@ public class Profile extends Fragment {
 
         username = view.findViewById(R.id.username);
         role = view.findViewById(R.id.role);
+        profilePicture = view.findViewById(R.id.placeholderProfilePic);
         buttonResetCalendar = view.findViewById(R.id.buttonResetCalendar);
         buttonLogOut = view.findViewById(R.id.buttonLogOut);
 
@@ -112,6 +113,9 @@ public class Profile extends Fragment {
 
         username.setText(appUser.getUsername());
         role.setText(appUser.getRole());
+        //TODO: get profile picture and set it to profilePicture
+        //for now the getPhoto() function is not implemented
+        //profilePicture.setImageResource(appUser.getPhoto);
 
         buttonResetCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
