@@ -28,8 +28,11 @@ public class EventsPageActivity extends AppCompatActivity {
     private ImageView eventImageView;
     private TextView eventNameTextView;
     private TextView eventLocationTextView;
+    private TextView eventDateTimeTextView;
+    private TextView eventDescriptionTextView;
     private ToggleButton addButtonView;
     private ToggleButton likeButtonView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +40,13 @@ public class EventsPageActivity extends AppCompatActivity {
         setContentView(R.layout.events_page);
 
         // TODO: fetch Views
-        addButtonView = findViewById(R.id.add_button);
-        likeButtonView = findViewById(R.id.like_button);
-        eventNameTextView = findViewById(R.id.eventNameView);
-        eventLocationTextView = findViewById(R.id.location);
+        addButtonView = findViewById(R.id.addToggleButton);
+        likeButtonView = findViewById(R.id.likeToggleButton);
+        eventImageView = findViewById(R.id.eventImageView);
+        eventNameTextView = findViewById(R.id.eventNameTextView);
+        eventLocationTextView = findViewById(R.id.eventLocationTextView);
+        eventDescriptionTextView = findViewById(R.id.eventDescriptionTextView);
+        eventDateTimeTextView = findViewById(R.id.eventDateTimeTextView);
 
         // Initialize other attributes
         db = ((MyApplication) getApplicationContext()).getDatabase();
@@ -57,6 +63,8 @@ public class EventsPageActivity extends AppCompatActivity {
         // TODO: Bind Post data to Views
         eventNameTextView.setText(post.getTitle());
         eventLocationTextView.setText(post.getLocation());
+        eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
+        eventDescriptionTextView.setText(post.getDescription());
 
 
         // 'Add to Calendar' Toggle Button

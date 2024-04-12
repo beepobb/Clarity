@@ -2,6 +2,7 @@ package com.example.clarity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,15 +11,14 @@ import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 import com.example.clarity.ui.login.LoginActivity;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.util.Base64;
+import java.io.IOException;
+import java.io.Serial;
 
 // No views associated with this class - only start-up navigation logic
 public class NavigatorActivity extends AppCompatActivity {
     // Need to test whether it is better to have start-up logic be in this no-view activity
     // or in MyApplication class
-
+    private static final String TAG = "NavigatorActivity";
     // TODO: set starting activity of app to be NavigatorActivity
     private PreferenceUtils prefUtils;
     private RestRepo database;
@@ -32,7 +32,8 @@ public class NavigatorActivity extends AppCompatActivity {
         database = myApplication.getDatabase();
 
         String sessionToken = prefUtils.getSessionToken();
-        if (sessionToken.equals("")) { // No session token
+        if (sessionToken.equals("")) {
+            Log.d(TAG, "No session token found");
             // Go to log-in page
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -49,19 +50,22 @@ public class NavigatorActivity extends AppCompatActivity {
              * then we simply log in with that user (and skip the log-in page).
              * This "session token" can be cleared by logging out.
              */
+
             // TODO: serialize whole User object as session token instead, then verify that id exists in database
+            try {
+                User appUser = (User) (SerializationUtils.deserializeFromString(sessionToken));
+                // TODO: ensure that the User object exists in database
+                Log.d(TAG, "Fetched User object from session token");
+                myApplication.saveAppUser(appUser);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
 
-            // Deserialize session token back into a User object
-            // Deserialize string back to object
-//            byte[] decoded = Base64.getDecoder(sessionToken);
-//            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(decoded));
-//            User deserializedObj = (User) ois.readObject();
-//            ois.close();
-
-
-            // else: go to log-in page
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            } catch (IOException | ClassNotFoundException e) {
+                Log.d(TAG, "Failed to get User object from session token");
+                // throw new RuntimeException(e);
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }
 
         }
     }

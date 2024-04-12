@@ -151,6 +151,7 @@ public class Profile extends Fragment {
 
                 // Placeholder (until session token)
                 appContext.saveAppUser(null); // delete the User object that was saved
+                userPrefs.clearSessionToken(); // delete session token
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
             }

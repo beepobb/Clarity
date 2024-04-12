@@ -101,7 +101,7 @@ public class PreferenceUtils {
 
     // SESSION TOKEN METHODS //
     public String getSessionToken() {return sessionToken;}
-    private void saveSessionToken(String sessionToken) {
+    public void saveSessionToken(String sessionToken) {
         this.sessionToken = sessionToken;
 
         // Save to local storage
@@ -110,7 +110,7 @@ public class PreferenceUtils {
         editor.apply();
     }
 
-    private void clearSessionToken() {
+    public void clearSessionToken() {
         saveSessionToken(""); // set empty session token
     }
 
