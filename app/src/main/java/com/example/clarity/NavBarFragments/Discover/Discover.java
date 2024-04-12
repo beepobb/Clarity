@@ -177,13 +177,26 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
         swipeDownToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                db.getAllPostRequest(new RestRepo.RepositoryCallback<ArrayList<Post>>() {
+                db.getAllPostsWithTagRequest(new RestRepo.RepositoryCallback<ArrayList<Tag>>() {
                     @Override
-                    public void onComplete(ArrayList<Post> result) {
-                        Log.d("DiscoverFragment", "db onComplete "+result.toString());
+                    public void onComplete(ArrayList<Tag> result) {
+                        Log.d("DiscoverFragment", "db getAllPostsWithTagRequest onComplete "+ result.toString());
+                        for (Tag tag : result) {
+                            Integer post_id = tag.getPost_id();
+                            String tag_category = tag.getTag_category();
 
-                        // update eventListLive, observer (UI) will be notified
-                        eventListLive.postValue(result);
+                            if (tag_category.equals(EventTags.FIFTH_ROW.name())) {
+                                tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
+                            } else if (tag_category.equals(EventTags.CAREER.name())) {
+                                tagsEventMapping.get(EventTags.CAREER).add(post_id);
+                            } else if (tag_category.equals(EventTags.WORKSHOP.name())) {
+                                tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
+                            } else if (tag_category.equals(EventTags.CAMPUS_LIFE.name())) {
+                                tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
+                            } else if (tag_category.equals(EventTags.COMPETITION.name())) {
+                                tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
+                            }
+                        }
                         Log.d("RefreshDiscoverFragment", "Check for new events and update Discover fragment");
 
                         // end refresh state on main thread
