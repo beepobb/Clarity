@@ -98,7 +98,7 @@
         app:layout_constraintStart_toStartOf="@+id/purple_line"
         app:layout_constraintTop_toBottomOf="@+id/Event_Name" />
     <TextView
-        android:id="@+id/tags"
+        android:id="@+id/tagsHeaderTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tags"
@@ -117,7 +117,7 @@
         android:textSize = "8sp"
         android:textColor="#434A54"
         app:layout_constraintStart_toStartOf="@+id/purple_line"
-        app:layout_constraintTop_toBottomOf="@+id/tags"
+        app:layout_constraintTop_toBottomOf="@+id/tagsHeaderTextView"
         />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/chipGroup"
@@ -198,7 +198,7 @@
         app:layout_constraintStart_toEndOf="@+id/editTextDate"
         app:layout_constraintTop_toBottomOf="@+id/time" />
     <TextView
-        android:id="@+id/location"
+        android:id="@+id/eventLocationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Location"
@@ -221,7 +221,7 @@
         android:inputType="text"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/purple_line"
-        app:layout_constraintTop_toBottomOf="@+id/location" />
+        app:layout_constraintTop_toBottomOf="@+id/eventLocationTextView" />
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
