@@ -52,7 +52,7 @@ public class Favourites extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
         favouriteRecyclerView = view.findViewById(R.id.favouriteRecyclerView);
 
-        user = new User(2, "ryan", "ryan", "ryan", "ryan", "2024-04-01 03:39:42");
+        user = new User(2, "ryan", "ryan", "ryan", "ryan", "2024-04-01 03:39:42", "123123132");
 
         favouriteRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         favouriteEventAdapter = new DiscoverEventAdapter(getActivity(), new ArrayList<>());
