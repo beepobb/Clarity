@@ -250,7 +250,6 @@ public class Create extends Fragment {
                 String contact = contactEditText.getText().toString();
 
                 if (image == null) {
-                    Toast.makeText(getContext(), "null value", Toast.LENGTH_SHORT).show();
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
                 }
 

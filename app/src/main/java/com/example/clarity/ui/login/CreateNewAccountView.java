@@ -16,12 +16,18 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
+import com.example.clarity.R;
 import com.example.clarity.databinding.CreateNewBinding;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
@@ -34,6 +40,7 @@ public class CreateNewAccountView extends AppCompatActivity {
     private ImageView selectedImageView;
     private RestRepo database;
     private MutableLiveData<String> stringMutableLiveData;
+    private Bitmap image;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,17 +82,23 @@ public class CreateNewAccountView extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = result.getData();
                         if (data != null) {
+                            selectedImageView.setVisibility(View.GONE);
                             Uri selectedImageUri = data.getData();
-                            // Load the selected image into the ImageView
-                            selectedImageView.setImageURI(selectedImageUri);
                             try {
-                                //TODO: check getApplicationContext()
-                                Bitmap bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(selectedImageUri));
-                                selectedImageView.setImageBitmap(bitmap);
-                            } catch (FileNotFoundException e) {
+                                Glide.with(this)
+                                        .asBitmap()
+                                        .load(selectedImageUri)
+                                        .into(new BitmapImageViewTarget(selectedImageView) {
+                                            @Override
+                                            public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
+                                                super.onResourceReady(bitmap, transition);
+                                                // Assign the loaded Bitmap to the image variable
+                                                image = bitmap;
+                                            }
+                                        });
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
                         }
                     }
                 });
@@ -103,6 +116,9 @@ public class CreateNewAccountView extends AppCompatActivity {
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 String confirmPassword = confirmEditText.getText().toString();
+                if (image == null) {
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_profile);
+                }
                 // Validate input fields (e.g., check if username, email, and password are not empty)
                 if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     // Display an error message if any field is empty
@@ -126,7 +142,7 @@ public class CreateNewAccountView extends AppCompatActivity {
                     return;
                 }
 
-                database.addUserRequest(username, password, email, role, null, new RestRepo.RepositoryCallback<String>() {
+                database.addUserRequest(username, password, email, role, image, new RestRepo.RepositoryCallback<String>() {
                     @Override
                     public void onComplete(String result) {
                         stringMutableLiveData.postValue(result);
