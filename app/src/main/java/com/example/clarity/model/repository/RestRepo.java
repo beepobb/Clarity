@@ -195,6 +195,16 @@ public class RestRepo {
     }
     //################USER METHODS################/
     // NULL indicates failed authentication
+    public void checkUserRequest(int id, RepositoryCallback<Boolean> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean response = checkUser(Integer.toString(id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
     public void getUserRequest(String username, String password, RepositoryCallback<User> callback) {
         executor.execute(new Runnable() {
             @Override
@@ -219,6 +229,22 @@ public class RestRepo {
             return null;
         }
     }
+    private Boolean checkUser(String id) {
+        try {
+            String urlQuery = "?id="+id;
+            JSONObject tmp = urlGet(endPointUser,urlQuery);
+            String result = tmp.getString("body");
+            if(result.equals("True")) {
+                return true;
+            }
+            return false;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
 
     public void addUserRequest(String username, String password, String email, String role, Bitmap bm, RepositoryCallback<String> callback) {
         executor.execute(new Runnable() {
