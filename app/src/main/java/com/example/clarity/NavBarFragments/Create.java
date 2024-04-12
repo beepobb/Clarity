@@ -13,10 +13,15 @@ import android.net.Uri;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
 import com.example.clarity.model.data.User;
@@ -24,6 +29,7 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
@@ -72,7 +78,7 @@ public class Create extends Fragment {
     private User appUser;
     private MutableLiveData<String> userLiveData;
     private BottomNavigationView bottomNavigationView;
-    private Bitmap bitmap;
+    private Bitmap image;
     boolean limitExceeded = false;
     private int selectedCount;
 //end
@@ -124,7 +130,33 @@ public class Create extends Fragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
-//end
+
+        imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            placeholderImageView.setVisibility(View.GONE);
+                            Uri selectedImageUri = data.getData();
+                            try {
+                                Glide.with(this)
+                                        .asBitmap()
+                                        .load(selectedImageUri)
+                                        .into(new BitmapImageViewTarget(selectedImageView) {
+                                            @Override
+                                            public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
+                                                super.onResourceReady(bitmap, transition);
+                                                // Assign the loaded Bitmap to the image variable
+                                                image = bitmap;
+                                            }
+                                        });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
         mMultiAutoCompleteTextView = rootView.findViewById(R.id.multiAutoCompleteTextView);
         String[] tags = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, tags);
@@ -151,7 +183,6 @@ public class Create extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 selectedCount++;
                 if (selectedCount > 3 && !limitExceeded) {
                     // Notify the user that only 3 selections are allowed
@@ -170,29 +201,6 @@ public class Create extends Fragment {
             }
 
         });
-
-
-
-        // Set up image selection
-        imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null) {
-                            placeholderImageView.setVisibility(View.GONE);
-                            Uri selectedImageUri = data.getData();
-                            try {
-                                // Convert URI to Bitmap, this bitmap variable refers to the image user upload
-                                Bitmap bitmap = BitmapFactory.decodeStream(requireActivity().getContentResolver().openInputStream(selectedImageUri));
-
-                                // Set the bitmap to ImageView
-                                selectedImageView.setImageBitmap(bitmap);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
 
         // Launch the gallery picker when the ImageView is clicked
         selectedImageView.setOnClickListener(view -> selectImage());
@@ -239,10 +247,14 @@ public class Create extends Fragment {
                 String end_time = end_timeEditText.getText().toString();
                 String location = locationEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
+                String contact = contactEditText.getText().toString();
 
-                Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
+                if (image == null) {
+                    Toast.makeText(getContext(), "null value", Toast.LENGTH_SHORT).show();
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
+                }
 
-                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty()) {
+                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() || contact.isEmpty()) {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
