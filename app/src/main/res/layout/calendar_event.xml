@@ -6,8 +6,8 @@
     android:id="@+id/calendarEventCard"
     app:cardBackgroundColor="@color/white"
     app:cardPreventCornerOverlap="false"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="0dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="5dp"
     app:cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="100dp"
@@ -17,8 +17,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="28dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="3dp">
 
         <TextView
             android:id="@+id/calendarEventNameTextView"
@@ -54,8 +54,8 @@
 
         <TextView
             android:id="@+id/calendarEventLocationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="124dp"
+            android:layout_height="18dp"
             android:layout_marginStart="6dp"
             android:layout_marginTop="54dp"
             android:text="Event Location Here"
@@ -82,13 +82,14 @@
 
         <View
             android:id="@+id/eventDateLabel"
-            android:layout_width="100dp"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:background="@color/calendar_label_date"
             android:rotation="180"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/eventDay"
@@ -107,17 +108,16 @@
             android:id="@+id/eventDayNumber"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="01"
             android:textColor="@color/accent_1"
             android:textSize="30sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/eventDateLabel"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toBottomOf="@+id/eventDateLabel"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/eventDateLabel"
-            app:layout_constraintTop_toTopOf="@+id/eventDateLabel" />
+            app:layout_constraintTop_toTopOf="@+id/eventDateLabel"
+            app:layout_constraintVertical_bias="0.177" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
