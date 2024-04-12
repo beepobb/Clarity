@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         discoverFragment = new Discover();
         favouritesFragment = new Favourites();
         createFragment = new Create();
