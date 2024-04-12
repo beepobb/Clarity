@@ -83,7 +83,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         holder.eventTimeTextView.setText(event.getEvent_start());
         holder.eventLocationTextView.setText(event.getLocation());
         holder.eventDayNumber.setText(String.valueOf(event.getEventStart().get(Calendar.DAY_OF_MONTH)));
-        holder.eventDay.setText(daysOfWeekConverter[event.getEventStart().get(Calendar.DAY_OF_MONTH)]);
+        holder.eventDay.setText(daysOfWeekConverter[event.getEventStart().get(Calendar.DAY_OF_WEEK)]);
 
         // hide elements based on monthly or agenda view
         if (this.calendarDisplayState == CalendarFragment.CalendarDisplayState.MONTHLY_VIEW) {

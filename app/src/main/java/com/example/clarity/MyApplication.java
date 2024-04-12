@@ -2,6 +2,8 @@ package com.example.clarity;
 
 import android.app.Application;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.clarity.model.PreferenceUtils;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
@@ -19,10 +21,11 @@ public class MyApplication extends Application {
 
 
     // Initialize Threads and Database on application start
-    private final Executor executor = Executors.newFixedThreadPool(2);
-    private final RestRepo database = RestRepo.getInstance(executor);
+    private Executor executor = Executors.newFixedThreadPool(2);
+    private RestRepo database = RestRepo.getInstance(executor);
 
     private User appUser; // User object for logged in user
+
 
     // Database methods //
     public RestRepo getDatabase() {
@@ -35,4 +38,5 @@ public class MyApplication extends Application {
     public void saveAppUser(User user) {
         appUser = user;
     }
+
 }

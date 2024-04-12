@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.clarity"
-        minSdk = 24
+        minSdk = 26 // used to be 24 (12/4/2024)
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

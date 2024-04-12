@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
+import com.example.clarity.MyDataRepository;
 import com.example.clarity.NavBarFragments.Discover.DiscoverEventAdapter;
 import com.example.clarity.R;
 import com.example.clarity.model.PreferenceUtils;
@@ -49,6 +50,7 @@ public class Profile extends Fragment {
     private Button buttonResetCalendar,buttonCancel,buttonConfirm,buttonLogOut;
     private View view;
     private RestRepo db;
+    private MyDataRepository dataRepo;
     private TextView username,role,alertBoxAction;
     ImageView profilePicture;
     ImageButton editProfile;
@@ -58,6 +60,7 @@ public class Profile extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userPrefs = PreferenceUtils.getInstance(getActivity());
+        dataRepo = MyDataRepository.getInstance();
         
         // Fetch database (RestRepo instance)
         Activity activity = getActivity();
@@ -134,6 +137,7 @@ public class Profile extends Fragment {
             public void onClick(View v) {
                 description = alertDialog.findViewById(R.id.action_description);
                 //TODO: if reset calendar -> remove all added events from local storage
+                dataRepo.resetSavedEventsOnMainThread(); // triggers observers to refresh UI
                 userPrefs.resetCalendar();
                 userPrefs.commitCalendarUpdates();
                 alertDialog.dismiss();
@@ -151,6 +155,7 @@ public class Profile extends Fragment {
 
                 // Placeholder (until session token)
                 appContext.saveAppUser(null); // delete the User object that was saved
+                userPrefs.clearSessionToken(); // delete session token
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
             }
