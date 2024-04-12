@@ -186,28 +186,38 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
                             String tag_category = tag.getTag_category();
 
                             if (tag_category.equals(EventTags.FIFTH_ROW.name())) {
-                                tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
+                                if (tagsEventMapping.get(post_id) != null ){
+                                    tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
+                                }
                             } else if (tag_category.equals(EventTags.CAREER.name())) {
-                                tagsEventMapping.get(EventTags.CAREER).add(post_id);
+                                if (tagsEventMapping.get(post_id) != null ) {
+                                    tagsEventMapping.get(EventTags.CAREER).add(post_id);
+                                }
                             } else if (tag_category.equals(EventTags.WORKSHOP.name())) {
-                                tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
+                                if (tagsEventMapping.get(post_id) != null ){
+                                    tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
+                                }
                             } else if (tag_category.equals(EventTags.CAMPUS_LIFE.name())) {
-                                tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
+                                if (tagsEventMapping.get(post_id) != null ){
+                                    tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
+                                }
                             } else if (tag_category.equals(EventTags.COMPETITION.name())) {
-                                tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
+                                if (tagsEventMapping.get(post_id) != null ){
+                                    tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
+                                }
                             }
                         }
-                        Log.d("RefreshDiscoverFragment", "Check for new events and update Discover fragment");
+                    }
+                });
+                Log.d("RefreshDiscoverFragment", "Check for new events and update Discover fragment");
 
-                        // end refresh state on main thread
-                        assert getActivity()!=null;
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d("onRefresh", "Refresh discover page done.");
-                                swipeDownToRefresh.setRefreshing(false);
-                            }
-                        });
+                // end refresh state on main thread
+                assert getActivity()!=null;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("onRefresh", "Refresh discover page done.");
+                        swipeDownToRefresh.setRefreshing(false);
                     }
                 });
             }
@@ -229,14 +239,17 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
         Toast.makeText(getActivity(), "TAG BUTTON CLICKED "+tagButtons.get(position).toString(), Toast.LENGTH_SHORT).show();
         Log.d("DiscoverFragment", tagButtons.get(position).toString());
 
-        EventTags buttonPressed = tagButtons.get(position);
-
-        // generate a sublist of events based on the tag button that was clicked
         List<Post> subList = new ArrayList<>();
-        for (Post post : Objects.requireNonNull(eventListLive.getValue())) {
-            for (Integer id : Objects.requireNonNull(tagsEventMapping.get(buttonPressed))) {
-                if (post.getId() == id) {
-                    subList.add(post);
+        EventTags buttonPressed = tagButtons.get(position);
+        if (buttonPressed.name().equals("ALL")){
+            subList = eventListLive.getValue();
+        } else {
+            // generate a sublist of events based on the tag button that was clicked
+            for (Post post : Objects.requireNonNull(eventListLive.getValue())) {
+                for (Integer id : Objects.requireNonNull(tagsEventMapping.get(buttonPressed))) {
+                    if (post.getId() == id) {
+                        subList.add(post);
+                    }
                 }
             }
         }

@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 
 // for tag button creation
 public enum EventTags {
-    CAREER, CAMPUS_LIFE, FIFTH_ROW, COMPETITION, WORKSHOP;
+    ALL, CAREER, CAMPUS_LIFE, FIFTH_ROW, COMPETITION, WORKSHOP;
 
     @NonNull
     @Override
     public String toString() {
         switch (this) {
+            case ALL:
+                return "All";
             case CAREER:
                 return "Career";
             case WORKSHOP:
