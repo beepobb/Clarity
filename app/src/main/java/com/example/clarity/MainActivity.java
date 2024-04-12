@@ -51,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        database.removeFavouritesRequest(4,3, new RestRepo.RepositoryCallback<String>() {
+            @Override
+            public void onComplete(String result) {
+                System.out.println(result);
+            }
+        });
+
         discoverFragment = new Discover();
         favouritesFragment = new Favourites();
         createFragment = new Create();

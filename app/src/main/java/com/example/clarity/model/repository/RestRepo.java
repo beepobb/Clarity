@@ -193,6 +193,39 @@ public class RestRepo {
             }
         }
     }
+
+    public static String urlDelete(String targetURL, String urlParameters) {
+        HttpURLConnection connection = null;
+        try {
+            //Create connection
+            URL url = new URL(targetURL + urlParameters);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("content-type", "application/json");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            //Get Response
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+            String line;
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            return response.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
     //################USER METHODS################/
     // NULL indicates failed authentication
     public void checkUserRequest(int id, RepositoryCallback<Boolean> callback) {
@@ -279,6 +312,8 @@ public class RestRepo {
             return null;
         }
     }
+
+    //################END USER METHODS################/
 
 
     //################POST METHODS################/
@@ -420,6 +455,7 @@ public class RestRepo {
             return null;
         }
     }
+    //################END POST METHODS################/
 
     //################Favourites METHODS################/
     public void getFavouritesRequest(int user_id, RepositoryCallback<ArrayList<Post>> callback) {
@@ -475,6 +511,28 @@ public class RestRepo {
             return null;
         }
     }
+
+    public void removeFavouritesRequest(int post_id, int user_id, RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                String response = removeFavourites(String.valueOf(post_id), String.valueOf(user_id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private String removeFavourites(String post_id, String user_id) {
+        String urlParameter = String.format("?post_id=%s&user_id=%s",post_id,user_id);
+        try {
+            return urlDelete(endPointFavourites, urlParameter);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    //################Favourites METHODS################/
 
     //################Tag METHODS################/
     public void getPostsWithTagRequest(String category, RepositoryCallback<ArrayList<Post>> callback) {
