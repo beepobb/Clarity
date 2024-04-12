@@ -66,5 +66,6 @@ public class NavigatorActivity extends AppCompatActivity {
             }
 
         }
+        finish();
     }
 }
