@@ -1,9 +1,13 @@
 package com.example.clarity.model.repository;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.clarity.databinding.ActivityMainBinding;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import com.example.clarity.R;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Favourite;
@@ -206,7 +210,9 @@ public class RestRepo {
             String urlQuery = "?username="+username+"&password="+password;
             JSONObject tmp = urlGet(endPointUser,urlQuery);
             System.out.println(tmp);
-            return new User(tmp.getInt("id"), tmp.getString("username"),tmp.getString("password"),tmp.getString("role"),tmp.getString("email"),tmp.getString("created_at"));
+            return new User(tmp.getInt("id"), tmp.getString("username"),
+                    tmp.getString("password"),tmp.getString("role"),tmp.getString("email"),
+                    tmp.getString("created_at"), tmp.getString("profile_pic_url"));
         }
         catch(Exception e) {
             System.out.println(e.getMessage());
@@ -601,7 +607,7 @@ public class RestRepo {
 
     private  String getStringImage(Bitmap bmp, Bitmap.CompressFormat format){
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bmp.compress(format, 100, out);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 40, out);
         byte[] imageBytes = out.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
