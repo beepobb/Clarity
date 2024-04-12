@@ -220,22 +220,31 @@ public class RestRepo {
         }
     }
 
-    public void addUserRequest(String username, String password, String email, String role, RepositoryCallback<String> callback) {
+    public void addUserRequest(String username, String password, String email, String role, Bitmap bm, RepositoryCallback<String> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                String response = addUser(username, MD5.getMd5(password), email, role);
-                callback.onComplete(response);
+                try {
+                    String filename = username + ".png";
+                    String url = imageBucket + '/' + filename;
+                    addImage(bm, filename);
+                    String response = addUser(username, MD5.getMd5(password), email, role, url);
+                    callback.onComplete(response);
+                }
+                catch (Exception e) {
+                    callback.onComplete("error");
+                }
             }
         });
     }
 
-    private String addUser(String username, String password, String email, String role) {
+    private String addUser(String username, String password, String email, String role, String profile_pic_url) {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("username", username);
         data.put("password", password);
         data.put("email", email);
         data.put("role", role);
+        data.put("profile_pic_url", profile_pic_url);
         try {
             return urlPost(endPointUser, new JSONObject(data));
         }
