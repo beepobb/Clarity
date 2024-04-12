@@ -402,7 +402,7 @@ public class RestRepo {
 
     private String addPost(int author_id, String event_start, String event_end, String image_url, String title,
                           String location, String description, ArrayList<String> tags) {
-        String listString = String.join(", ", tags);
+        String listString = String.join(",", tags);
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("author_id", String.valueOf(author_id));
         data.put("event_start", event_start);
