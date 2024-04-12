@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.clarity.MainActivity;
+import com.example.clarity.MyApplication;
+import com.example.clarity.MyDataRepository;
 import com.example.clarity.NavBarFragments.Discover.DiscoverEventAdapter;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
@@ -27,11 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Favourites extends Fragment {
+    private String TAG = "FavouritesFragment";
     private RestRepo db;
-    private User user;
+    private User appUser;
+    private MyDataRepository dataRepo;
     private DiscoverEventAdapter favouriteEventAdapter;
     private RecyclerView favouriteRecyclerView;
-    private MutableLiveData<List<Post>> favouriteListLiveData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,9 @@ public class Favourites extends Fragment {
             // Example: Accessing activity's method
             db = ((MainActivity) activity).database;
         };
-        favouriteListLiveData = new MutableLiveData<>(new ArrayList<>());
+        dataRepo = MyDataRepository.getInstance();
+        appUser = ((MyApplication) getActivity().getApplicationContext()).getAppUser(); // Logged in User
+        Log.i(TAG, "onCreate: finished");
     }
 
     @Override
@@ -52,12 +57,10 @@ public class Favourites extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
         favouriteRecyclerView = view.findViewById(R.id.favouriteRecyclerView);
 
-        user = new User(2, "ryan", "ryan", "ryan", "ryan", "2024-04-01 03:39:42");
-
         favouriteRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         favouriteEventAdapter = new DiscoverEventAdapter(getActivity(), new ArrayList<>());
         favouriteRecyclerView.setAdapter(favouriteEventAdapter);
-        Log.d("FavouriteEventAdaper", "onCreateView");
+        Log.i(TAG, "onCreateView: finished");
         return view;
     }
 
@@ -66,22 +69,35 @@ public class Favourites extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.d("View", "onViewCreated");
 
-        favouriteListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+        // Set up observer for favourite events (favouriteEventsLiveData from dataRepo)
+        // When there is a change in the favourite events list (e.g. Posts removed, etc), update the UI
+        dataRepo.getFavouriteEventsLiveData().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
-                // TODO: update RecyclerView with updated data from database
-                // executed in main thread, so we can modify Views
-                favouriteEventAdapter.updateEventList(favouriteListLiveData.getValue());
+                // Updates RecyclerView with updated data from database
+                // executed in main thread, so that we can modify Views
+
+                Log.d(TAG, "favouriteEventsLiveData triggered: refresh UI");
+                favouriteEventAdapter.updateEventList(dataRepo.getFavouriteEvents());
             }
         });
 
-        db.getFavouritesRequest(user.getId(), new RestRepo.RepositoryCallback<ArrayList<Post>>() {
+        // Load in user's favourite posts from database
+        db.getFavouritesRequest(appUser.getId(), new RestRepo.RepositoryCallback<ArrayList<Post>>() {
             @Override
             public void onComplete(ArrayList<Post> result) {
-                if (result != null) {
-                    favouriteListLiveData.postValue(result); // use post as it is executed in worker thread
+                if (result == null) { // no Posts fetched
+                    result = new ArrayList<>(); // set result to be an empty list rather than null
                 }
+
+                dataRepo.loadFavouriteEventsOnWorkerThread(result);
+                Log.d(TAG, "List of user's favourite events pulled from database");
+
+                // Note: we cannot directly update UI Views here as onComplete will be executed on a worker thread
+                // We instead trigger observers that will update the UI in the main thread.
             }
         });
+
+
     }
 }
