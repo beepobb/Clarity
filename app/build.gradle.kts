@@ -48,5 +48,5 @@ dependencies {
     implementation ("com.applandeo:material-calendar-view:1.9.1") // MaterialCalendarView
     implementation ("com.google.android.material:material:1.5.0") // circular image
     implementation ("org.signal:argon2:13.1@aar")
-
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0") //swipe down to refresh
 }
