@@ -58,12 +58,14 @@ public class LoginActivity extends AppCompatActivity {
                 // When user object is fetched (getUserRequest): switch to MainActivity
                 if (user == null) {
                     Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
+                    progressBar.setProgress(0);
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
                     ((MyApplication) getApplicationContext()).saveAppUser(user); // save logged-in user
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -72,6 +74,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Start long operation in a background thread
+
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+
+                if (username.isEmpty() || password.isEmpty()) {
+                    // Display an error message if any field is empty
+                    Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 new Thread(new Runnable() {
                     public void run() {
                         int progressStatus = 0;
@@ -88,28 +100,13 @@ public class LoginActivity extends AppCompatActivity {
 
                             try {
                                 // Sleep for 200 milliseconds to simulate a long operation
-                                Thread.sleep(20);
+                                Thread.sleep(25);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }
-                        // Once the operation is completed, show a toast message
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Toast.makeText(LoginActivity.this, "Operation completed", Toast.LENGTH_SHORT).show();
-                            }
-                        });
                     }
                 }).start();
-
-                String username = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-
-                if (username.isEmpty() || password.isEmpty()) {
-                    // Display an error message if any field is empty
-                    Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 database.getUserRequest(username, password, new RestRepo.RepositoryCallback<User>() {
 
                     @Override
