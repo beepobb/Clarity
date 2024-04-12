@@ -1,5 +1,9 @@
 package com.example.clarity.model.data;
-public class User {
+
+import java.io.Serializable;
+
+public class User implements Serializable {
+    // Implements Serializable so that User object can be serialized into a session token
     private int id;
     private String username;
     private String password;

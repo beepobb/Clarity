@@ -11,11 +11,11 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/eventImageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:contentDescription="event description"
+                android:contentDescription="Event image"
                 android:src="@drawable/night_fiesta"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/background_white"
+            android:id="@+id/bgImageView"
             android:layout_width="match_parent"
             android:layout_height="500dp"
             android:layout_marginTop="200dp"
@@ -44,7 +44,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/eventNameView"
+            android:id="@+id/eventNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="30dp"
@@ -53,50 +53,50 @@
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/background_white"
-            app:layout_constraintTop_toTopOf="@id/background_white" />
+            app:layout_constraintStart_toStartOf="@id/bgImageView"
+            app:layout_constraintTop_toTopOf="@id/bgImageView" />
 
         <TextView
-            android:id="@+id/datentime"
+            android:id="@+id/eventDateTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="30dp"
             android:text="@string/event_date_time"
             android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@+id/eventNameView"
-            app:layout_constraintTop_toBottomOf="@+id/eventNameView" />
+            app:layout_constraintStart_toStartOf="@+id/eventNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/eventNameTextView" />
 
         <ImageView
-            android:id="@+id/pin"
+            android:id="@+id/locationPinImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="25dp"
             android:src="@drawable/baseline_location_on_24"
-            app:layout_constraintStart_toStartOf="@+id/datentime"
-            app:layout_constraintTop_toBottomOf="@+id/datentime" />
+            app:layout_constraintStart_toStartOf="@+id/eventDateTimeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/eventDateTimeTextView" />
 
         <TextView
-            android:id="@+id/location"
+            android:id="@+id/eventLocationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="7dp"
             android:text="@string/event_location"
-            app:layout_constraintStart_toEndOf="@+id/pin"
-            app:layout_constraintTop_toBottomOf="@+id/datentime" />
+            app:layout_constraintStart_toEndOf="@+id/locationPinImageView"
+            app:layout_constraintTop_toBottomOf="@+id/eventDateTimeTextView" />
 
         <ToggleButton
-            android:id="@+id/add_button"
+            android:id="@+id/addToggleButton"
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_marginStart="100dp"
             android:background="@drawable/plus_button"
             android:textOff=""
             android:textOn=""
-            app:layout_constraintStart_toEndOf="@+id/location"
-            app:layout_constraintTop_toTopOf="@+id/location" />
+            app:layout_constraintStart_toEndOf="@+id/eventLocationTextView"
+            app:layout_constraintTop_toTopOf="@+id/eventLocationTextView" />
 
         <ToggleButton
-            android:id="@+id/like_button"
+            android:id="@+id/likeToggleButton"
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_marginStart="10dp"
@@ -104,20 +104,20 @@
             android:paddingStart="125dp"
             android:textOff=""
             android:textOn=""
-            app:layout_constraintStart_toEndOf="@+id/add_button"
-            app:layout_constraintTop_toTopOf="@+id/location" />
+            app:layout_constraintStart_toEndOf="@+id/addToggleButton"
+            app:layout_constraintTop_toTopOf="@+id/eventLocationTextView" />
 
         <View
-            android:id="@+id/horizontal_line"
+            android:id="@+id/horizontalLineView"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
             android:background="#967ADC"
-            app:layout_constraintTop_toBottomOf="@+id/location" />
+            app:layout_constraintTop_toBottomOf="@+id/eventLocationTextView" />
 
         <TextView
-            android:id="@+id/event_des"
+            android:id="@+id/descriptionHeaderTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="30dp"
@@ -125,10 +125,10 @@
             android:textColor="#000000"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/horizontal_line" />
+            app:layout_constraintTop_toBottomOf="@+id/horizontalLineView" />
 
         <TextView
-            android:id="@+id/event_des_text"
+            android:id="@+id/eventDescriptionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="30dp"
@@ -136,10 +136,10 @@
             android:text="@string/event_descrip"
             android:textColor="#000000"
             android:textSize="10sp"
-            app:layout_constraintTop_toBottomOf="@+id/event_des" />
+            app:layout_constraintTop_toBottomOf="@+id/descriptionHeaderTextView" />
 
         <TextView
-            android:id="@+id/tags"
+            android:id="@+id/tagsHeaderTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="30dp"
@@ -147,10 +147,10 @@
             android:textColor="#000000"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/event_des_text" />
+            app:layout_constraintTop_toBottomOf="@+id/eventDescriptionTextView" />
 
         <TextView
-            android:id="@+id/rect_tag_1"
+            android:id="@+id/rectangleTag1TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -158,11 +158,11 @@
             android:text="@string/tag1"
             android:textColor="#967ADC"
             android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@+id/tags"
-            app:layout_constraintTop_toBottomOf="@+id/tags" />
+            app:layout_constraintStart_toStartOf="@+id/tagsHeaderTextView"
+            app:layout_constraintTop_toBottomOf="@+id/tagsHeaderTextView" />
 
         <TextView
-            android:id="@+id/rect_tag_2"
+            android:id="@+id/rectangleTag2TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -170,11 +170,11 @@
             android:text="@string/tag2"
             android:textColor="#967ADC"
             android:textSize="10sp"
-            app:layout_constraintStart_toEndOf="@+id/rect_tag_1"
-            app:layout_constraintTop_toBottomOf="@+id/tags" />
+            app:layout_constraintStart_toEndOf="@+id/rectangleTag1TextView"
+            app:layout_constraintTop_toBottomOf="@+id/tagsHeaderTextView" />
 
         <TextView
-            android:id="@+id/organiser"
+            android:id="@+id/organiserHeaderTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="30dp"
@@ -182,17 +182,18 @@
             android:textColor="#000000"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/rect_tag_1"/>
+            app:layout_constraintTop_toBottomOf="@+id/rectangleTag1TextView"/>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/organiserCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="15dp"
-            app:layout_constraintStart_toStartOf="@+id/organiser"
-            app:layout_constraintTop_toBottomOf="@+id/organiser"
+            app:layout_constraintStart_toStartOf="@+id/organiserHeaderTextView"
+            app:layout_constraintTop_toBottomOf="@+id/organiserHeaderTextView"
             app:cardCornerRadius="10dp"
             app:cardElevation="7dp"
             app:cardBackgroundColor="#F7FAFA">
@@ -200,14 +201,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <ImageView
-                    android:id="@+id/org_pic"
+                    android:id="@+id/organiserPictureImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/root"
                     android:paddingStart="10dp"/>
 
                 <TextView
-                    android:id="@+id/orgName"
+                    android:id="@+id/organiserNameTextView"
                     android:layout_width="232dp"
                     android:layout_height="42dp"
                     android:layout_marginTop="24dp"
@@ -217,8 +218,8 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#000000"
-                    app:layout_constraintStart_toEndOf="@id/org_pic"
-                    app:layout_constraintTop_toBottomOf="@id/organiser" />
+                    app:layout_constraintStart_toEndOf="@id/organiserPictureImageView"
+                    app:layout_constraintTop_toBottomOf="@id/organiserHeaderTextView" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

@@ -5,6 +5,7 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class Post {
     private int id;
@@ -95,4 +96,20 @@ public class Post {
     public String toString() {
         return title;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        // Two Post objects are considered equal if id and title are the same
+
+        if (this == o) return true; // same object in memory
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return id == post.id && Objects.equals(title, post.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title);
+    }
+
 }

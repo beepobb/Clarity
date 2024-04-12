@@ -21,14 +21,20 @@ import android.widget.Toast;
 import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
 import com.example.clarity.R;
+import com.example.clarity.SerializationUtils;
 import com.example.clarity.databinding.ActivityLoginBinding;
+import com.example.clarity.model.PreferenceUtils;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 
+import java.io.IOException;
+
 public class LoginActivity extends AppCompatActivity {
+    private static final String TAG = "LoginActivity";
     private ActivityLoginBinding binding;
     private RestRepo database;
     private MutableLiveData<User> userLiveData;
+    private PreferenceUtils prefUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         final Handler handler = new Handler();
 
         database = ((MyApplication) getApplicationContext()).getDatabase();
+        prefUtils = PreferenceUtils.getInstance(this);
         userLiveData = new MutableLiveData<>(); // contains null at this step
 
 
@@ -63,6 +70,14 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
                     ((MyApplication) getApplicationContext()).saveAppUser(user); // save logged-in user
+                    try {
+                        String sessionToken = SerializationUtils.serializeToString(user);
+                        prefUtils.saveSessionToken(sessionToken);
+                    } catch (IOException e) {
+                        Log.d(TAG, "Failed to serialize User object.");
+                        throw new RuntimeException(e);
+                    }
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
