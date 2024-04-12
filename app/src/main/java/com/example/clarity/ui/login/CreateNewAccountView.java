@@ -126,7 +126,7 @@ public class CreateNewAccountView extends AppCompatActivity {
                     return;
                 }
 
-                database.addUserRequest(username, password, email, role, new RestRepo.RepositoryCallback<String>() {
+                database.addUserRequest(username, password, email, role, null, new RestRepo.RepositoryCallback<String>() {
                     @Override
                     public void onComplete(String result) {
                         stringMutableLiveData.postValue(result);
