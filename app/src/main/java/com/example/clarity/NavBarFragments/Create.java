@@ -1,12 +1,12 @@
 package com.example.clarity.NavBarFragments;
 
 import static android.app.Activity.RESULT_OK;
+
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.net.Uri;
@@ -21,14 +21,12 @@ import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
-import com.example.clarity.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -37,7 +35,6 @@ import android.widget.Toast;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -54,7 +51,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import android.util.Log;
+
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -76,6 +73,8 @@ public class Create extends Fragment {
     private MutableLiveData<String> userLiveData;
     private BottomNavigationView bottomNavigationView;
     private Bitmap bitmap;
+    boolean limitExceeded = false;
+    private int selectedCount;
 //end
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -138,6 +137,41 @@ public class Create extends Fragment {
 
         // Set threshold for filtering
         mMultiAutoCompleteTextView.setThreshold(1);
+
+        // hide keyboard for the dropdown
+        mMultiAutoCompleteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyboard(requireContext(), v);
+                mMultiAutoCompleteTextView.showDropDown();}
+
+        });
+        // Handle item selection
+        mMultiAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                selectedCount++;
+                if (selectedCount > 3 && !limitExceeded) {
+                    // Notify the user that only 3 selections are allowed
+                    Toast.makeText(requireContext(), "Only 3 selections allowed", Toast.LENGTH_SHORT).show();
+
+                    // Clear the MultiAutoCompleteTextView
+                    mMultiAutoCompleteTextView.setText("");
+                    selectedCount = 0; // Reset the count
+                    limitExceeded = true; // Set the flag
+                } else {
+                    limitExceeded = false; // Reset the flag
+                }
+
+                // Your existing logic to handle item selection
+                String selectedItem = (String) parent.getItemAtPosition(position);
+            }
+
+        });
+
+
 
         // Set up image selection
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -264,6 +298,11 @@ public class Create extends Fragment {
         //end
         return rootView;
     }
+    private void hideKeyboard(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mMultiAutoCompleteTextView.getWindowToken(), 0);
+    }
+
 
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
