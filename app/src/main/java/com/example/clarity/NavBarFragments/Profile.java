@@ -11,6 +11,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Profile extends Fragment {
+    private static String TAG = "ProfileFragment";
     private PreferenceUtils userPrefs;
     private MyApplication appContext;
     private User appUser;
@@ -58,6 +61,7 @@ public class Profile extends Fragment {
     private MyDataRepository dataRepo;
     private TextView username,role,alertBoxAction;
     ShapeableImageView profilePicture;
+    MutableLiveData<Bitmap> bitmapLiveData;
     TextView description;
 
     @Override
@@ -65,6 +69,8 @@ public class Profile extends Fragment {
         super.onCreate(savedInstanceState);
         userPrefs = PreferenceUtils.getInstance(getActivity());
         dataRepo = MyDataRepository.getInstance();
+        bitmapLiveData = new MutableLiveData<>();
+
         
         // Fetch database (RestRepo instance)
         Activity activity = getActivity();
@@ -113,14 +119,28 @@ public class Profile extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.i("ProfileCreated", "onViewCreated");
 
-
+        profilePicture.setImageResource(R.drawable.placeholder_profile);
 
         username.setText(appUser.getUsername());
         role.setText(appUser.getRole());
+
+        // Triggers when user profile image is fetched
+        bitmapLiveData.observe(getViewLifecycleOwner(), new Observer<Bitmap>() {
+            @Override
+            public void onChanged(Bitmap bitmap) {
+                if (bitmap != null) {
+                    Log.d(TAG, "Image changed");
+                    profilePicture.setImageBitmap(bitmap);
+                }
+            }
+        });
+
         db.getImageRequest(appUser.getProfile_pic_url(), new RestRepo.RepositoryCallback<Bitmap>() {
             @Override
             public void onComplete(Bitmap result) {
-                profilePicture.setImageBitmap(result);
+                if (result != null) {
+                    bitmapLiveData.postValue(result);
+                }
             }
         });
 
