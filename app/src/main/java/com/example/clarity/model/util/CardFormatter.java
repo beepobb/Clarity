@@ -38,7 +38,7 @@ public class CardFormatter {
         return day+"/"+month+"/"+year;
     }
 
-    /**
+    /**gi
      * Formats start and end time for event
      * @param eventStart format: yyyy-MM-dd HH:mm:ss
      * @param eventEnd format: yyyy-MM-dd HH:mm:ss

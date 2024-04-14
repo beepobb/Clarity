@@ -89,7 +89,7 @@ public class MyDataRepository {
         List<Post> favouriteEvents = favouriteEventsLiveData.getValue();
         assert favouriteEvents != null;
         favouriteEvents.remove(post);
-        savedEventsLiveData.setValue(favouriteEvents); // setValue can only be executed on main UI thread
+        favouriteEventsLiveData.setValue(favouriteEvents); // setValue can only be executed on main UI thread
         // Observers of savedEventsLiveData will be triggered
     }
 
