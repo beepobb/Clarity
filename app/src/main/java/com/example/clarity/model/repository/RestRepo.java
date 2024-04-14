@@ -23,23 +23,21 @@ import java.io.OutputStreamWriter;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.lang.Runnable;
-import java.util.concurrent.Executors;
 
 import com.example.clarity.model.util.MD5;
 
 public class RestRepo {
-    //################STATIC METHODS################/
     private final String endPointUser = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/user";
     private final String endPointPost = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/post";
     private final String endPointFavourites = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/favourites";
     private final String endPointTags = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/tags";
     private final String imageBucket = "https://18ihlowsu4.execute-api.ap-southeast-2.amazonaws.com/beta/sutdclarity";
+    private final String endPointSummary = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/summary";
 
     private final Executor executor;
     private static RestRepo instance; // single instance
@@ -49,6 +47,7 @@ public class RestRepo {
         this.executor = executor;
     }
 
+    //################STATIC METHODS################/
     public static RestRepo getInstance(Executor executor) {
         if (instance == null) {
             instance = new RestRepo(executor);
@@ -126,14 +125,16 @@ public class RestRepo {
         HttpURLConnection connection = null;
         try {
             //Create connection
+            String data_string = data.toString();
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("content-type", "application/json");
+            connection.setRequestProperty("content-length", Integer.toString(data_string.length()));
             connection.setDoOutput(true);
             connection.setDoInput(true);
             OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-            wr.write(data.toString());
+            wr.write(data_string);
             wr.flush();
 
             //Get Response
@@ -193,8 +194,51 @@ public class RestRepo {
             }
         }
     }
+
+    public static String urlDelete(String targetURL, String urlParameters) {
+        HttpURLConnection connection = null;
+        try {
+            //Create connection
+            URL url = new URL(targetURL + urlParameters);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("content-type", "application/json");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            //Get Response
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+            String line;
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            return response.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
     //################USER METHODS################/
     // NULL indicates failed authentication
+    public void checkUserRequest(int id, RepositoryCallback<Boolean> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean response = checkUser(Integer.toString(id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
     public void getUserRequest(String username, String password, RepositoryCallback<User> callback) {
         executor.execute(new Runnable() {
             @Override
@@ -219,23 +263,48 @@ public class RestRepo {
             return null;
         }
     }
+    private Boolean checkUser(String id) {
+        try {
+            String urlQuery = "?id="+id;
+            JSONObject tmp = urlGet(endPointUser,urlQuery);
+            String result = tmp.getString("body");
+            if(result.equals("True")) {
+                return true;
+            }
+            return false;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 
-    public void addUserRequest(String username, String password, String email, String role, RepositoryCallback<String> callback) {
+
+    public void addUserRequest(String username, String password, String email, String role, Bitmap bm, RepositoryCallback<String> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                String response = addUser(username, MD5.getMd5(password), email, role);
-                callback.onComplete(response);
+                try {
+                    String filename = username + ".png";
+                    String url = imageBucket + '/' + filename;
+                    addImage(bm, filename);
+                    String response = addUser(username, MD5.getMd5(password), email, role, url);
+                    callback.onComplete(response);
+                }
+                catch (Exception e) {
+                    callback.onComplete("error");
+                }
             }
         });
     }
 
-    private String addUser(String username, String password, String email, String role) {
+    private String addUser(String username, String password, String email, String role, String profile_pic_url) {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("username", username);
         data.put("password", password);
         data.put("email", email);
         data.put("role", role);
+        data.put("profile_pic_url", profile_pic_url);
         try {
             return urlPost(endPointUser, new JSONObject(data));
         }
@@ -244,6 +313,8 @@ public class RestRepo {
             return null;
         }
     }
+
+    //################END USER METHODS################/
 
 
     //################POST METHODS################/
@@ -367,7 +438,7 @@ public class RestRepo {
 
     private String addPost(int author_id, String event_start, String event_end, String image_url, String title,
                           String location, String description, ArrayList<String> tags) {
-        String listString = String.join(", ", tags);
+        String listString = String.join(",", tags);
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("author_id", String.valueOf(author_id));
         data.put("event_start", event_start);
@@ -385,6 +456,7 @@ public class RestRepo {
             return null;
         }
     }
+    //################END POST METHODS################/
 
     //################Favourites METHODS################/
     public void getFavouritesRequest(int user_id, RepositoryCallback<ArrayList<Post>> callback) {
@@ -440,6 +512,28 @@ public class RestRepo {
             return null;
         }
     }
+
+    public void removeFavouritesRequest(int post_id, int user_id, RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                String response = removeFavourites(String.valueOf(post_id), String.valueOf(user_id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private String removeFavourites(String post_id, String user_id) {
+        String urlParameter = String.format("?post_id=%s&user_id=%s",post_id,user_id);
+        try {
+            return urlDelete(endPointFavourites, urlParameter);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    //################Favourites METHODS################/
 
     //################Tag METHODS################/
     public void getPostsWithTagRequest(String category, RepositoryCallback<ArrayList<Post>> callback) {
@@ -550,7 +644,7 @@ public class RestRepo {
     }
 
 
-
+    // #############IMAGE METHODS##############
     // provide image in a specific type given the url.
     // UPDATE FROM UI/UX side regarding which type to display
     public void postImageRequest(Bitmap bmp, String filename, RepositoryCallback<String> callback) {
@@ -623,5 +717,26 @@ public class RestRepo {
             return filename.substring(index + 1);
         }
         return "";
+    }
+
+    public void  bitmapToTextSummaryRequest(Bitmap bm, RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onComplete("Updated");
+//                try {
+//                    String base64Text = getStringImage(bm, Bitmap.CompressFormat.JPEG);
+//                    base64Text = base64Text.replace("\n", "");
+//                    HashMap<String, String> data = new HashMap<String, String>();
+//                    data.put("document", base64Text);
+//                    String response = urlPost(endPointSummary, new JSONObject(data));
+//                    JSONObject tmp = new JSONObject(response);
+//                    callback.onComplete(tmp.getString("summary"));
+//                }
+//                catch(Exception e) {
+//                    callback.onComplete("");
+//                }
+            }
+        });
     }
 }

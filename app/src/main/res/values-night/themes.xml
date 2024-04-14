@@ -35,7 +35,7 @@
     <style name="CreateAccountFields"><item name="android:background">@drawable/field_night</item></style>
 
     <!-- Styles for Event Fragment -->
-    <style name="EventTitle"><item name="android:textColor">@color/purple</item></style>
+    <style name="EventTitle"><item name="android:textColor">@color/white</item></style>
     <style name="EventDetails"><item name="android:textColor">@color/light_grey</item></style>
     <style name="EventCard"><item name="android:background">@color/purplish_grey</item></style>
 
