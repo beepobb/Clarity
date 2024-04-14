@@ -23,23 +23,21 @@ import java.io.OutputStreamWriter;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.lang.Runnable;
-import java.util.concurrent.Executors;
 
 import com.example.clarity.model.util.MD5;
 
 public class RestRepo {
-    //################STATIC METHODS################/
     private final String endPointUser = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/user";
     private final String endPointPost = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/post";
     private final String endPointFavourites = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/favourites";
     private final String endPointTags = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/tags";
     private final String imageBucket = "https://18ihlowsu4.execute-api.ap-southeast-2.amazonaws.com/beta/sutdclarity";
+    private final String endPointSummary = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/summary";
 
     private final Executor executor;
     private static RestRepo instance; // single instance
@@ -49,6 +47,7 @@ public class RestRepo {
         this.executor = executor;
     }
 
+    //################STATIC METHODS################/
     public static RestRepo getInstance(Executor executor) {
         if (instance == null) {
             instance = new RestRepo(executor);
@@ -126,14 +125,16 @@ public class RestRepo {
         HttpURLConnection connection = null;
         try {
             //Create connection
+            String data_string = data.toString();
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("content-type", "application/json");
+            connection.setRequestProperty("content-length", Integer.toString(data_string.length()));
             connection.setDoOutput(true);
             connection.setDoInput(true);
             OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-            wr.write(data.toString());
+            wr.write(data_string);
             wr.flush();
 
             //Get Response
@@ -643,7 +644,7 @@ public class RestRepo {
     }
 
 
-
+    // #############IMAGE METHODS##############
     // provide image in a specific type given the url.
     // UPDATE FROM UI/UX side regarding which type to display
     public void postImageRequest(Bitmap bmp, String filename, RepositoryCallback<String> callback) {
@@ -716,5 +717,26 @@ public class RestRepo {
             return filename.substring(index + 1);
         }
         return "";
+    }
+
+    public void  bitmapToTextSummaryRequest(Bitmap bm, RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onComplete("Updated");
+//                try {
+//                    String base64Text = getStringImage(bm, Bitmap.CompressFormat.JPEG);
+//                    base64Text = base64Text.replace("\n", "");
+//                    HashMap<String, String> data = new HashMap<String, String>();
+//                    data.put("document", base64Text);
+//                    String response = urlPost(endPointSummary, new JSONObject(data));
+//                    JSONObject tmp = new JSONObject(response);
+//                    callback.onComplete(tmp.getString("summary"));
+//                }
+//                catch(Exception e) {
+//                    callback.onComplete("");
+//                }
+            }
+        });
     }
 }
