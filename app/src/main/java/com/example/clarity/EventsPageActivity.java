@@ -121,7 +121,17 @@ public class EventsPageActivity extends AppCompatActivity {
                 else {
                     // Remove event from user's favourites
                     dataRepo.removeFavouriteEventOnMainThread(post); // Will trigger listeners to update UI
-                    // TODO: CALL DATABASE UNFAVOURITE FUNCTION ONCE JUNJIE HAS IMPLEMENTED IT
+                    db.removeFavouritesRequest(post.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
+                        @Override
+                        public void onComplete(String result) {
+                            if (result != null) {
+                                Log.d(TAG, "onComplete: event successfully removed from user's favourites");
+                            }
+                            else {
+                                Log.d(TAG, "onComplete: error - event failed to be removed from user's favourites");
+                            }
+                        }
+                    });
                     Toast.makeText(EventsPageActivity.this, "Event removed from user's favourites", Toast.LENGTH_SHORT).show();
                 }
                 prefUtils.commitCalendarUpdates();
