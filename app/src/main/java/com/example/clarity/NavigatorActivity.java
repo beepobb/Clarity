@@ -56,6 +56,8 @@ public class NavigatorActivity extends AppCompatActivity {
                 }
                 else {
                     Log.d(TAG, "onChanged: User not in database, log in again");
+                    myApplication.saveAppUser(null);
+                    prefUtils.clearSessionToken();
                     Toast.makeText(myApplication, "User no longer exists.", Toast.LENGTH_SHORT).show();
                     goToLoginActivity();
                 }
