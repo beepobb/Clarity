@@ -279,35 +279,12 @@
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/location" />
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:inputType="text"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/location_text" />
-        <TextView
-            android:id="@+id/description_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="You can include links to Sign-up forms or event websites etc."
-            android:textSize = "8sp"
-            android:inputType="text"
-            android:textColor="#000000"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/description"
-            />
 
         <EditText
             android:id="@+id/description_text"
             android:layout_width="300dp"
             android:layout_height="100dp"
+            android:layout_marginTop="52dp"
             android:background="@drawable/text_box"
             android:hint=""
             android:inputType="textMultiLine"
@@ -317,38 +294,81 @@
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/description_info" />
 
-        <TextView
-            android:id="@+id/contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Contact"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/description_text" />
-
         <EditText
             android:id="@+id/contact_text"
             android:layout_width="300dp"
             android:layout_height="30dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/text_box"
-            android:paddingStart="10dp"
-            android:textSize="15sp"
             android:hint=""
             android:inputType="text"
+            android:paddingStart="10dp"
             android:textColor="#000000"
+            android:textSize="15sp"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/contact" />
+
+        <TextView
+            android:id="@+id/description_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:inputType="text"
+            android:text="You can include links to Sign-up forms or event websites etc."
+            android:textColor="#000000"
+            android:textSize="8sp"
+            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/CreateAccountFields"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:entries="@array/AIornot"
+            android:minWidth="300dp"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/location_text" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:inputType="text"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:text="Description"
+            android:textColor="#6338CD"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintTop_toBottomOf="@+id/location_text" />
+
+        <TextView
+            android:id="@+id/contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:text="Contact"
+            android:textColor="#6338CD"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintTop_toBottomOf="@+id/description_text" />
 
         <Button
             android:id="@+id/postButton"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="56dp"
             android:background="@drawable/purple_button_rect"
             android:gravity="center"
             android:padding="8dp"
@@ -370,7 +390,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/CreateEvent"
+            app:layout_constraintTop_toBottomOf="@+id/CreateEvent"
             app:layout_constraintVertical_bias="0.577">
 
             <!--progress bar implementation-->
