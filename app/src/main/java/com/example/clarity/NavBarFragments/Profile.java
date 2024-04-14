@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
 import com.example.clarity.MyDataRepository;
@@ -36,6 +40,7 @@ import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 import com.example.clarity.ui.login.LoginActivity;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import org.w3c.dom.Text;
 
@@ -52,8 +57,7 @@ public class Profile extends Fragment {
     private RestRepo db;
     private MyDataRepository dataRepo;
     private TextView username,role,alertBoxAction;
-    ImageView profilePicture;
-    ImageButton editProfile;
+    ShapeableImageView profilePicture;
     TextView description;
 
     @Override
@@ -113,9 +117,12 @@ public class Profile extends Fragment {
 
         username.setText(appUser.getUsername());
         role.setText(appUser.getRole());
-        //TODO: get profile picture and set it to profilePicture
-        //for now the getPhoto() function is not implemented
-        //profilePicture.setImageResource(appUser.getPhoto);
+        db.getImageRequest(appUser.getProfile_pic_url(), new RestRepo.RepositoryCallback<Bitmap>() {
+            @Override
+            public void onComplete(Bitmap result) {
+                profilePicture.setImageBitmap(result);
+            }
+        });
 
         buttonResetCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,12 +143,10 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 description = alertDialog.findViewById(R.id.action_description);
-                //TODO: if reset calendar -> remove all added events from local storage
                 dataRepo.resetSavedEventsOnMainThread(); // triggers observers to refresh UI
                 userPrefs.resetCalendar();
                 userPrefs.commitCalendarUpdates();
                 alertDialog.dismiss();
-                //TODO: toast/alert when done
                 Toast.makeText(getContext(), "Calendar reset done", Toast.LENGTH_SHORT).show();; // Placeholder action
             }
         });
@@ -149,10 +154,6 @@ public class Profile extends Fragment {
         buttonLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: clear global variable that stores user object
-                //TODO: go back to login page
-                // for now, no session tokens, so just clear user object and go back to login page
-
                 // Placeholder (until session token)
                 appContext.saveAppUser(null); // delete the User object that was saved
                 userPrefs.clearSessionToken(); // delete session token
