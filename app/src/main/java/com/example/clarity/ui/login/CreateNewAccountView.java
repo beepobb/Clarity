@@ -5,11 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,19 +51,6 @@ public class CreateNewAccountView extends AppCompatActivity {
         binding = CreateNewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        database = ((MyApplication) getApplicationContext()).getDatabase();
-        stringMutableLiveData = new MutableLiveData<>(); // contains null at this step
-        stringMutableLiveData.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String string) {
-                // When string is fetched (addUserRequest): switch to MainActivity
-                Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(CreateNewAccountView.this, LoginActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
         final ImageView NewImageView = binding.addImage;
         final TextView CreateAccountTextView = binding.textView4;
         final TextView choiceTextView = binding.textView5;
@@ -75,6 +64,22 @@ public class CreateNewAccountView extends AppCompatActivity {
         final TextView confirmTextView = binding.textView3;
         final EditText confirmEditText = binding.confirmPassword;
         final Button loginButton = binding.login;
+        final ProgressBar progressBar = binding.progressBar;
+        final Handler handler = new Handler();
+
+        database = ((MyApplication) getApplicationContext()).getDatabase();
+        stringMutableLiveData = new MutableLiveData<>(); // contains null at this step
+        stringMutableLiveData.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String string) {
+                // When string is fetched (addUserRequest): switch to MainActivity
+                Intent intent = new Intent(CreateNewAccountView.this, LoginActivity.class);
+                startActivity(intent);
+                progressBar.setProgress(0);
+                finish();
+
+            }
+        });
 
         selectedImageView = NewImageView;
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -82,7 +87,6 @@ public class CreateNewAccountView extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = result.getData();
                         if (data != null) {
-                            selectedImageView.setVisibility(View.GONE);
                             Uri selectedImageUri = data.getData();
                             try {
                                 Glide.with(this)
@@ -141,6 +145,40 @@ public class CreateNewAccountView extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Must be more than 8 characters", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                new Thread(new Runnable() {
+                    public void run() {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "Please wait for your account to be created...", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        int progressStatus = 0;
+                        while (progressStatus < 100) {
+                            progressStatus += 1;
+
+                            // Update the progress bar and display the current value
+                            int finalProgressStatus = progressStatus;
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    progressBar.setProgress(finalProgressStatus);
+                                }
+                            });
+
+                            try {
+                                // Sleep for 200 milliseconds to simulate a long operation
+                                Thread.sleep(40);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        // Once the operation is completed, show a toast message
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }).start();
 
                 database.addUserRequest(username, password, email, role, image, new RestRepo.RepositoryCallback<String>() {
                     @Override
