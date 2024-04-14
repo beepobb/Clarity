@@ -186,33 +186,37 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
                             String tag_category = tag.getTag_category();
 
                             if (tag_category.equals(EventTags.FIFTH_ROW.name())) {
-                                if (tagsEventMapping.get(post_id) != null ){
+                                if (!tagsEventMapping.get(EventTags.FIFTH_ROW).contains(post_id)){
                                     tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
                                 }
                             } else if (tag_category.equals(EventTags.CAREER.name())) {
-                                if (tagsEventMapping.get(post_id) != null ) {
+                                if (!tagsEventMapping.get(EventTags.CAREER).contains(post_id)) {
                                     tagsEventMapping.get(EventTags.CAREER).add(post_id);
                                 }
                             } else if (tag_category.equals(EventTags.WORKSHOP.name())) {
-                                if (tagsEventMapping.get(post_id) != null ){
+                                if (!tagsEventMapping.get(EventTags.WORKSHOP).contains(post_id) ){
                                     tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
                                 }
                             } else if (tag_category.equals(EventTags.CAMPUS_LIFE.name())) {
-                                if (tagsEventMapping.get(post_id) != null ){
+                                if (!tagsEventMapping.get(EventTags.CAMPUS_LIFE).contains(post_id)){
                                     tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
                                 }
                             } else if (tag_category.equals(EventTags.COMPETITION.name())) {
-                                if (tagsEventMapping.get(post_id) != null ){
+                                if (!tagsEventMapping.get(EventTags.COMPETITION).contains(post_id)){
                                     tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
                                 }
                             }
                         }
+
+                        // Update the event list in the adapter
+                        updateEventRecycler();
                     }
                 });
+
                 Log.d("RefreshDiscoverFragment", "Check for new events and update Discover fragment");
 
-                // end refresh state on main thread
-                assert getActivity()!=null;
+                // End refresh state on the main thread
+                assert getActivity() != null;
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
