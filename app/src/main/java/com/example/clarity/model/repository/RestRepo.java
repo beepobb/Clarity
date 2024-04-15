@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import com.example.clarity.R;
+import com.example.clarity.model.data.Author;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Favourite;
@@ -257,6 +258,29 @@ public class RestRepo {
             return new User(tmp.getInt("id"), tmp.getString("username"),
                     tmp.getString("password"),tmp.getString("role"),tmp.getString("email"),
                     tmp.getString("created_at"), tmp.getString("profile_pic_url"));
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void getAuthorRequest(int author_id, RepositoryCallback<Author> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Author response = getAuthor(Integer.toString(author_id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private Author getAuthor(String author_id) {
+        try {
+            String urlQuery = "?author_id="+author_id;
+            JSONObject tmp = urlGet(endPointUser,urlQuery);
+            System.out.println(tmp);
+            return new Author(tmp.getString("username"),tmp.getString("role"),tmp.getString("profile_pic_url"));
         }
         catch(Exception e) {
             System.out.println(e.getMessage());
@@ -679,6 +703,23 @@ public class RestRepo {
         }
     }
 
+    public void getProfilePictureRequest(int userID, RepositoryCallback<Bitmap> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Author author = getAuthor(Integer.toString(userID));
+                    Bitmap bm = getImage(author.getProfile_pic_url());
+                    callback.onComplete(bm);
+                }
+                catch(Exception e) {
+                    callback.onComplete(null);
+                }
+            }
+        });
+
+    }
+
     public void getImageRequest(String url, RepositoryCallback<Bitmap> callback) {
         executor.execute(new Runnable() {
             @Override
@@ -731,7 +772,8 @@ public class RestRepo {
 //                    data.put("document", base64Text);
 //                    String response = urlPost(endPointSummary, new JSONObject(data));
 //                    JSONObject tmp = new JSONObject(response);
-//                    callback.onComplete(tmp.getString("summary"));
+//                    String result = tmp.getString("summary");
+//                    callback.onComplete(result.substring(1,result.length() - 1));
 //                }
 //                catch(Exception e) {
 //                    callback.onComplete("");
