@@ -44,6 +44,7 @@ public class EventsPageActivity extends AppCompatActivity {
     private TextView eventLocationTextView;
     private TextView eventDateTimeTextView;
     private TextView eventDescriptionTextView;
+    private TextView organiserNameTextView;
     private ShapeableImageView organiserPictureImageView;
     private ToggleButton addButtonView;
     private ToggleButton likeButtonView;
@@ -69,6 +70,7 @@ public class EventsPageActivity extends AppCompatActivity {
         eventDateTimeTextView = findViewById(R.id.eventDateTimeTextView);
         tagRecycler = findViewById(R.id.event_tag_recycler);
         organiserPictureImageView = findViewById(R.id.organiserPictureImageView);
+        organiserNameTextView = findViewById(R.id.organiserNameTextView);
 
         // Initialize other attributes
         db = ((MyApplication) getApplicationContext()).getDatabase();
@@ -116,6 +118,7 @@ public class EventsPageActivity extends AppCompatActivity {
             public void onChanged(ArrayList<Tag> tags) {
                 // TODO: update UI - populate tags
                 eventTagAdapter.updateTagList(categoryListLiveData.getValue());
+
             }
         });
 
@@ -125,6 +128,7 @@ public class EventsPageActivity extends AppCompatActivity {
                 if (bitmap != null) {
                     Log.d(TAG, "Image changed");
                     organiserPictureImageView.setImageBitmap(bitmap);
+                    organiserNameTextView.setText(organiser);
                 }
             }
         });

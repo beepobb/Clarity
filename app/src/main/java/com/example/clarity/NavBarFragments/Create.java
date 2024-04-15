@@ -31,6 +31,7 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.Handler;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -108,6 +109,7 @@ public class Create extends Fragment {
         EditText end_dateEditText = rootView.findViewById(R.id.editTextDate2);
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
+        Linkify.addLinks(descriptionEditText, Linkify.WEB_URLS);
         EditText contactEditText = rootView.findViewById(R.id.contact_text);
         Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
         Log.d("EESONG", AIornotSpinner.toString());
