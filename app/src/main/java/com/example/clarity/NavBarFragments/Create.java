@@ -2,7 +2,9 @@ package com.example.clarity.NavBarFragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 
 import android.app.Activity;
@@ -30,6 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import android.view.LayoutInflater;
@@ -51,6 +54,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -64,9 +68,13 @@ public class Create extends Fragment {
     ArrayAdapter<String> adapterTags;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
-//    private EditText editTextDate, editTextTime;
+    //    private EditText editTextDate, editTextTime;
     private Calendar calendar;
     private View rootView;
+    TextView textView;
+    boolean[] selectedLanguage;
+    ArrayList<Integer> langList = new ArrayList<>();
+    String[] langArray = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
     //start
     private RestRepo database;
     private User appUser;
@@ -75,7 +83,7 @@ public class Create extends Fragment {
     private Bitmap bitmap;
     boolean limitExceeded = false;
     private int selectedCount;
-//end
+    //end
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,7 +93,7 @@ public class Create extends Fragment {
         Button postButton = rootView.findViewById(R.id.postButton);
         ImageView placeholderImageView = rootView.findViewById(R.id.middle_image);
         EditText titleEditText = rootView.findViewById(R.id.editTextValue);
-        EditText tagsEditText = rootView.findViewById(R.id.multiAutoCompleteTextView);
+        TextView tagsEditText = rootView.findViewById(R.id.textView);
         EditText start_dateEditText = rootView.findViewById(R.id.editTextDate);
         EditText start_timeEditText = rootView.findViewById(R.id.editTextTime);
         EditText locationEditText = rootView.findViewById(R.id.location_text);
@@ -125,50 +133,90 @@ public class Create extends Fragment {
             }
         });
 //end
-        mMultiAutoCompleteTextView = rootView.findViewById(R.id.multiAutoCompleteTextView);
-        String[] tags = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, tags);
 
-        // Set adapter to MultiAutoCompleteTextView
-        mMultiAutoCompleteTextView.setAdapter(adapter);
+        // assign variable
+        TextView textView  = rootView.findViewById(R.id.textView);
 
-        // Set tokenizer to separate multiple selections by comma or semicolon
-        mMultiAutoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        // initialize selected language array
+        selectedLanguage = new boolean[langArray.length];
 
-        // Set threshold for filtering
-        mMultiAutoCompleteTextView.setThreshold(1);
-
-        // hide keyboard for the dropdown
-        mMultiAutoCompleteTextView.setOnClickListener(new View.OnClickListener() {
+        textView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                hideKeyboard(requireContext(), v);
-                mMultiAutoCompleteTextView.showDropDown();}
+            public void onClick(View view) {
 
-        });
-        // Handle item selection
-        mMultiAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                // Initialize alert dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // set title
+                builder.setTitle("Select Tags");
 
-                selectedCount++;
-                if (selectedCount > 3 && !limitExceeded) {
-                    // Notify the user that only 3 selections are allowed
-                    Toast.makeText(requireContext(), "Only 3 selections allowed", Toast.LENGTH_SHORT).show();
+                // set dialog non cancelable
+                builder.setCancelable(false);
 
-                    // Clear the MultiAutoCompleteTextView
-                    mMultiAutoCompleteTextView.setText("");
-                    selectedCount = 0; // Reset the count
-                    limitExceeded = true; // Set the flag
-                } else {
-                    limitExceeded = false; // Reset the flag
-                }
+                builder.setMultiChoiceItems(langArray, selectedLanguage, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        // check condition
+                        if (b) {
+                            // when checkbox selected
+                            // Add position  in lang list
+                            langList.add(i);
+                            // Sort array list
+                            Collections.sort(langList);
+                        } else {
+                            // when checkbox unselected
+                            // Remove position from langList
+                            langList.remove(Integer.valueOf(i));
+                        }
+                    }
+                });
 
-                // Your existing logic to handle item selection
-                String selectedItem = (String) parent.getItemAtPosition(position);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Initialize string builder
+                        StringBuilder stringBuilder = new StringBuilder();
+                        // use for loop
+                        for (int j = 0; j < langList.size(); j++) {
+                            // concat array value
+                            stringBuilder.append(langArray[langList.get(j)]);
+                            // check condition
+                            if (j != langList.size() - 1) {
+                                // When j value  not equal
+                                // to lang list size - 1
+                                // add comma
+                                stringBuilder.append(", ");
+                            }
+                        }
+                        // set text on textView
+                        textView.setText(stringBuilder.toString());
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // dismiss dialog
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // use for loop
+                        for (int j = 0; j < selectedLanguage.length; j++) {
+                            // remove all selection
+                            selectedLanguage[j] = false;
+                            // clear language list
+                            langList.clear();
+                            // clear text view value
+                            textView.setText("");
+                        }
+                    }
+                });
+                // show dialog
+                builder.show();
             }
-
         });
 
 
@@ -346,7 +394,7 @@ public class Create extends Fragment {
         );
         datePickerDialog.show();
     }
-//MIGHT HAVE API VERSION ISSUES
+    //MIGHT HAVE API VERSION ISSUES
     private void showTimePickerDialog(final EditText editText) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),
