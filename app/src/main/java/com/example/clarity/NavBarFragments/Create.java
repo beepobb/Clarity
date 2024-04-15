@@ -31,6 +31,8 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
@@ -109,7 +111,6 @@ public class Create extends Fragment {
         EditText end_dateEditText = rootView.findViewById(R.id.editTextDate2);
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
-        Linkify.addLinks(descriptionEditText, Linkify.WEB_URLS);
         EditText contactEditText = rootView.findViewById(R.id.contact_text);
         Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
         Log.d("EESONG", AIornotSpinner.toString());
@@ -344,6 +345,11 @@ public class Create extends Fragment {
                     return;
                 }
 
+                //addLinks only takes in Spannable object
+                Spannable spannable = new SpannableString(description);
+                Linkify.addLinks(spannable, Linkify.WEB_URLS);
+                String descriptionwithlink = spannable.toString();
+
                 new Thread(new Runnable() {
                     public void run() {
                         handler.post(new Runnable() {
@@ -383,7 +389,7 @@ public class Create extends Fragment {
                 String end = end_date + " " + end_time;
 
                 database.addPostRequest(author_id, start, end, title,
-                        location, description, tags, image, new RestRepo.RepositoryCallback<String>() {
+                        location, descriptionwithlink, tags, image, new RestRepo.RepositoryCallback<String>() {
                             @Override
                             public void onComplete(String result) {
                                 userLiveData.postValue(result);
