@@ -13,13 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.clarity.EventsPageActivity;
+import com.example.clarity.NavBarFragments.Event.EventsPageActivity;
 import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.util.CardFormatter;
 
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 
