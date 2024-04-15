@@ -15,10 +15,15 @@ import android.net.Uri;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
 import com.example.clarity.model.data.User;
@@ -26,12 +31,14 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,22 +75,23 @@ public class Create extends Fragment {
     ArrayAdapter<String> adapterTags;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
-    //    private EditText editTextDate, editTextTime;
+//    private EditText editTextDate, editTextTime;
     private Calendar calendar;
     private View rootView;
-    TextView textView;
-    boolean[] selectedLanguage;
-    ArrayList<Integer> langList = new ArrayList<>();
-    String[] langArray = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
     //start
     private RestRepo database;
     private User appUser;
     private MutableLiveData<String> userLiveData;
+    private MutableLiveData<String> userdescriptionLiveData;
     private BottomNavigationView bottomNavigationView;
-    private Bitmap bitmap;
+    private Bitmap image;
     boolean limitExceeded = false;
     private int selectedCount;
-    //end
+    TextView textView;
+    boolean[] selectedLanguage;
+    ArrayList<Integer> langList = new ArrayList<>();
+    String[] langArray = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
+//end
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,6 +109,8 @@ public class Create extends Fragment {
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
         EditText contactEditText = rootView.findViewById(R.id.contact_text);
+        Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
+        Log.d("EESONG", AIornotSpinner.toString());
         ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
         Handler handler = new Handler();
 
@@ -115,6 +125,9 @@ public class Create extends Fragment {
         appUser = ((MyApplication) getActivity().getApplicationContext()).getAppUser();
         Integer appUser_id = appUser.getId();
         userLiveData = new MutableLiveData<>();
+        userdescriptionLiveData = new MutableLiveData<>();
+
+
         userLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
@@ -132,7 +145,39 @@ public class Create extends Fragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
-//end
+
+        userdescriptionLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String string) {
+                descriptionEditText.setText(string);
+            }
+        });
+
+        imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            placeholderImageView.setVisibility(View.GONE);
+                            Uri selectedImageUri = data.getData();
+                            try {
+                                Glide.with(this)
+                                        .asBitmap()
+                                        .load(selectedImageUri)
+                                        .into(new BitmapImageViewTarget(selectedImageView) {
+                                            @Override
+                                            public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
+                                                super.onResourceReady(bitmap, transition);
+                                                // Assign the loaded Bitmap to the image variable
+                                                image = bitmap;
+                                            }
+                                        });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
 
         // assign variable
         TextView textView  = rootView.findViewById(R.id.textView);
@@ -148,7 +193,7 @@ public class Create extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
                 // set title
-                builder.setTitle("Select Language");
+                builder.setTitle("Select Tags");
 
                 // set dialog non cancelable
                 builder.setCancelable(false);
@@ -221,29 +266,6 @@ public class Create extends Fragment {
             }
         });
 
-
-
-        // Set up image selection
-        imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null) {
-                            placeholderImageView.setVisibility(View.GONE);
-                            Uri selectedImageUri = data.getData();
-                            try {
-                                // Convert URI to Bitmap, this bitmap variable refers to the image user upload
-                                Bitmap bitmap = BitmapFactory.decodeStream(requireActivity().getContentResolver().openInputStream(selectedImageUri));
-
-                                // Set the bitmap to ImageView
-                                selectedImageView.setImageBitmap(bitmap);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-
         // Launch the gallery picker when the ImageView is clicked
         selectedImageView.setOnClickListener(view -> selectImage());
 
@@ -274,6 +296,26 @@ public class Create extends Fragment {
             }
         });
 
+        AIornotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String choice = AIornotSpinner.getSelectedItem().toString();
+
+                if (choice.equals("I want to use AI!")) {
+                    database.bitmapToTextSummaryRequest(image, new RestRepo.RepositoryCallback<String>() {
+                        @Override
+                        public void onComplete(String result) {
+                            userdescriptionLiveData.postValue(result);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         //start
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,11 +330,14 @@ public class Create extends Fragment {
                 String end_date = end_dateEditText.getText().toString();
                 String end_time = end_timeEditText.getText().toString();
                 String location = locationEditText.getText().toString();
+                String contact = contactEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
 
-                Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
+                if (image == null) {
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
+                }
 
-                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty()) {
+                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() || contact.isEmpty()) {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -396,7 +441,7 @@ public class Create extends Fragment {
         );
         datePickerDialog.show();
     }
-    //MIGHT HAVE API VERSION ISSUES
+//MIGHT HAVE API VERSION ISSUES
     private void showTimePickerDialog(final EditText editText) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),

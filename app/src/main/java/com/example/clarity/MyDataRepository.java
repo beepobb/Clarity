@@ -24,7 +24,12 @@ public class MyDataRepository {
      */
 
     // Singleton class
-    private MyDataRepository() {}
+    private MyDataRepository() {
+        // Initialize values for use in Discover fragment
+        for (EventTags e : EventTags.values()) {
+            tagsEventMapping.put(e, new ArrayList<>());
+        }
+    }
     public static MyDataRepository getInstance() {
         if (instance == null) {
             instance = new MyDataRepository();
@@ -108,55 +113,56 @@ public class MyDataRepository {
         return favouriteEvents.contains(post);
     }
 
+
+
+
     // DISCOVER METHODS //
-    // TODO: WIP
-    private MutableLiveData<List<Post>> allEventsLiveData;
-    private MutableLiveData<HashMap<Integer, Bitmap>> eventImageMappingLiveData;
-    private MutableLiveData<HashMap<EventTags, ArrayList<Integer>>> tagEventMappingLiveData;
+    private MutableLiveData<List<Post>> allEventsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<HashMap<Integer, Bitmap>> eventImageMappingLiveData = new MutableLiveData<>(new HashMap<>());
+    private HashMap<EventTags, ArrayList<Integer>> tagsEventMapping = new HashMap<>();
 
     /*
     fetch all posts --> save to allEvents --> observer 1) fetch all tags --> load all tags
     observer 2) fetch all images --> load all images
      */
+
+    public void loadEventImageMappingLiveData(HashMap<Integer, Bitmap> mapping) {
+        eventImageMappingLiveData.postValue(mapping);
+    }
+    public HashMap<EventTags, ArrayList<Integer>> getTagsEventMapping() {
+        return tagsEventMapping;
+    }
+
+    public MutableLiveData<List<Post>> getAllEventsLiveData() {
+        return allEventsLiveData;
+    }
+
+    public MutableLiveData<HashMap<Integer, Bitmap>> getEventImageMappingLiveData() {
+        return eventImageMappingLiveData;
+    }
+
     public void loadAllEventsOnWorkerThread(ArrayList<Post> eventsList) {
         allEventsLiveData.postValue(eventsList);
         // Observers of allEventsLiveData will be triggered
     }
 
     public void createTagEventMapping(ArrayList<Tag> tagObjects) {
-        // Initialize:
-        HashMap<EventTags, ArrayList<Integer>> tagsEventMapping = new HashMap<>();
-        for (EventTags e : EventTags.values()) {
-            tagsEventMapping.put(e, new ArrayList<>());
-        }
-
-        // Populate:
+        // Populate: tagEventNapping
         for (Tag tag : tagObjects) {
             Integer post_id = tag.getPost_id();
             String tag_category = tag.getTag_category();
 
             if (tag_category.equals(EventTags.FIFTH_ROW.name())) {
-                if (tagsEventMapping.get(post_id) != null ){
-                    tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
-                }
+                tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
             } else if (tag_category.equals(EventTags.CAREER.name())) {
-                if (tagsEventMapping.get(post_id) != null ) {
-                    tagsEventMapping.get(EventTags.CAREER).add(post_id);
-                }
+                tagsEventMapping.get(EventTags.CAREER).add(post_id);
             } else if (tag_category.equals(EventTags.WORKSHOP.name())) {
-                if (tagsEventMapping.get(post_id) != null ){
-                    tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
-                }
+                tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
             } else if (tag_category.equals(EventTags.CAMPUS_LIFE.name())) {
-                if (tagsEventMapping.get(post_id) != null ){
-                    tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
-                }
+                tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
             } else if (tag_category.equals(EventTags.COMPETITION.name())) {
-                if (tagsEventMapping.get(post_id) != null ){
-                    tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
-                }
+                tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
             }
         }
     }
-
 }
