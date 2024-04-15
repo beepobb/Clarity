@@ -282,19 +282,7 @@
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/location_text" />
 
-        <Spinner
-            android:id="@+id/spinner"
-            style="@style/CreateAccountFields"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="4dp"
-            android:entries="@array/AIornot"
-            android:minWidth="300dp"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/description_info" />
+
 
         <TextView
             android:id="@+id/description_info"
@@ -303,10 +291,24 @@
             android:text="You can include links to Sign-up forms or event websites etc."
             android:textSize = "8sp"
             android:inputType="text"
-            android:textColor="#000000"
+            android:textColor="#434A54"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/description"
             />
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/CreateAccountFields"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:entries="@array/AIornot"
+            android:minWidth="300dp"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintTop_toBottomOf="@+id/description_info" />
 
         <EditText
             android:id="@+id/description_text"
@@ -319,7 +321,7 @@
             android:textColor="#000000"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/description_info" />
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
         <TextView
             android:id="@+id/contact"
