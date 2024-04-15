@@ -148,7 +148,7 @@ public class Create extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
                 // set title
-                builder.setTitle("Select Tags");
+                builder.setTitle("Select Language");
 
                 // set dialog non cancelable
                 builder.setCancelable(false);
@@ -156,17 +156,19 @@ public class Create extends Fragment {
                 builder.setMultiChoiceItems(langArray, selectedLanguage, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                        // check condition
-                        if (b) {
-                            // when checkbox selected
-                            // Add position  in lang list
-                            langList.add(i);
-                            // Sort array list
-                            Collections.sort(langList);
+                        // Check if the number of selected items exceeds three
+                        if (b && langList.size() >= 3) {
+                            // If more than three options are selected, uncheck the current item
+                            ((AlertDialog) dialogInterface).getListView().setItemChecked(i, false);
+                            Toast.makeText(requireContext(), "You can select up to three options", Toast.LENGTH_SHORT).show();
                         } else {
-                            // when checkbox unselected
-                            // Remove position from langList
-                            langList.remove(Integer.valueOf(i));
+                            // If less than three options are selected, proceed as usual
+                            if (b) {
+                                langList.add(i);
+                            } else {
+                                langList.remove(Integer.valueOf(i));
+                            }
+                            Collections.sort(langList);
                         }
                     }
                 });
