@@ -323,7 +323,7 @@ public class Create extends Fragment {
 
                 Integer author_id = appUser_id;
                 String title = titleEditText.getText().toString();
-                String tagsString = tagsEditText.getText().toString();
+                String tagsString = tagsEditText.getText().toString().trim();
                 ArrayList<String> tags = new ArrayList<>(Arrays.asList(tagsString.split(",")));
                 String start_date = start_dateEditText .getText().toString();
                 String start_time = start_timeEditText.getText().toString();
