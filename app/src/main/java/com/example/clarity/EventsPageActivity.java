@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+//// trial
+import com.squareup.picasso.Picasso;
+////
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -65,7 +68,21 @@ public class EventsPageActivity extends AppCompatActivity {
         eventLocationTextView.setText(post.getLocation());
         eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
         eventDescriptionTextView.setText(post.getDescription());
+        //eventImageView.setImageBitmap(post.getImage_url());
 
+        //trial for image
+
+        String imageUrl = post.getImage_url(); // Assuming getImage_url() returns image URL
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Picasso.get().load(imageUrl).into(eventImageView);
+        } else {
+            // Handle case where image URL is not available
+            // You can set a placeholder image or hide the ImageView
+            // For example:
+            eventImageView.setImageResource(R.drawable.event_detail_image_holder);
+            // or
+            eventImageView.setVisibility(View.GONE);
+        }
 
         // 'Add to Calendar' Toggle Button
         // Check whether post is saved to Calendar (for the icon)

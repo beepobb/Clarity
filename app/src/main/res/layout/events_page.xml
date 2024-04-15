@@ -16,212 +16,212 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:contentDescription="Event image"
-                android:src="@drawable/night_fiesta"
+                android:src="@drawable/event_detail_image_holder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp">
+
+                <ImageView
+                    android:id="@+id/bgImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:layout_marginTop="200dp"
+                    android:src="@drawable/rectangle_3"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/eventNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="30dp"
+                    android:paddingTop="20dp"
+                    android:text="@string/event_name"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@id/bgImageView"
+                    app:layout_constraintTop_toTopOf="@id/bgImageView" />
+
+                <TextView
+                    android:id="@+id/eventDateTimeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="30dp"
+                    android:text="@string/event_date_time"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toStartOf="@+id/eventNameTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/eventNameTextView" />
+
+                <ImageView
+                    android:id="@+id/locationPinImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="25dp"
+                    android:src="@drawable/baseline_location_on_24"
+                    app:layout_constraintStart_toStartOf="@+id/eventDateTimeTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/eventDateTimeTextView" />
+
+                <TextView
+                    android:id="@+id/eventLocationTextView"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="7dp"
+                    android:text="@string/event_location"
+                    app:layout_constraintStart_toEndOf="@+id/locationPinImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/eventDateTimeTextView" />
+
+                <ToggleButton
+                    android:id="@+id/addToggleButton"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:background="@drawable/plus_button"
+                    android:textOff=""
+                    android:textOn=""
+                    app:layout_constraintStart_toEndOf="@+id/eventLocationTextView"
+                    app:layout_constraintTop_toTopOf="@+id/eventLocationTextView" />
+
+                <ToggleButton
+                    android:id="@+id/likeToggleButton"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/like_button"
+                    android:paddingStart="125dp"
+                    android:textOff=""
+                    android:textOn=""
+                    app:layout_constraintStart_toEndOf="@+id/addToggleButton"
+                    app:layout_constraintTop_toTopOf="@+id/eventLocationTextView" />
+
+                <View
+                    android:id="@+id/horizontalLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:background="#967ADC"
+                    app:layout_constraintTop_toBottomOf="@+id/eventLocationTextView" />
+
+                <TextView
+                    android:id="@+id/descriptionHeaderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="30dp"
+                    android:text="Event Description"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/horizontalLineView" />
+
+                <TextView
+                    android:id="@+id/eventDescriptionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="25dp"
+                    android:text="@string/event_descrip"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionHeaderTextView" />
+
+                <TextView
+                    android:id="@+id/tagsHeaderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="30dp"
+                    android:text="Tags"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/eventDescriptionTextView" />
+
+                <TextView
+                    android:id="@+id/rectangleTag1TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:background="@drawable/tag_rectangle"
+                    android:text="@string/tag1"
+                    android:textColor="#967ADC"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toStartOf="@+id/tagsHeaderTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/tagsHeaderTextView" />
+
+                <TextView
+                    android:id="@+id/rectangleTag2TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/tag_rectangle"
+                    android:text="@string/tag2"
+                    android:textColor="#967ADC"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toEndOf="@+id/rectangleTag1TextView"
+                    app:layout_constraintTop_toBottomOf="@+id/tagsHeaderTextView" />
+
+                <TextView
+                    android:id="@+id/organiserHeaderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="30dp"
+                    android:text="Meet The Organisers"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/rectangleTag1TextView" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/organiserCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="15dp"
+                    app:cardBackgroundColor="#F7FAFA"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="7dp"
+                    app:layout_constraintStart_toStartOf="@+id/organiserHeaderTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/organiserHeaderTextView">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/organiserPictureImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="10dp"
+                            android:src="@drawable/root" />
+
+                        <TextView
+                            android:id="@+id/organiserNameTextView"
+                            android:layout_width="232dp"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="24dp"
+                            android:paddingStart="10dp"
+                            android:paddingTop="15dp"
+                            android:text="@string/org_name"
+                            android:textColor="#000000"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toEndOf="@id/organiserPictureImageView"
+                            app:layout_constraintTop_toBottomOf="@id/organiserHeaderTextView" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/bgImageView"
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_marginTop="200dp"
-            android:src="@drawable/rectangle_3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/eventNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="30dp"
-            android:paddingTop="20dp"
-            android:text="@string/event_name"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/bgImageView"
-            app:layout_constraintTop_toTopOf="@id/bgImageView" />
-
-        <TextView
-            android:id="@+id/eventDateTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="30dp"
-            android:text="@string/event_date_time"
-            android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@+id/eventNameTextView"
-            app:layout_constraintTop_toBottomOf="@+id/eventNameTextView" />
-
-        <ImageView
-            android:id="@+id/locationPinImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="25dp"
-            android:src="@drawable/baseline_location_on_24"
-            app:layout_constraintStart_toStartOf="@+id/eventDateTimeTextView"
-            app:layout_constraintTop_toBottomOf="@+id/eventDateTimeTextView" />
-
-        <TextView
-            android:id="@+id/eventLocationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="7dp"
-            android:text="@string/event_location"
-            app:layout_constraintStart_toEndOf="@+id/locationPinImageView"
-            app:layout_constraintTop_toBottomOf="@+id/eventDateTimeTextView" />
-
-        <ToggleButton
-            android:id="@+id/addToggleButton"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
-            android:layout_marginStart="100dp"
-            android:background="@drawable/plus_button"
-            android:textOff=""
-            android:textOn=""
-            app:layout_constraintStart_toEndOf="@+id/eventLocationTextView"
-            app:layout_constraintTop_toTopOf="@+id/eventLocationTextView" />
-
-        <ToggleButton
-            android:id="@+id/likeToggleButton"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/like_button"
-            android:paddingStart="125dp"
-            android:textOff=""
-            android:textOn=""
-            app:layout_constraintStart_toEndOf="@+id/addToggleButton"
-            app:layout_constraintTop_toTopOf="@+id/eventLocationTextView" />
-
-        <View
-            android:id="@+id/horizontalLineView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:background="#967ADC"
-            app:layout_constraintTop_toBottomOf="@+id/eventLocationTextView" />
-
-        <TextView
-            android:id="@+id/descriptionHeaderTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="30dp"
-            android:text="Event Description"
-            android:textColor="#000000"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/horizontalLineView" />
-
-        <TextView
-            android:id="@+id/eventDescriptionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="30dp"
-            android:paddingEnd="25dp"
-            android:text="@string/event_descrip"
-            android:textColor="#000000"
-            android:textSize="10sp"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionHeaderTextView" />
-
-        <TextView
-            android:id="@+id/tagsHeaderTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="30dp"
-            android:text="Tags"
-            android:textColor="#000000"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/eventDescriptionTextView" />
-
-        <TextView
-            android:id="@+id/rectangleTag1TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:background="@drawable/tag_rectangle"
-            android:text="@string/tag1"
-            android:textColor="#967ADC"
-            android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@+id/tagsHeaderTextView"
-            app:layout_constraintTop_toBottomOf="@+id/tagsHeaderTextView" />
-
-        <TextView
-            android:id="@+id/rectangleTag2TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/tag_rectangle"
-            android:text="@string/tag2"
-            android:textColor="#967ADC"
-            android:textSize="10sp"
-            app:layout_constraintStart_toEndOf="@+id/rectangleTag1TextView"
-            app:layout_constraintTop_toBottomOf="@+id/tagsHeaderTextView" />
-
-        <TextView
-            android:id="@+id/organiserHeaderTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="30dp"
-            android:text="Meet The Organisers"
-            android:textColor="#000000"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/rectangleTag1TextView"/>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/organiserCardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp"
-            app:layout_constraintStart_toStartOf="@+id/organiserHeaderTextView"
-            app:layout_constraintTop_toBottomOf="@+id/organiserHeaderTextView"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="7dp"
-            app:cardBackgroundColor="#F7FAFA">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/organiserPictureImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/root"
-                    android:paddingStart="10dp"/>
-
-                <TextView
-                    android:id="@+id/organiserNameTextView"
-                    android:layout_width="232dp"
-                    android:layout_height="42dp"
-                    android:layout_marginTop="24dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="15dp"
-                    android:text="@string/org_name"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    app:layout_constraintStart_toEndOf="@id/organiserPictureImageView"
-                    app:layout_constraintTop_toBottomOf="@id/organiserHeaderTextView" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
