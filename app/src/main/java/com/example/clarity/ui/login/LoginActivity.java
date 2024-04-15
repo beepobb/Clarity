@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private RestRepo database;
     private MutableLiveData<User> userLiveData;
     private PreferenceUtils prefUtils;
+    private String username;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,40 +58,12 @@ public class LoginActivity extends AppCompatActivity {
         prefUtils = PreferenceUtils.getInstance(this);
         userLiveData = new MutableLiveData<>(); // contains null at this step
 
-
-        userLiveData.observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-
-                // When user object is fetched (getUserRequest): switch to MainActivity
-                if (user == null) {
-                    Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
-                    progressBar.setProgress(0);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
-                    ((MyApplication) getApplicationContext()).saveAppUser(user); // save logged-in user
-                    try {
-                        String sessionToken = SerializationUtils.serializeToString(user);
-                        prefUtils.saveSessionToken(sessionToken);
-                    } catch (IOException e) {
-                        Log.d(TAG, "Failed to serialize User object.");
-                        throw new RuntimeException(e);
-                    }
-
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        });
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start long operation in a background thread
 
-                String username = usernameEditText.getText().toString();
+                username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
                 if (username.isEmpty() || password.isEmpty()) {
@@ -129,6 +102,32 @@ public class LoginActivity extends AppCompatActivity {
                         userLiveData.postValue(data); // use postValue as this is executed in worker thread
                     }
                 });
+            }
+        });
+        userLiveData.observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+
+                // When user object is fetched (getUserRequest): switch to MainActivity
+                if (user == null) {
+                    Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
+                    progressBar.setProgress(0);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Welcome, " + username + "!", Toast.LENGTH_LONG).show();
+                    ((MyApplication) getApplicationContext()).saveAppUser(user); // save logged-in user
+                    try {
+                        String sessionToken = SerializationUtils.serializeToString(user);
+                        prefUtils.saveSessionToken(sessionToken);
+                    } catch (IOException e) {
+                        Log.d(TAG, "Failed to serialize User object.");
+                        throw new RuntimeException(e);
+                    }
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 

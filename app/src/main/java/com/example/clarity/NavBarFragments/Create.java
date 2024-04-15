@@ -36,6 +36,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import android.view.LayoutInflater;
@@ -77,6 +78,7 @@ public class Create extends Fragment {
     private RestRepo database;
     private User appUser;
     private MutableLiveData<String> userLiveData;
+    private MutableLiveData<String> userdescriptionLiveData;
     private BottomNavigationView bottomNavigationView;
     private Bitmap image;
     boolean limitExceeded = false;
@@ -99,6 +101,7 @@ public class Create extends Fragment {
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
         EditText contactEditText = rootView.findViewById(R.id.contact_text);
+        Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
         ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
         Handler handler = new Handler();
 
@@ -113,6 +116,9 @@ public class Create extends Fragment {
         appUser = ((MyApplication) getActivity().getApplicationContext()).getAppUser();
         Integer appUser_id = appUser.getId();
         userLiveData = new MutableLiveData<>();
+        userdescriptionLiveData = new MutableLiveData<>();
+
+
         userLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
@@ -128,6 +134,13 @@ public class Create extends Fragment {
                 locationEditText.setText("");
                 descriptionEditText.setText("");
                 progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        userdescriptionLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String string) {
+                descriptionEditText.setText(string);
             }
         });
 
@@ -232,6 +245,26 @@ public class Create extends Fragment {
             }
         });
 
+        AIornotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String choice = AIornotSpinner.getSelectedItem().toString();
+
+                if (choice.equals("I want to use AI!")) {
+                    database.bitmapToTextSummaryRequest(image, new RestRepo.RepositoryCallback<String>() {
+                        @Override
+                        public void onComplete(String result) {
+                            userdescriptionLiveData.postValue(result);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         //start
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,8 +279,8 @@ public class Create extends Fragment {
                 String end_date = end_dateEditText.getText().toString();
                 String end_time = end_timeEditText.getText().toString();
                 String location = locationEditText.getText().toString();
-                String description = descriptionEditText.getText().toString();
                 String contact = contactEditText.getText().toString();
+                String description = descriptionEditText.getText().toString();
 
                 if (image == null) {
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
