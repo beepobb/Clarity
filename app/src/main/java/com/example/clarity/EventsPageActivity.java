@@ -1,6 +1,8 @@
 package com.example.clarity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -63,6 +65,13 @@ public class EventsPageActivity extends AppCompatActivity {
         assert postParcelable != null;
         Post post = postParcelable.getPost();
 
+        // Get image byte array from intent
+        byte[] byteArray = intent.getByteArrayExtra("IMAGE");
+        if (byteArray != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            eventImageView.setImageBitmap(bitmap);
+        }
+
         // TODO: Bind Post data to Views
         eventNameTextView.setText(post.getTitle());
         eventLocationTextView.setText(post.getLocation());
@@ -72,17 +81,17 @@ public class EventsPageActivity extends AppCompatActivity {
 
         //trial for image
 
-        String imageUrl = post.getImage_url(); // Assuming getImage_url() returns image URL
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            Picasso.get().load(imageUrl).into(eventImageView);
-        } else {
-            // Handle case where image URL is not available
-            // You can set a placeholder image or hide the ImageView
-            // For example:
-            eventImageView.setImageResource(R.drawable.event_detail_image_holder);
-            // or
-            eventImageView.setVisibility(View.GONE);
-        }
+//        String imageUrl = post.getImage_url(); // Assuming getImage_url() returns image URL
+//        if (imageUrl != null && !imageUrl.isEmpty()) {
+//            Picasso.get().load(imageUrl).into(eventImageView);
+//        } else {
+//            // Handle case where image URL is not available
+//            // You can set a placeholder image or hide the ImageView
+//            // For example:
+//            eventImageView.setImageResource(R.drawable.event_detail_image_holder);
+//            // or
+//            eventImageView.setVisibility(View.GONE);
+//        }
 
         // 'Add to Calendar' Toggle Button
         // Check whether post is saved to Calendar (for the icon)
