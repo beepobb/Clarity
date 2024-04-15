@@ -1,6 +1,8 @@
-package com.example.clarity.NavBarFragments.Event;
+package com.example.clarity.Event;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,9 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clarity.MyApplication;
 import com.example.clarity.MyDataRepository;
-import com.example.clarity.NavBarFragments.Discover.DiscoverEventAdapter;
-import com.example.clarity.NavBarFragments.Discover.EventTags;
-import com.example.clarity.NavBarFragments.Discover.TagButtonAdapter;
 import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.PreferenceUtils;
@@ -29,8 +28,6 @@ import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 
 public class EventsPageActivity extends AppCompatActivity {
@@ -91,6 +88,20 @@ public class EventsPageActivity extends AppCompatActivity {
         tagRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         eventTagAdapter = new EventTagAdapter(this, categoryListLiveData.getValue());
         tagRecycler.setAdapter(eventTagAdapter);
+
+        // Get image byte array from intent
+        byte[] byteArray = intent.getByteArrayExtra("IMAGE");
+        if (byteArray != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            eventImageView.setImageBitmap(bitmap);
+        }
+
+        // TODO: Bind Post data to Views
+        eventNameTextView.setText(post.getTitle());
+        eventLocationTextView.setText(post.getLocation());
+        eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
+        eventDescriptionTextView.setText(post.getDescription());
+        //eventImageView.setImageBitmap(post.getImage_url());
 
         // Set listener: update tags UI once data has been fetched
         categoryListLiveData.observe(this, new Observer<ArrayList<Tag>>() {

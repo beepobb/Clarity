@@ -1,26 +1,17 @@
-package com.example.clarity.NavBarFragments.Event;
+package com.example.clarity.Event;
 
 import android.content.Context;
-import android.media.metrics.Event;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.clarity.NavBarFragments.Calendar.CalendarEventAdapter;
-import com.example.clarity.NavBarFragments.Calendar.CalendarFragment;
-import com.example.clarity.NavBarFragments.Discover.EventTags;
-import com.example.clarity.NavBarFragments.Discover.TagButtonUpdateEventsClickListener;
 import com.example.clarity.R;
-import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Tag;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EventTagAdapter extends RecyclerView.Adapter<EventTagAdapter.EventTagViewHolder> {

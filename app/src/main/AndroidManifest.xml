@@ -31,7 +31,7 @@
         </activity>
 
         <activity
-            android:name=".NavBarFragments.Event.EventsPageActivity"
+            android:name=".Event.EventsPageActivity"
             android:exported="true">
         </activity>
 
