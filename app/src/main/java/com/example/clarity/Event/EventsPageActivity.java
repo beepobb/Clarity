@@ -22,6 +22,7 @@ import com.example.clarity.MyDataRepository;
 import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.PreferenceUtils;
+import com.example.clarity.model.data.Author;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Tag;
 import com.example.clarity.model.data.User;
@@ -40,17 +41,16 @@ public class EventsPageActivity extends AppCompatActivity {
 
     // TODO: Define Views
     private ImageView eventImageView;
-    private TextView eventNameTextView;
-    private TextView eventLocationTextView;
-    private TextView eventDateTimeTextView;
-    private TextView eventDescriptionTextView;
+    private TextView eventNameTextView,eventLocationTextView,eventDateTimeTextView,
+            eventDescriptionTextView,organiserNameTextView;
     private ShapeableImageView organiserPictureImageView;
     private ToggleButton addButtonView;
     private ToggleButton likeButtonView;
     private RecyclerView tagRecycler;
     private EventTagAdapter eventTagAdapter;
+    private MutableLiveData<String> organiserUsernameLiveData;
     private MutableLiveData<ArrayList<Tag>> categoryListLiveData;
-    private MutableLiveData<Bitmap> organiserLiveData;
+    private MutableLiveData<Bitmap> organiserProfilePictureLiveData;
     private Intent intent;
 
 
@@ -69,6 +69,7 @@ public class EventsPageActivity extends AppCompatActivity {
         eventDateTimeTextView = findViewById(R.id.eventDateTimeTextView);
         tagRecycler = findViewById(R.id.event_tag_recycler);
         organiserPictureImageView = findViewById(R.id.organiserPictureImageView);
+        organiserNameTextView = findViewById(R.id.organiserNameTextView);
 
         // Initialize other attributes
         db = ((MyApplication) getApplicationContext()).getDatabase();
@@ -76,7 +77,8 @@ public class EventsPageActivity extends AppCompatActivity {
         appUser = ((MyApplication) getApplicationContext()).getAppUser();
         dataRepo = MyDataRepository.getInstance();
         categoryListLiveData = new MutableLiveData<>(new ArrayList<>());
-        organiserLiveData = new MutableLiveData<>();
+        organiserProfilePictureLiveData = new MutableLiveData<>();
+        organiserUsernameLiveData = new MutableLiveData<>();
 
         // Get Post object from intent (Event post to display)
         Intent intent = getIntent();
@@ -103,7 +105,7 @@ public class EventsPageActivity extends AppCompatActivity {
             eventImageView.setImageBitmap(bitmap);
         }
 
-        // TODO: Bind Post data to Views
+        // Bind Post data to Views
         eventNameTextView.setText(post.getTitle());
         eventLocationTextView.setText(post.getLocation());
         eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
@@ -119,13 +121,20 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
-        organiserLiveData.observe(this, new Observer<Bitmap>() {
+        organiserProfilePictureLiveData.observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(Bitmap bitmap) {
                 if (bitmap != null) {
                     Log.d(TAG, "Image changed");
                     organiserPictureImageView.setImageBitmap(bitmap);
                 }
+            }
+        });
+
+        organiserUsernameLiveData.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                organiserNameTextView.setText(s);
             }
         });
 
@@ -141,13 +150,20 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
-        db.getProfilePictureRequest(organiser, new RestRepo.RepositoryCallback<Bitmap>() {
+        // Get profile picture of organiser (user who posted the event)
+        // Get username of organiser of event
+        db.getAuthorRequest(organiser, new RestRepo.RepositoryCallback<Author>() {
             @Override
-                public void onComplete(Bitmap result) {
-                    organiserLiveData.postValue(result);
-                }
-            });
-
+            public void onComplete(Author result) {
+                db.getImageRequest(result.getProfile_pic_url(), new RestRepo.RepositoryCallback<Bitmap>() {
+                    @Override
+                    public void onComplete(Bitmap result) {
+                        organiserProfilePictureLiveData.postValue(result);
+                    }
+                });
+                organiserUsernameLiveData.postValue(result.getUsername());
+            }
+        });
 
         // 'Add to Calendar' Toggle Button
         // Check whether post is saved to Calendar (for the icon)
