@@ -122,30 +122,19 @@
             android:textSize="8sp"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/tags" />
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/chipGroup"
+
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="300dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:drawable/editbox_background"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/tag_choose"
+            android:drawablePadding="16dp"
             android:hint="Select Tags"
+            android:padding="12dp" />
 
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-            <MultiAutoCompleteTextView
-                android:id="@+id/multiAutoCompleteTextView"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:hint="Select Tags"
-                android:inputType="textMultiLine" />
-            <!--        <com.google.android.material.chip.ChipGroup-->
-
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_marginTop="8dp"-->
-            <!--            app:singleLine="false" />-->
-
-        </com.google.android.material.textfield.TextInputLayout>
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
@@ -292,6 +281,21 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/location_text" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/CreateAccountFields"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="4dp"
+            android:entries="@array/AIornot"
+            android:minWidth="300dp"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintTop_toBottomOf="@+id/description_info" />
+
         <TextView
             android:id="@+id/description_info"
             android:layout_width="wrap_content"
