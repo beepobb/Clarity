@@ -109,7 +109,9 @@ public class Discover extends Fragment {
                         }
                     });
                 }
+                updateRecyclerEventsShown();
             }
+
         });
 
         // set up observer for eventImageMappingLiveData, refresh UI when images are loaded in
