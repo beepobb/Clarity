@@ -1,10 +1,13 @@
 package com.example.clarity;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -40,8 +43,21 @@ public class MainActivity extends AppCompatActivity {
 
         // Database instance
         database = ((MyApplication) getApplicationContext()).getDatabase();
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder3);
+        database.postImageRequest(bm, "event_placeholder3.png", new RestRepo.RepositoryCallback<String>() {
+            @Override
+            public void onComplete(String result) {
+                System.out.println(result);
+            }
+        });
 
-        // Initialize Fragments and Fragment Manager
+        database.bitmapToTextSummaryRequest(bm, new RestRepo.RepositoryCallback<String>() {
+            @Override
+            public void onComplete(String result) {
+                System.out.println("Summary: " + result);
+            }
+        });
+
         discoverFragment = new Discover();
         favouritesFragment = new Favourites();
         createFragment = new Create();

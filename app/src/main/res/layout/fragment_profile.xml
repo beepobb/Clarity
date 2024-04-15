@@ -37,16 +37,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/placeholderProfilePic"
-            android:layout_width="137dp"
-            android:layout_height="144dp"
-            android:src="@drawable/placeholder_profile"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/circleBg"
             app:layout_constraintEnd_toEndOf="@+id/circleBg"
             app:layout_constraintStart_toStartOf="@+id/circleBg"
             app:layout_constraintTop_toTopOf="@+id/circleBg"
-            android:contentDescription="Profile photo" />
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearance" />
 
         <TextView
             android:id="@+id/username"

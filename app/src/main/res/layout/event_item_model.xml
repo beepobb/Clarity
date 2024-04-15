@@ -72,7 +72,7 @@
                 android:paddingStart="5dp"
                 android:text="TextView"
                 android:textSize="10dp"
-                app:layout_constraintStart_toEndOf="@id/location"
+                app:layout_constraintStart_toEndOf="@id/eventLocationTextView"
                 app:layout_constraintTop_toBottomOf="@id/eventTime" />
 
             <ImageView
@@ -85,6 +85,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                app:tint="@color/purple"
                 android:id="@+id/calendar"
                 android:layout_width="18dp"
                 android:layout_height="12dp"
@@ -95,6 +96,7 @@
                 app:srcCompat="@drawable/baseline_calendar_today_24" />
 
             <ImageView
+                app:tint="@color/purple"
                 android:id="@+id/clock"
                 android:layout_width="17dp"
                 android:layout_height="14dp"
@@ -105,7 +107,8 @@
                 app:srcCompat="@drawable/baseline_access_time_24" />
 
             <ImageView
-                android:id="@+id/location"
+                app:tint="@color/purple"
+                android:id="@+id/eventLocationTextView"
                 android:layout_width="18dp"
                 android:layout_height="15dp"
                 android:layout_marginEnd="51dp"
