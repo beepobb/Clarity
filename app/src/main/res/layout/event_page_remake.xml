@@ -153,7 +153,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/event_tag_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="1dp"
                     android:layout_marginTop="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/tagsHeaderTextView"
                     tools:layout_editor_absoluteX="0dp" />
@@ -183,16 +183,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <ImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/organiserPictureImageView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
                             android:layout_marginStart="6dp"
                             android:paddingStart="10dp"
                             android:src="@drawable/root"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearanceOverlay="@style/RoundedShapeAppearance" />
 
                         <TextView
                             android:id="@+id/organiserNameTextView"

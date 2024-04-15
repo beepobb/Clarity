@@ -50,7 +50,6 @@ public class Post {
         } catch (ParseException e) {
             Log.d("RYAN TEST", "Post: Parse Exception " + event_end);
         }
-
     }
 
     public int getId() {

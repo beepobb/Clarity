@@ -26,6 +26,7 @@ import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Tag;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 
@@ -43,11 +44,14 @@ public class EventsPageActivity extends AppCompatActivity {
     private TextView eventLocationTextView;
     private TextView eventDateTimeTextView;
     private TextView eventDescriptionTextView;
+    private ShapeableImageView organiserPictureImageView;
     private ToggleButton addButtonView;
     private ToggleButton likeButtonView;
     private RecyclerView tagRecycler;
     private EventTagAdapter eventTagAdapter;
     private MutableLiveData<ArrayList<Tag>> categoryListLiveData;
+    private MutableLiveData<Bitmap> organiserLiveData;
+    private Intent intent;
 
 
     @Override
@@ -64,6 +68,7 @@ public class EventsPageActivity extends AppCompatActivity {
         eventDescriptionTextView = findViewById(R.id.eventDescriptionTextView);
         eventDateTimeTextView = findViewById(R.id.eventDateTimeTextView);
         tagRecycler = findViewById(R.id.event_tag_recycler);
+        organiserPictureImageView = findViewById(R.id.organiserPictureImageView);
 
         // Initialize other attributes
         db = ((MyApplication) getApplicationContext()).getDatabase();
@@ -71,12 +76,14 @@ public class EventsPageActivity extends AppCompatActivity {
         appUser = ((MyApplication) getApplicationContext()).getAppUser();
         dataRepo = MyDataRepository.getInstance();
         categoryListLiveData = new MutableLiveData<>(new ArrayList<>());
+        organiserLiveData = new MutableLiveData<>();
 
         // Get Post object from intent (Event post to display)
         Intent intent = getIntent();
         PostParcelable postParcelable = intent.getParcelableExtra("POST");
         assert postParcelable != null;
         Post post = postParcelable.getPost();
+        int organiser = post.getAuthor_id();
 
         // TODO: Bind Post data to Views
         eventNameTextView.setText(post.getTitle());
@@ -112,6 +119,16 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
+        organiserLiveData.observe(this, new Observer<Bitmap>() {
+            @Override
+            public void onChanged(Bitmap bitmap) {
+                if (bitmap != null) {
+                    Log.d(TAG, "Image changed");
+                    organiserPictureImageView.setImageBitmap(bitmap);
+                }
+            }
+        });
+
         //get all tags associated with the post
         db.getTagsWithPostIDRequest(post.getId(), new RestRepo.RepositoryCallback<ArrayList<Tag>>() {
             @Override
@@ -123,6 +140,13 @@ public class EventsPageActivity extends AppCompatActivity {
                 }
             }
         });
+
+        db.getProfilePictureRequest(organiser, new RestRepo.RepositoryCallback<Bitmap>() {
+            @Override
+                public void onComplete(Bitmap result) {
+                    organiserLiveData.postValue(result);
+                }
+            });
 
 
         // 'Add to Calendar' Toggle Button
