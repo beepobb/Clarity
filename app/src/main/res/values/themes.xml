@@ -72,19 +72,14 @@
         <item name="android:background">#F2DFFF</item>
     </style>
 
-    <style name="CalendarEventMainText">
-        <item name="android:textColor">@color/dark_purple</item>
-    </style>
+    <style name="CalendarEventMainText"><item name="android:textColor">@color/dark_purple</item></style>
 
     <style name="CalendarEventSubText">
         <item name="android:textColor">@color/purple</item>
     </style>
 
     <!-- Styles for Profile Fragment -->
-    <style name="ProfileBanner">
-        <item name="android:background">@color/purple</item>
-    </style>
-
+    <style name="ProfileBanner"><item name="android:background">@color/purple</item></style>
     <style name="ProfileButton">
         <item name="backgroundTint">@color/light_grey</item>
         <item name="android:textColor">@color/wolf_grey</item>

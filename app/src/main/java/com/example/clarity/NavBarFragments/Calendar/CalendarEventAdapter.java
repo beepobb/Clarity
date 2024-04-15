@@ -11,10 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.clarity.EventsPageActivity;
+import com.example.clarity.Event.EventsPageActivity;
 import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
+import com.example.clarity.model.util.CardFormatter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -80,7 +81,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
 
         // Bind Event object data to the EventViewHolder i.e. fill in data
         holder.eventNameTextView.setText(event.getTitle());
-        holder.eventTimeTextView.setText(event.getEvent_start());
+        holder.eventTimeTextView.setText(CardFormatter.formatTime(event.getEvent_start(), event.getEvent_end()));
         holder.eventLocationTextView.setText(event.getLocation());
         holder.eventDayNumber.setText(String.valueOf(event.getEventStart().get(Calendar.DAY_OF_MONTH)));
         holder.eventDay.setText(daysOfWeekConverter[event.getEventStart().get(Calendar.DAY_OF_WEEK)]);

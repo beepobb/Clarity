@@ -13,12 +13,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.clarity.EventsPageActivity;
+import com.example.clarity.Event.EventsPageActivity;
 import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.util.CardFormatter;
 
+import java.io.ByteArrayOutputStream;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
@@ -100,6 +101,15 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
                 // To pass in Post object, we need to wrap it first (Parcelable)
                 PostParcelable postParcelable = new PostParcelable(event_details); // can be serialized into Parcel
                 intent.putExtra("POST", postParcelable); // pass in wrapped Post
+                // Pass image bitmap
+                Bitmap bitmap = eventImageMapping.get(event_details.getId());
+                if (bitmap != null) {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    intent.putExtra("IMAGE", byteArray);
+                }
+
                 context.startActivity(intent);
             }
         });

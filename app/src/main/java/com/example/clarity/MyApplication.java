@@ -19,7 +19,6 @@ public class MyApplication extends Application {
     Add [android:name=".MyApplication"] to the AndroidManifest
      */
 
-
     // Initialize Threads and Database on application start
     private Executor executor = Executors.newFixedThreadPool(2);
     private RestRepo database = RestRepo.getInstance(executor);

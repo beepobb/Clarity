@@ -16,4 +16,10 @@
         <item>SUTD Fifth Row</item>
         <item>Public</item>
     </string-array>
+
+    <string-array name="AIornot">
+        <item>I want to write my own description!</item>
+        <item>I want to use AI!</item>
+    </string-array>
+
 </resources>
