@@ -337,7 +337,7 @@ public class Create extends Fragment {
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
                 }
 
-                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() || contact.isEmpty()) {
+                if (author_id == null || title.isEmpty() || tags.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() || contact.isEmpty()) {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                     return;
                 }

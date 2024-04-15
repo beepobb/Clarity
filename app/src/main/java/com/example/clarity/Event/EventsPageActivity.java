@@ -28,6 +28,7 @@ import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class EventsPageActivity extends AppCompatActivity {
@@ -48,6 +49,7 @@ public class EventsPageActivity extends AppCompatActivity {
     private RecyclerView tagRecycler;
     private EventTagAdapter eventTagAdapter;
     private MutableLiveData<ArrayList<Tag>> categoryListLiveData;
+    private Post thisPost;
 
 
     @Override
@@ -76,32 +78,36 @@ public class EventsPageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         PostParcelable postParcelable = intent.getParcelableExtra("POST");
         assert postParcelable != null;
-        Post post = postParcelable.getPost();
+        thisPost = postParcelable.getPost();
 
         // TODO: Bind Post data to Views
-        eventNameTextView.setText(post.getTitle());
-        eventLocationTextView.setText(post.getLocation());
-        eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
-        eventDescriptionTextView.setText(post.getDescription());
+        eventNameTextView.setText(thisPost.getTitle());
+        eventLocationTextView.setText(thisPost.getLocation());
+        eventDateTimeTextView.setText(thisPost.getEvent_start()); // unformatted
+        eventDescriptionTextView.setText(thisPost.getDescription());
 
         // set up tag recycler
         tagRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         eventTagAdapter = new EventTagAdapter(this, categoryListLiveData.getValue());
         tagRecycler.setAdapter(eventTagAdapter);
 
-        // Get image byte array from intent
-        byte[] byteArray = intent.getByteArrayExtra("IMAGE");
-        if (byteArray != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            eventImageView.setImageBitmap(bitmap);
-        }
 
-        // TODO: Bind Post data to Views
-        eventNameTextView.setText(post.getTitle());
-        eventLocationTextView.setText(post.getLocation());
-        eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
-        eventDescriptionTextView.setText(post.getDescription());
-        //eventImageView.setImageBitmap(post.getImage_url());
+        // Bind Post data to Views
+        eventNameTextView.setText(thisPost.getTitle());
+        eventLocationTextView.setText(thisPost.getLocation());
+        eventDateTimeTextView.setText(thisPost.getEvent_start()); // unformatted
+        eventDescriptionTextView.setText(thisPost.getDescription());
+
+        // Set listener: update post Image once it has been fetched
+        dataRepo.getEventImageMappingLiveData().observe(this, new Observer<HashMap<Integer, Bitmap>>() {
+            @Override
+            public void onChanged(HashMap<Integer, Bitmap> integerBitmapHashMap) {
+                Bitmap imageBitmap = integerBitmapHashMap.get(thisPost.getId());
+                if (imageBitmap != null) {
+                    eventImageView.setImageBitmap(imageBitmap);
+                }
+            }
+        });
 
         // Set listener: update tags UI once data has been fetched
         categoryListLiveData.observe(this, new Observer<ArrayList<Tag>>() {
@@ -113,7 +119,7 @@ public class EventsPageActivity extends AppCompatActivity {
         });
 
         //get all tags associated with the post
-        db.getTagsWithPostIDRequest(post.getId(), new RestRepo.RepositoryCallback<ArrayList<Tag>>() {
+        db.getTagsWithPostIDRequest(thisPost.getId(), new RestRepo.RepositoryCallback<ArrayList<Tag>>() {
             @Override
             public void onComplete(ArrayList<Tag> result) {
                 if (result != null) {
@@ -128,7 +134,7 @@ public class EventsPageActivity extends AppCompatActivity {
         // 'Add to Calendar' Toggle Button
         // Check whether post is saved to Calendar (for the icon)
 
-        boolean postInCalendar = prefUtils.inCalendar(post.getId());
+        boolean postInCalendar = prefUtils.inCalendar(thisPost.getId());
         addButtonView.setChecked(postInCalendar);
         addButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,14 +142,14 @@ public class EventsPageActivity extends AppCompatActivity {
                 // Toggle button will automatically toggle state first when clicked, before the following checks
                 if (addButtonView.isChecked()) {
                     // Add event to calendar
-                    dataRepo.addSavedEventOnMainThread(post); // Will trigger listeners to update UI
-                    prefUtils.addToCalendar(post.getId());
+                    dataRepo.addSavedEventOnMainThread(thisPost); // Will trigger listeners to update UI
+                    prefUtils.addToCalendar(thisPost.getId());
                     Toast.makeText(EventsPageActivity.this, "Event added to calendar", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     // Remove event from calendar
-                    dataRepo.removeSavedEventOnMainThread(post); // Will trigger listeners to update UI
-                    prefUtils.removeFromCalendar(post.getId());
+                    dataRepo.removeSavedEventOnMainThread(thisPost); // Will trigger listeners to update UI
+                    prefUtils.removeFromCalendar(thisPost.getId());
                     Toast.makeText(EventsPageActivity.this, "Event removed from calendar", Toast.LENGTH_SHORT).show();
                 }
                 prefUtils.commitCalendarUpdates();
@@ -154,7 +160,7 @@ public class EventsPageActivity extends AppCompatActivity {
         // 'Add to Favourites' Toggle Button (like button)
         // Check whether post is in user's favourites (for the icon)
 
-        boolean postInFavourites = dataRepo.postInFavourites(post);
+        boolean postInFavourites = dataRepo.postInFavourites(thisPost);
         likeButtonView.setChecked(postInFavourites);
         likeButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,8 +168,8 @@ public class EventsPageActivity extends AppCompatActivity {
                 // Toggle button will automatically toggle state first when clicked, before the following checks
                 if (likeButtonView.isChecked()) {
                     // Add event to user's favourites
-                    dataRepo.addFavouriteEventOnMainThread(post); // Will trigger listeners to update UI
-                    db.addFavouritesRequest(post.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
+                    dataRepo.addFavouriteEventOnMainThread(thisPost); // Will trigger listeners to update UI
+                    db.addFavouritesRequest(thisPost.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
                         @Override
                         public void onComplete(String result) {
                             if (result != null) {
@@ -178,8 +184,8 @@ public class EventsPageActivity extends AppCompatActivity {
                 }
                 else {
                     // Remove event from user's favourites
-                    dataRepo.removeFavouriteEventOnMainThread(post); // Will trigger listeners to update UI
-                    db.removeFavouritesRequest(post.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
+                    dataRepo.removeFavouriteEventOnMainThread(thisPost); // Will trigger listeners to update UI
+                    db.removeFavouritesRequest(thisPost.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
                         @Override
                         public void onComplete(String result) {
                             if (result != null) {
@@ -192,7 +198,6 @@ public class EventsPageActivity extends AppCompatActivity {
                     });
                     Toast.makeText(EventsPageActivity.this, "Event removed from user's favourites", Toast.LENGTH_SHORT).show();
                 }
-                prefUtils.commitCalendarUpdates();
             }
         });
 

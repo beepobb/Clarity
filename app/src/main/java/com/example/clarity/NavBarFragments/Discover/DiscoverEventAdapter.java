@@ -80,7 +80,7 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
         String rawStartTime = event_details.getEvent_start();
         String rawEndTime = event_details.getEvent_end();
         String formattedName = CardFormatter.formatTitleDiscover(rawName);
-        String formattedDate = CardFormatter.formatDate(rawStartTime);
+        String formattedDate = CardFormatter.formatDate(rawStartTime, rawEndTime);
         String formattedTime = CardFormatter.formatTime(rawStartTime, rawEndTime);
 
         // Set text in UI
@@ -100,16 +100,7 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
 
                 // To pass in Post object, we need to wrap it first (Parcelable)
                 PostParcelable postParcelable = new PostParcelable(event_details); // can be serialized into Parcel
-                intent.putExtra("POST", postParcelable); // pass in wrapped Post
-                // Pass image bitmap
-                Bitmap bitmap = eventImageMapping.get(event_details.getId());
-                if (bitmap != null) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    intent.putExtra("IMAGE", byteArray);
-                }
-
+                intent.putExtra("POST", postParcelable); // pass in wrapped Post (serializable)
                 context.startActivity(intent);
             }
         });

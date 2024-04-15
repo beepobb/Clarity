@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clarity.R;
@@ -19,20 +20,17 @@ import java.util.List;
 public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagButtonViewHolder>{
     private Context context;
     private List<EventTags> buttonNameList; // store name of buttons
-
-    public List<Button> getButtonsList() {
-        return buttonsList;
-    }
+    private MutableLiveData<EventTags> selectedTagLiveData;
 
     private List<Button> buttonsList; // store references to Button views
-    private final String logCatTag = "TagButtonAdapter";
-    private TagButtonUpdateEventsClickListener tagButtonUpdateEventsClickListener;
-    public TagButtonAdapter(Context context, List<EventTags> buttonNameList, TagButtonUpdateEventsClickListener tagButtonUpdateEventsClickListener) {
-        Log.d(logCatTag, "TagButtonAdapter");
+    private final String TAG = "TagButtonAdapter";
+
+    public TagButtonAdapter(Context context, List<EventTags> buttonNameList) {
+        Log.d(TAG, "TagButtonAdapter");
         this.context = context;
         this.buttonNameList = buttonNameList;
         this.buttonsList = new ArrayList<>();
-        this.tagButtonUpdateEventsClickListener = tagButtonUpdateEventsClickListener;
+        selectedTagLiveData = new MutableLiveData<>(EventTags.ALL); // first selected tag should be 'ALL'
     }
 
     public static class TagButtonViewHolder extends RecyclerView.ViewHolder {
@@ -47,7 +45,7 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
     @NonNull
     @Override
     public TagButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(logCatTag, "onCreateViewHolder");
+        Log.d(TAG, "onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tag_button_model, parent, false);
         return new TagButtonViewHolder(view);
     }
@@ -55,7 +53,7 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
     @Override
     public void onBindViewHolder(@NonNull TagButtonViewHolder holder, int position) {
         // RecyclerView calls this to bind a EventViewHolder to data
-        Log.d(logCatTag, "onBindViewHolder");
+        Log.d(TAG, "onBindViewHolder");
 
         EventTags buttonName = buttonNameList.get(position);
         buttonsList.add(holder.button);
@@ -68,16 +66,18 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedTagLiveData.setValue(buttonName); // will trigger observer in Discover, to change the events being presented
+
                 // Update UI for all buttons based on what button was clicked
                 for (Button button : buttonsList) {
                     // when button clicked, change background color and text color
                     if (view == button) {
-                        Log.d(logCatTag, view.toString());
+                        Log.d(TAG, view.toString());
                         button.setBackgroundResource(R.drawable.tag_select_rectangle);
                         button.setTextColor(ContextCompat.getColor(context, R.color.white));
 
                         // updates eventRecycler in Discover Fragment
-                        tagButtonUpdateEventsClickListener.onButtonClick(pos);
+                        // tagButtonUpdateEventsClickListener.onButtonClick(pos);
                     // change UI for buttons that are not clicked
                     } else {
                         button.setBackgroundResource(R.drawable.tag_unselect_rectangle);
@@ -86,8 +86,8 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
                 }
             }
         });
-        //TODO: pre-select "All" category
-        if (position == 0) {
+
+        if (position == 0) { // Select 'ALL' tag button on start-up
             holder.button.performClick();
         }
     }
@@ -96,4 +96,10 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
     public int getItemCount() {
         return buttonNameList.size();
     }
+
+    public List<Button> getButtonsList() {
+        return buttonsList;
+    }
+    public MutableLiveData<EventTags> getSelectedTagLiveData() { return selectedTagLiveData; }
+    public EventTags getSelectedTag() { return selectedTagLiveData.getValue(); }
 }
