@@ -193,6 +193,11 @@ public class Discover extends Fragment {
         }
         // refresh adapter for event recycler
         discoverEventAdapter.updateEventList(subList);
+
+//        Log.d("RYANTEST", "updateRecyclerEventsShown: ");
+//        for (Integer id: dataRepo.getTagsEventMapping().get(buttonPressed)) {
+//            Log.d("RYANTEST", String.valueOf(id));
+//        }
     }
 
     public void updateRecyclerImageMapping() {

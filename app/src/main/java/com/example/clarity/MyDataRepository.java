@@ -24,12 +24,7 @@ public class MyDataRepository {
      */
 
     // Singleton class
-    private MyDataRepository() {
-        // Initialize values for tagsEventMappingLiveData hash map
-        for (EventTags e : EventTags.values()) {
-            getTagsEventMapping().put(e, new ArrayList<>());
-        }
-    }
+    private MyDataRepository() {}
     public static MyDataRepository getInstance() {
         if (instance == null) {
             instance = new MyDataRepository();
@@ -137,7 +132,12 @@ public class MyDataRepository {
     }
 
     public void createTagEventMappingOnWorkerThread(ArrayList<Tag> tagObjects) {
-        HashMap<EventTags, ArrayList<Integer>> tagsEventMapping = tagsEventMappingLiveData.getValue();
+        // Initialize hash map
+        HashMap<EventTags, ArrayList<Integer>> tagsEventMapping = new HashMap<>();
+        for (EventTags e : EventTags.values()) {
+            tagsEventMapping.put(e, new ArrayList<>());
+        }
+
         for (Tag tag : tagObjects) {
             Integer post_id = tag.getPost_id();
             String tag_category = tag.getTag_category();

@@ -62,48 +62,51 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
     @Override
     public void onBindViewHolder(@NonNull DiscoverEventViewHolder holder, int position) {
         Log.d("DiscoverEventAdapter", "onBindViewHolder");
-        Post event_details = eventList.get(position);
-        Integer post_id = event_details.getId();
-        Bitmap bitmap = eventImageMapping.get(post_id);
+        Post eventPost = eventList.get(position);
+        if (eventPost != null) {
+            Integer post_id = eventPost.getId();
+            Bitmap bitmap = eventImageMapping.get(post_id);
 
-        if (bitmap != null) {
-            Log.d("DiscoverEventAdapter", String.valueOf(bitmap.getHeight()) + bitmap.getWidth());
-        } else {
-            Log.d("DiscoverEventAdapter", "bitmap null");
+            if (bitmap != null) {
+                Log.d("DiscoverEventAdapter", String.valueOf(bitmap.getHeight()) + bitmap.getWidth());
+            } else {
+                Log.d("DiscoverEventAdapter", "bitmap null");
+            }
+
+            // set image to UI
+            holder.eventImage.setImageBitmap(bitmap);
+
+            // String formatting for CardView
+            String rawName = eventPost.getTitle();
+            String rawStartTime = eventPost.getEvent_start();
+            String rawEndTime = eventPost.getEvent_end();
+            String formattedName = CardFormatter.formatTitleDiscover(rawName);
+            String formattedDate = CardFormatter.formatDate(rawStartTime, rawEndTime);
+            String formattedTime = CardFormatter.formatTime(rawStartTime, rawEndTime);
+
+            // Set text in UI
+            holder.eventName.setText(formattedName);
+            holder.eventDate.setText(formattedDate);
+            holder.eventTime.setText(formattedTime);
+            holder.eventLocation.setText(eventPost.getLocation());
+
+            // Set on click listener for each item
+            // ViewHolder is not a View, so we access its root view instead (itemView)
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // Go to corresponding events page
+                    Intent intent = new Intent(context, EventsPageActivity.class); // Intent for going to events page activity
+
+                    // To pass in Post object, we need to wrap it first (Parcelable)
+                    PostParcelable postParcelable = new PostParcelable(eventPost); // can be serialized into Parcel
+                    intent.putExtra("POST", postParcelable); // pass in wrapped Post (serializable)
+                    context.startActivity(intent);
+                }
+            });
         }
 
-        // set image to UI
-        holder.eventImage.setImageBitmap(bitmap);
-
-        // String formatting for CardView
-        String rawName = event_details.getTitle();
-        String rawStartTime = event_details.getEvent_start();
-        String rawEndTime = event_details.getEvent_end();
-        String formattedName = CardFormatter.formatTitleDiscover(rawName);
-        String formattedDate = CardFormatter.formatDate(rawStartTime, rawEndTime);
-        String formattedTime = CardFormatter.formatTime(rawStartTime, rawEndTime);
-
-        // Set text in UI
-        holder.eventName.setText(formattedName);
-        holder.eventDate.setText(formattedDate);
-        holder.eventTime.setText(formattedTime);
-        holder.eventLocation.setText(event_details.getLocation());
-
-        // Set on click listener for each item
-        // ViewHolder is not a View, so we access its root view instead (itemView)
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // Go to corresponding events page
-                Intent intent = new Intent(context, EventsPageActivity.class); // Intent for going to events page activity
-
-                // To pass in Post object, we need to wrap it first (Parcelable)
-                PostParcelable postParcelable = new PostParcelable(event_details); // can be serialized into Parcel
-                intent.putExtra("POST", postParcelable); // pass in wrapped Post (serializable)
-                context.startActivity(intent);
-            }
-        });
     }
 
     @Override
