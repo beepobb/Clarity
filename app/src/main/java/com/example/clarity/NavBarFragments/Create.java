@@ -105,7 +105,6 @@ public class Create extends Fragment {
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
         Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
-        Log.d("EESONG", AIornotSpinner.toString());
         ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
         Handler handler = new Handler();
 
@@ -323,6 +322,7 @@ public class Create extends Fragment {
             public void onClick(View v) {
 
                 postButton.setEnabled(false);
+                hideKeyboard(getContext(), v);
 
                 Integer author_id = appUser_id;
                 String title = titleEditText.getText().toString();
@@ -471,6 +471,12 @@ public class Create extends Fragment {
                 true // 24-hour format
         );
         timePickerDialog.show();
+    }
+
+    //hides keyboard after user inputs password
+    private void hideKeyboard(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
 }
