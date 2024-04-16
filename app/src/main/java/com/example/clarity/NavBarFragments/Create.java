@@ -393,11 +393,6 @@ public class Create extends Fragment {
         //end
         return rootView;
     }
-    private void hideKeyboard(Context context, View v) {
-        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mMultiAutoCompleteTextView.getWindowToken(), 0);
-    }
-
 
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);

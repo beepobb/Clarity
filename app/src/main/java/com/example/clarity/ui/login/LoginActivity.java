@@ -1,5 +1,6 @@
 package com.example.clarity.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -143,4 +145,5 @@ public class LoginActivity extends AppCompatActivity {
         Intent go_to_create = new Intent(this, CreateNewAccountView.class);
         startActivity(go_to_create);
     }
+
 }

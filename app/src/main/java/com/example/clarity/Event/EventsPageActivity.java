@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clarity.MyApplication;
 import com.example.clarity.MyDataRepository;
+import com.example.clarity.NavBarFragments.Discover.EventTags;
 import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.PreferenceUtils;
@@ -29,6 +30,8 @@ import com.example.clarity.model.repository.RestRepo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class EventsPageActivity extends AppCompatActivity {
@@ -48,7 +51,6 @@ public class EventsPageActivity extends AppCompatActivity {
     private ToggleButton likeButtonView;
     private RecyclerView tagRecycler;
     private EventTagAdapter eventTagAdapter;
-    private MutableLiveData<ArrayList<Tag>> categoryListLiveData;
     private Post thisPost;
 
 
@@ -72,7 +74,6 @@ public class EventsPageActivity extends AppCompatActivity {
         prefUtils = PreferenceUtils.getInstance(this);
         appUser = ((MyApplication) getApplicationContext()).getAppUser();
         dataRepo = MyDataRepository.getInstance();
-        categoryListLiveData = new MutableLiveData<>(new ArrayList<>());
 
         // Get Post object from intent (Event post to display)
         Intent intent = getIntent();
@@ -80,7 +81,7 @@ public class EventsPageActivity extends AppCompatActivity {
         assert postParcelable != null;
         thisPost = postParcelable.getPost();
 
-        // TODO: Bind Post data to Views
+        // Bind Post data to Views
         eventNameTextView.setText(thisPost.getTitle());
         eventLocationTextView.setText(thisPost.getLocation());
         eventDateTimeTextView.setText(thisPost.getEvent_start()); // unformatted
@@ -88,15 +89,8 @@ public class EventsPageActivity extends AppCompatActivity {
 
         // set up tag recycler
         tagRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        eventTagAdapter = new EventTagAdapter(this, categoryListLiveData.getValue());
+        eventTagAdapter = new EventTagAdapter(this, new ArrayList<>());
         tagRecycler.setAdapter(eventTagAdapter);
-
-
-        // Bind Post data to Views
-        eventNameTextView.setText(thisPost.getTitle());
-        eventLocationTextView.setText(thisPost.getLocation());
-        eventDateTimeTextView.setText(thisPost.getEvent_start()); // unformatted
-        eventDescriptionTextView.setText(thisPost.getDescription());
 
         // Set listener: update post Image once it has been fetched
         dataRepo.getEventImageMappingLiveData().observe(this, new Observer<HashMap<Integer, Bitmap>>() {
@@ -109,24 +103,18 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
-        // Set listener: update tags UI once data has been fetched
-        categoryListLiveData.observe(this, new Observer<ArrayList<Tag>>() {
+        dataRepo.getTagsEventMappingLiveData().observe(this, new Observer<HashMap<EventTags, ArrayList<Integer>>>() {
             @Override
-            public void onChanged(ArrayList<Tag> tags) {
-                // TODO: update UI - populate tags
-                eventTagAdapter.updateTagList(categoryListLiveData.getValue());
-            }
-        });
-
-        //get all tags associated with the post
-        db.getTagsWithPostIDRequest(thisPost.getId(), new RestRepo.RepositoryCallback<ArrayList<Tag>>() {
-            @Override
-            public void onComplete(ArrayList<Tag> result) {
-                if (result != null) {
-                    categoryListLiveData.postValue(result);
-                }else{
-                    Log.d("getTagsWithPostIDRequest", "return null");
+            public void onChanged(HashMap<EventTags, ArrayList<Integer>> eventTagsArrayListHashMap) {
+                List<EventTags> postTagList = new ArrayList<>();
+                for (Map.Entry<EventTags, ArrayList<Integer>> entry: dataRepo.getTagsEventMapping().entrySet()) {
+                    EventTags tag = entry.getKey();
+                    ArrayList<Integer> postList = entry.getValue();
+                    if (postList.contains(thisPost.getId())) {
+                        postTagList.add(tag);
+                    }
                 }
+                eventTagAdapter.updateTagList(postTagList);
             }
         });
 

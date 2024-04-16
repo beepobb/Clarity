@@ -65,6 +65,7 @@ public class CardFormatter {
     public static String formatDate(String eventStart, String eventEnd) {
         String startDate = getDate(eventStart);
         String endDate = getDate(eventEnd);
+
         if (startDate.equals(endDate)) {
             return startDate;
         } else {
@@ -94,4 +95,5 @@ public class CardFormatter {
         String day = tmpDateOnly[2];
         return day+"/"+month+"/"+year;
     }
+
 }

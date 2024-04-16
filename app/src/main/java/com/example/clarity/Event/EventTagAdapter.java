@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.clarity.NavBarFragments.Discover.EventTags;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Tag;
 
@@ -16,8 +17,8 @@ import java.util.List;
 
 public class EventTagAdapter extends RecyclerView.Adapter<EventTagAdapter.EventTagViewHolder> {
     private Context context;
-    private List<Tag> categoryList;
-    public EventTagAdapter(Context context, List<Tag> categoryList){
+    private List<EventTags> categoryList;
+    public EventTagAdapter(Context context, List<EventTags> categoryList){
         this.context = context;
         this.categoryList = categoryList;
     }
@@ -30,8 +31,8 @@ public class EventTagAdapter extends RecyclerView.Adapter<EventTagAdapter.EventT
 
     @Override
     public void onBindViewHolder(@NonNull EventTagViewHolder holder, int position) {
-        Tag tag = categoryList.get(position);
-        holder.tagName.setText(tag.getTag_category());
+        EventTags tag = categoryList.get(position);
+        holder.tagName.setText(tag.toString());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class EventTagAdapter extends RecyclerView.Adapter<EventTagAdapter.EventT
         }
     }
 
-    public void updateTagList(List<Tag> categoryList) {
+    public void updateTagList(List<EventTags> categoryList) {
         // Called when list of events to display on Recycler changes
         this.categoryList = categoryList;
         notifyDataSetChanged();
