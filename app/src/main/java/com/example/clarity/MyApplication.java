@@ -20,7 +20,7 @@ public class MyApplication extends Application {
      */
 
     // Initialize Threads and Database on application start
-    private Executor executor = Executors.newFixedThreadPool(2);
+    private Executor executor = Executors.newFixedThreadPool(8);
     private RestRepo database = RestRepo.getInstance(executor);
 
     private User appUser; // User object for logged in user

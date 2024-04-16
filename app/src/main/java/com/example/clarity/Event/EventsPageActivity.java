@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clarity.MyApplication;
 import com.example.clarity.MyDataRepository;
+import com.example.clarity.NavBarFragments.Discover.EventTags;
 import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.PreferenceUtils;
@@ -34,6 +35,9 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class EventsPageActivity extends AppCompatActivity {
@@ -56,6 +60,7 @@ public class EventsPageActivity extends AppCompatActivity {
     private MutableLiveData<ArrayList<Tag>> categoryListLiveData;
     private MutableLiveData<Bitmap> organiserProfilePictureLiveData;
     private Intent intent;
+    private Post thisPost;
 
 
     @Override
@@ -88,39 +93,34 @@ public class EventsPageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         PostParcelable postParcelable = intent.getParcelableExtra("POST");
         assert postParcelable != null;
-        Post post = postParcelable.getPost();
+        thisPost = postParcelable.getPost();
         int organiser = post.getAuthor_id();
 
         // TODO: Bind Post data to Views
-        eventNameTextView.setText(post.getTitle());
-        eventLocationTextView.setText(post.getLocation());
-        eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
-        //eventDescriptionTextView.setText(post.getDescription());
-
         //addLinks only takes in Spannable object
         Spannable descriptionSpannable = new SpannableString(post.getDescription());
         Linkify.addLinks(descriptionSpannable, Linkify.WEB_URLS);
         eventDescriptionTextView.setText(descriptionSpannable);
         eventDescriptionTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        // Bind Post data to Views
+        eventNameTextView.setText(thisPost.getTitle());
+        eventLocationTextView.setText(thisPost.getLocation());
+        eventDateTimeTextView.setText(thisPost.getEvent_start()); // unformatted
+        eventDescriptionTextView.setText(thisPost.getDescription());
 
         // set up tag recycler
         tagRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        eventTagAdapter = new EventTagAdapter(this, categoryListLiveData.getValue());
+        eventTagAdapter = new EventTagAdapter(this, new ArrayList<>());
         tagRecycler.setAdapter(eventTagAdapter);
 
-        // Get image byte array from intent
-        byte[] byteArray = intent.getByteArrayExtra("IMAGE");
-        if (byteArray != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            eventImageView.setImageBitmap(bitmap);
-        }
-
-        // Set listener: update tags UI once data has been fetched
-        categoryListLiveData.observe(this, new Observer<ArrayList<Tag>>() {
+        // Set listener: update post Image once it has been fetched
+        dataRepo.getEventImageMappingLiveData().observe(this, new Observer<HashMap<Integer, Bitmap>>() {
             @Override
-            public void onChanged(ArrayList<Tag> tags) {
-                // TODO: update UI - populate tags
-                eventTagAdapter.updateTagList(categoryListLiveData.getValue());
+            public void onChanged(HashMap<Integer, Bitmap> integerBitmapHashMap) {
+                Bitmap imageBitmap = integerBitmapHashMap.get(thisPost.getId());
+                if (imageBitmap != null) {
+                    eventImageView.setImageBitmap(imageBitmap);
+                }
             }
         });
 
@@ -141,15 +141,18 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
-        //get all tags associated with the post
-        db.getTagsWithPostIDRequest(post.getId(), new RestRepo.RepositoryCallback<ArrayList<Tag>>() {
+        dataRepo.getTagsEventMappingLiveData().observe(this, new Observer<HashMap<EventTags, ArrayList<Integer>>>() {
             @Override
-            public void onComplete(ArrayList<Tag> result) {
-                if (result != null) {
-                    categoryListLiveData.postValue(result);
-                }else{
-                    Log.d("getTagsWithPostIDRequest", "return null");
+            public void onChanged(HashMap<EventTags, ArrayList<Integer>> eventTagsArrayListHashMap) {
+                List<EventTags> postTagList = new ArrayList<>();
+                for (Map.Entry<EventTags, ArrayList<Integer>> entry: dataRepo.getTagsEventMapping().entrySet()) {
+                    EventTags tag = entry.getKey();
+                    ArrayList<Integer> postList = entry.getValue();
+                    if (postList.contains(thisPost.getId())) {
+                        postTagList.add(tag);
+                    }
                 }
+                eventTagAdapter.updateTagList(postTagList);
             }
         });
 
@@ -171,7 +174,7 @@ public class EventsPageActivity extends AppCompatActivity {
         // 'Add to Calendar' Toggle Button
         // Check whether post is saved to Calendar (for the icon)
 
-        boolean postInCalendar = prefUtils.inCalendar(post.getId());
+        boolean postInCalendar = prefUtils.inCalendar(thisPost.getId());
         addButtonView.setChecked(postInCalendar);
         addButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,14 +182,14 @@ public class EventsPageActivity extends AppCompatActivity {
                 // Toggle button will automatically toggle state first when clicked, before the following checks
                 if (addButtonView.isChecked()) {
                     // Add event to calendar
-                    dataRepo.addSavedEventOnMainThread(post); // Will trigger listeners to update UI
-                    prefUtils.addToCalendar(post.getId());
+                    dataRepo.addSavedEventOnMainThread(thisPost); // Will trigger listeners to update UI
+                    prefUtils.addToCalendar(thisPost.getId());
                     Toast.makeText(EventsPageActivity.this, "Event added to calendar", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     // Remove event from calendar
-                    dataRepo.removeSavedEventOnMainThread(post); // Will trigger listeners to update UI
-                    prefUtils.removeFromCalendar(post.getId());
+                    dataRepo.removeSavedEventOnMainThread(thisPost); // Will trigger listeners to update UI
+                    prefUtils.removeFromCalendar(thisPost.getId());
                     Toast.makeText(EventsPageActivity.this, "Event removed from calendar", Toast.LENGTH_SHORT).show();
                 }
                 prefUtils.commitCalendarUpdates();
@@ -197,7 +200,7 @@ public class EventsPageActivity extends AppCompatActivity {
         // 'Add to Favourites' Toggle Button (like button)
         // Check whether post is in user's favourites (for the icon)
 
-        boolean postInFavourites = dataRepo.postInFavourites(post);
+        boolean postInFavourites = dataRepo.postInFavourites(thisPost);
         likeButtonView.setChecked(postInFavourites);
         likeButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,8 +208,8 @@ public class EventsPageActivity extends AppCompatActivity {
                 // Toggle button will automatically toggle state first when clicked, before the following checks
                 if (likeButtonView.isChecked()) {
                     // Add event to user's favourites
-                    dataRepo.addFavouriteEventOnMainThread(post); // Will trigger listeners to update UI
-                    db.addFavouritesRequest(post.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
+                    dataRepo.addFavouriteEventOnMainThread(thisPost); // Will trigger listeners to update UI
+                    db.addFavouritesRequest(thisPost.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
                         @Override
                         public void onComplete(String result) {
                             if (result != null) {
@@ -221,8 +224,8 @@ public class EventsPageActivity extends AppCompatActivity {
                 }
                 else {
                     // Remove event from user's favourites
-                    dataRepo.removeFavouriteEventOnMainThread(post); // Will trigger listeners to update UI
-                    db.removeFavouritesRequest(post.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
+                    dataRepo.removeFavouriteEventOnMainThread(thisPost); // Will trigger listeners to update UI
+                    db.removeFavouritesRequest(thisPost.getId(), appUser.getId(), new RestRepo.RepositoryCallback<String>() {
                         @Override
                         public void onComplete(String result) {
                             if (result != null) {
@@ -235,7 +238,6 @@ public class EventsPageActivity extends AppCompatActivity {
                     });
                     Toast.makeText(EventsPageActivity.this, "Event removed from user's favourites", Toast.LENGTH_SHORT).show();
                 }
-                prefUtils.commitCalendarUpdates();
             }
         });
 

@@ -81,7 +81,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
 
         // Bind Event object data to the EventViewHolder i.e. fill in data
         holder.eventNameTextView.setText(event.getTitle());
-        holder.eventTimeTextView.setText(CardFormatter.formatTime(event.getEvent_start(), event.getEvent_end()));
+        holder.eventTimeTextView.setText(CardFormatter.formatTimeWithDate(event.getEvent_start(), event.getEvent_end()));
         holder.eventLocationTextView.setText(event.getLocation());
         holder.eventDayNumber.setText(String.valueOf(event.getEventStart().get(Calendar.DAY_OF_MONTH)));
         holder.eventDay.setText(daysOfWeekConverter[event.getEventStart().get(Calendar.DAY_OF_WEEK)]);
