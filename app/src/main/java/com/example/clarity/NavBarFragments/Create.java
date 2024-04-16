@@ -3,7 +3,6 @@ package com.example.clarity.NavBarFragments;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 
@@ -31,13 +30,9 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.Handler;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -48,16 +43,13 @@ import android.widget.Toast;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -85,9 +77,9 @@ public class Create extends Fragment {
     private MutableLiveData<String> userdescriptionLiveData;
     private BottomNavigationView bottomNavigationView;
     private Bitmap image;
-    boolean[] selectedLanguage;
-    ArrayList<Integer> langList = new ArrayList<>();
-    String[] langArray = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
+    boolean[] selectedTags;
+    ArrayList<Integer> tagList = new ArrayList<>();
+    String[] tagArray = {"CAREER", "CAMPUS_LIFE", "FIFTH_ROW", "COMPETITION", "WORKSHOP"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -181,7 +173,7 @@ public class Create extends Fragment {
         TextView textView  = rootView.findViewById(R.id.textView);
 
         // initialize selected language array
-        selectedLanguage = new boolean[langArray.length];
+        selectedTags = new boolean[tagArray.length];
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,22 +188,25 @@ public class Create extends Fragment {
                 // set dialog non cancelable
                 builder.setCancelable(false);
 
-                builder.setMultiChoiceItems(langArray, selectedLanguage, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(tagArray, selectedTags, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        selectedTags[i] = b;
+
                         // Check if the number of selected items exceeds three
-                        if (b && langList.size() >= 3) {
+                        if (b && tagList.size() >= 3) {
                             // If more than three options are selected, uncheck the current item
                             ((AlertDialog) dialogInterface).getListView().setItemChecked(i, false);
+                            selectedTags[i] = false;
                             Toast.makeText(requireContext(), "You can select up to three options", Toast.LENGTH_SHORT).show();
                         } else {
                             // If less than three options are selected, proceed as usual
                             if (b) {
-                                langList.add(i);
+                                tagList.add(i);
                             } else {
-                                langList.remove(Integer.valueOf(i));
+                                tagList.remove(Integer.valueOf(i));
                             }
-                            Collections.sort(langList);
+                            Collections.sort(tagList);
                         }
                     }
                 });
@@ -222,11 +217,11 @@ public class Create extends Fragment {
                         // Initialize string builder
                         StringBuilder stringBuilder = new StringBuilder();
                         // use for loop
-                        for (int j = 0; j < langList.size(); j++) {
+                        for (int j = 0; j < tagList.size(); j++) {
                             // concat array value
-                            stringBuilder.append(langArray[langList.get(j)]);
+                            stringBuilder.append(tagArray[tagList.get(j)]);
                             // check condition
-                            if (j != langList.size() - 1) {
+                            if (j != tagList.size() - 1) {
                                 // When j value  not equal
                                 // to lang list size - 1
                                 // add comma
@@ -249,11 +244,11 @@ public class Create extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // use for loop
-                        for (int j = 0; j < selectedLanguage.length; j++) {
+                        for (int j = 0; j < selectedTags.length; j++) {
                             // remove all selection
-                            selectedLanguage[j] = false;
+                            selectedTags[j] = false;
                             // clear language list
-                            langList.clear();
+                            tagList.clear();
                             // clear text view value
                             textView.setText("");
                         }
@@ -325,7 +320,7 @@ public class Create extends Fragment {
 
                 Integer author_id = appUser_id;
                 String title = titleEditText.getText().toString();
-                String tagsString = tagsEditText.getText().toString().trim();
+                String tagsString = tagsEditText.getText().toString().replaceAll("\\s", "");
                 ArrayList<String> tags = new ArrayList<>(Arrays.asList(tagsString.split(",")));
                 String start_date = start_dateEditText .getText().toString();
                 String start_time = start_timeEditText.getText().toString();

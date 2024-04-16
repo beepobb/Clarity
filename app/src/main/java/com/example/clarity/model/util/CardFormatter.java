@@ -1,12 +1,15 @@
 package com.example.clarity.model.util;
 
-import android.util.Log;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * This class provides methods to format items for card view to be used in adapters.
  */
 public class CardFormatter {
-    private static String logCatTag = "CardFormatter";
+    private static String TAG = "CardFormatter";
+    private static String[] monthMap = {"Jan","Feb","Mar","Apr","May","Jun","July",
+    "Aug","Sep","Oct","Nov","Dec"};
 
     /**
      *  Formats the original post title such that it can fit in the card view
@@ -52,9 +55,10 @@ public class CardFormatter {
         if (startDate.equals(endDate)) {
             return startTime + " - " + endTime;
         } else {
-            return startDate + " " + startTime + " - " + endDate + " " + endTime;
+            return startDate.substring(0,5) + " " + startTime + " - " + endDate.substring(0,5) + " " + endTime;
         }
     }
+
 
     /**
      * Formats the full date time string
@@ -94,6 +98,27 @@ public class CardFormatter {
         String month = tmpDateOnly[1];
         String day = tmpDateOnly[2];
         return day+"/"+month+"/"+year;
+    }
+
+    // Formatting Calendar object:
+    public static String formatCalendarObject(Calendar eventStart, Calendar eventEnd) {
+        return formatCalendarObject(eventStart, eventEnd, false);
+    }
+    public static String formatCalendarObject(Calendar eventStart, Calendar eventEnd, boolean retainDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+        String startTime = dateFormat.format(eventStart.getTime());
+        String endTime = dateFormat.format(eventEnd.getTime());
+        String startDay = String.valueOf(eventStart.get(Calendar.DAY_OF_MONTH));
+        String endDay = String.valueOf(eventEnd.get(Calendar.DAY_OF_MONTH));
+        String startMonth = monthMap[eventStart.get(Calendar.MONTH)];
+        String endMonth = monthMap[eventEnd.get(Calendar.MONTH)];
+
+        if (!retainDate && startDay.equals(endDay) && startMonth.equals(endMonth)){
+            return startTime + " - " + endTime;
+        } else {
+            return (startDay+" "+startMonth+", "+startTime)+" - "+(endDay+" "+endMonth+", "+endTime);
+        }
     }
 
 }
