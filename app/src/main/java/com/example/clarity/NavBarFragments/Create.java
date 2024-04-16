@@ -105,7 +105,6 @@ public class Create extends Fragment {
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
         Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
-        Log.d("EESONG", AIornotSpinner.toString());
         ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
         Handler handler = new Handler();
 
@@ -139,7 +138,6 @@ public class Create extends Fragment {
                 end_timeEditText.setText("");
                 locationEditText.setText("");
                 descriptionEditText.setText("");
-                progressBar.setVisibility(View.GONE);
                 postButton.setEnabled(true); // re-enable button
             }
         });
@@ -323,6 +321,7 @@ public class Create extends Fragment {
             public void onClick(View v) {
 
                 postButton.setEnabled(false);
+                hideKeyboard(getContext(), v);
 
                 Integer author_id = appUser_id;
                 String title = titleEditText.getText().toString();
@@ -341,6 +340,7 @@ public class Create extends Fragment {
 
                 if (author_id == null || title.isEmpty() || tags.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() ) {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+                    postButton.setEnabled(true);
                     return;
                 }
 
@@ -371,9 +371,20 @@ public class Create extends Fragment {
                                 e.printStackTrace();
                             }
                         }
+                        try {
+                            // Sleep for 200 milliseconds after reaching 100%
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         // Once the operation is completed, show a toast message
                         handler.post(new Runnable() {
                             public void run() {
+                                handler.post(new Runnable() {
+                                    public void run() {
+                                        progressBar.setProgress(0);
+                                    }
+                                });
                                 Toast.makeText(getContext(), "Event successfully added", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -470,6 +481,12 @@ public class Create extends Fragment {
                 true // 24-hour format
         );
         timePickerDialog.show();
+    }
+
+    //hides keyboard after user inputs password
+    private void hideKeyboard(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
 }
