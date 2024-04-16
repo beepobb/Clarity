@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -91,7 +95,13 @@ public class EventsPageActivity extends AppCompatActivity {
         eventNameTextView.setText(post.getTitle());
         eventLocationTextView.setText(post.getLocation());
         eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
-        eventDescriptionTextView.setText(post.getDescription());
+        //eventDescriptionTextView.setText(post.getDescription());
+
+        //addLinks only takes in Spannable object
+        Spannable descriptionSpannable = new SpannableString(post.getDescription());
+        Linkify.addLinks(descriptionSpannable, Linkify.WEB_URLS);
+        eventDescriptionTextView.setText(descriptionSpannable);
+        eventDescriptionTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         // set up tag recycler
         tagRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -104,13 +114,6 @@ public class EventsPageActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             eventImageView.setImageBitmap(bitmap);
         }
-
-        // Bind Post data to Views
-        eventNameTextView.setText(post.getTitle());
-        eventLocationTextView.setText(post.getLocation());
-        eventDateTimeTextView.setText(post.getEvent_start()); // unformatted
-        eventDescriptionTextView.setText(post.getDescription());
-        //eventImageView.setImageBitmap(post.getImage_url());
 
         // Set listener: update tags UI once data has been fetched
         categoryListLiveData.observe(this, new Observer<ArrayList<Tag>>() {
