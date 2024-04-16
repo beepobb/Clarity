@@ -2,19 +2,21 @@ package com.example.clarity.Event;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -29,9 +31,9 @@ import com.example.clarity.R;
 import com.example.clarity.model.PreferenceUtils;
 import com.example.clarity.model.data.Author;
 import com.example.clarity.model.data.Post;
-import com.example.clarity.model.data.Tag;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
+import com.example.clarity.model.util.CardFormatter;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -93,16 +95,15 @@ public class EventsPageActivity extends AppCompatActivity {
         thisPost = postParcelable.getPost();
         int organiser = thisPost.getAuthor_id();
 
-        // TODO: Bind Post data to Views
-        //addLinks only takes in Spannable object
+        // Bind Post data to Views
+        // addLinks only takes in Spannable object
         Spannable descriptionSpannable = new SpannableString(thisPost.getDescription());
         Linkify.addLinks(descriptionSpannable, Linkify.WEB_URLS);
         eventDescriptionTextView.setText(descriptionSpannable);
         eventDescriptionTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        // Bind Post data to Views
         eventNameTextView.setText(thisPost.getTitle());
         eventLocationTextView.setText(thisPost.getLocation());
-        eventDateTimeTextView.setText(thisPost.getEvent_start()); // unformatted
+        eventDateTimeTextView.setText(CardFormatter.formatCalendarObject(thisPost.getEventStart(), thisPost.getEventEnd(), true));
         eventDescriptionTextView.setText(thisPost.getDescription());
 
         // set up tag recycler
@@ -221,7 +222,7 @@ public class EventsPageActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    Toast.makeText(EventsPageActivity.this, "Event added to user's favourites", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventsPageActivity.this, "Event added to favourites", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     // Remove event from user's favourites
@@ -237,10 +238,37 @@ public class EventsPageActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    Toast.makeText(EventsPageActivity.this, "Event removed from user's favourites", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventsPageActivity.this, "Event removed from favourites", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        // Clicking event or organizer picture will display a bigger picture
+        eventImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showImageDialog(eventImageView.getDrawable());
+            }
+        });
+
+        organiserPictureImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showImageDialog(organiserPictureImageView.getDrawable());
+            }
+        });
+
     }
+
+    private void showImageDialog(Drawable drawable) {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.image_dialog, null);
+        ImageView dialogImageView = dialogView.findViewById(R.id.imageDialogView);
+        dialogImageView.setImageDrawable(drawable);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+        builder.show();
+    }
+
+
 }

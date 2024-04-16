@@ -57,7 +57,6 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
 
         EventTags buttonName = buttonNameList.get(position);
         buttonsList.add(holder.button);
-        int pos = position;
 
         // bind content to UI
         holder.button.setText(buttonName.toString());
@@ -76,8 +75,6 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
                         button.setBackgroundResource(R.drawable.tag_select_rectangle);
                         button.setTextColor(ContextCompat.getColor(context, R.color.white));
 
-                        // updates eventRecycler in Discover Fragment
-                        // tagButtonUpdateEventsClickListener.onButtonClick(pos);
                     // change UI for buttons that are not clicked
                     } else {
                         button.setBackgroundResource(R.drawable.tag_unselect_rectangle);

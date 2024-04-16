@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -182,5 +184,24 @@ public class Profile extends Fragment {
             }
         });
 
+        // Clicking on user profile picture will show an enlarged version:
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showImageDialog(profilePicture.getDrawable());
+            }
+        });
+
     }
+
+    private void showImageDialog(Drawable drawable) {
+        View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.image_dialog, null);
+        ImageView dialogImageView = dialogView.findViewById(R.id.imageDialogView);
+        dialogImageView.setImageDrawable(drawable);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(dialogView);
+        builder.show();
+    }
+
 }
