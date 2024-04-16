@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private MutableLiveData<User> userLiveData;
     private PreferenceUtils prefUtils;
     private String username;
+    private EditText passwordEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,8 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final Button loginButton = (Button) binding.login;
-        final ImageView imageView = binding.imageView;
-        final Button createButton = (Button) binding.newAccount;
+        final Button createButton = binding.newAccount;
 
         final ProgressBar progressBar = binding.progressBar;
 
@@ -60,10 +60,12 @@ public class LoginActivity extends AppCompatActivity {
         prefUtils = PreferenceUtils.getInstance(this);
         userLiveData = new MutableLiveData<>(); // contains null at this step
 
+        //triggers when user clicks login button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start long operation in a background thread
+                hideKeyboard(getApplicationContext(), v);
 
                 username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
@@ -74,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
+                //background thread will play a circular loading bar
                 new Thread(new Runnable() {
                     public void run() {
                         int progressStatus = 0;
@@ -133,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //triggers when user clicks create new account button
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,9 +145,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //method to go to CreateNewAccountView
     private void createNewAccount(){
         Intent go_to_create = new Intent(this, CreateNewAccountView.class);
         startActivity(go_to_create);
     }
 
+    //hides keyboard after user inputs password
+    private void hideKeyboard(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
 }
