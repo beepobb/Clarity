@@ -382,7 +382,7 @@ public class Create extends Fragment {
                                         progressBar.setProgress(0);
                                     }
                                 });
-
+                                Toast.makeText(getContext(), "Event successfully added", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -395,13 +395,7 @@ public class Create extends Fragment {
                         location, description, tags, image, new RestRepo.RepositoryCallback<String>() {
                             @Override
                             public void onComplete(String result) {
-                                if (result == null || result.equals("")) {
-                                    userLiveData.postValue(null);
-                                    Toast.makeText(getContext(), "Failed to add event", Toast.LENGTH_LONG).show();
-                                } else {
-                                    userLiveData.postValue(result);
-                                    Toast.makeText(getContext(), "Event successfully added", Toast.LENGTH_LONG).show();
-                                }
+                                userLiveData.postValue(result);
 
                             }
                         });
