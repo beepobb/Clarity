@@ -1,6 +1,7 @@
 package com.example.clarity.NavBarFragments.Discover;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,6 +56,7 @@ public class Discover extends Fragment {
         // initialise values
         tagButtons = Arrays.asList(EventTags.values());
         dataRepo = MyDataRepository.getInstance();
+
     }
 
     // create UI here
@@ -63,6 +65,10 @@ public class Discover extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_discover, container, false);
 
+        // Obtain the current theme mode
+        int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        boolean isNightMode = nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+
         // get reference to UI elements
         tagRecycler = view.findViewById(R.id.tag_recycler);
         eventRecycler = view.findViewById(R.id.event_recycler);
@@ -70,7 +76,7 @@ public class Discover extends Fragment {
 
         // set up tag button recycler
         tagRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        tagButtonAdapter = new TagButtonAdapter(getActivity(), tagButtons);
+        tagButtonAdapter = new TagButtonAdapter(getActivity(), tagButtons, isNightMode);
         tagRecycler.setAdapter(tagButtonAdapter);
 
         // set up event recycler

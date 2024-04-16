@@ -8,6 +8,7 @@
     tools:context=".NavBarFragments.Calendar.CalendarFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        style="@style/CalendarEventContainer"
         android:id="@+id/agendaRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,23 +22,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/purpleBar"
-        app:layout_constraintVertical_bias="0.0"
-        style=""/>
+        app:layout_constraintVertical_bias="0.0"/>
 
     <com.applandeo.materialcalendarview.CalendarView
         android:id="@+id/calendarView"
+        style="@style/CalendarEventCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:daysLabelsColor="@color/black"
-        app:headerColor="@color/white"
-        app:headerLabelColor="@color/white"
+        app:abbreviationsLabelsColor="@color/purple"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:pagesColor="@color/white"
         app:selectionColor="#967ADC"
-        app:todayLabelColor="@color/dark_purple"
+        app:todayLabelColor="@color/calendar_label_red"
         app:type="one_day_picker" />
 
     <View
@@ -53,7 +51,7 @@
     <View
         android:id="@+id/purpleBar"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="58dp"
         style="@style/CalendarBanner"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,6 +87,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        style="@style/CalendarEventContainer"
         android:id="@+id/monthlyRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"

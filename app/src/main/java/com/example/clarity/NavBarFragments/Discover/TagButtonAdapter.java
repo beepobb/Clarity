@@ -1,6 +1,7 @@
 package com.example.clarity.NavBarFragments.Discover;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagButtonViewHolder>{
+    private final boolean theme;
     private Context context;
     private List<EventTags> buttonNameList; // store name of buttons
     private MutableLiveData<EventTags> selectedTagLiveData;
@@ -25,11 +27,12 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
     private List<Button> buttonsList; // store references to Button views
     private final String TAG = "TagButtonAdapter";
 
-    public TagButtonAdapter(Context context, List<EventTags> buttonNameList) {
+    public TagButtonAdapter(Context context, List<EventTags> buttonNameList, boolean theme) {
         Log.d(TAG, "TagButtonAdapter");
         this.context = context;
         this.buttonNameList = buttonNameList;
         this.buttonsList = new ArrayList<>();
+        this.theme = theme;
         selectedTagLiveData = new MutableLiveData<>(EventTags.ALL); // first selected tag should be 'ALL'
     }
 
@@ -59,29 +62,35 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
         buttonsList.add(holder.button);
         int pos = position;
 
+
         // bind content to UI
         holder.button.setText(buttonName.toString());
 
-        // bind click listener
+        // Determine background resource and text color based on the theme
+        if (theme) { // Night mode
+            holder.button.setBackgroundResource(R.drawable.tag_unselect_rectangle_night);
+            holder.button.setTextColor(ContextCompat.getColor(context, R.color.purple_tint));
+        } else { // Day mode
+            holder.button.setBackgroundResource(R.drawable.tag_unselect_rectangle);
+            holder.button.setTextColor(ContextCompat.getColor(context, R.color.dark_purple));
+        }
+
+        // Bind click listener
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedTagLiveData.setValue(buttonName); // will trigger observer in Discover, to change the events being presented
+                selectedTagLiveData.setValue(buttonName); // Will trigger observer in Discover, to change the events being presented
 
                 // Update UI for all buttons based on what button was clicked
                 for (Button button : buttonsList) {
-                    // when button clicked, change background color and text color
+                    // When button clicked, change background color and text color
                     if (view == button) {
-                        Log.d(TAG, view.toString());
-                        button.setBackgroundResource(R.drawable.tag_select_rectangle);
+                        button.setBackgroundResource(theme ? R.drawable.tag_select_rectangle_night : R.drawable.tag_select_rectangle);
                         button.setTextColor(ContextCompat.getColor(context, R.color.white));
-
-                        // updates eventRecycler in Discover Fragment
-                        // tagButtonUpdateEventsClickListener.onButtonClick(pos);
-                    // change UI for buttons that are not clicked
                     } else {
-                        button.setBackgroundResource(R.drawable.tag_unselect_rectangle);
-                        button.setTextColor(ContextCompat.getColor(context, R.color.accent_1));
+                        // Change UI for buttons that are not clicked
+                        button.setBackgroundResource(theme ? R.drawable.tag_unselect_rectangle_night : R.drawable.tag_unselect_rectangle);
+                        button.setTextColor(ContextCompat.getColor(context, theme ? R.color.purple_tint : R.color.dark_purple));
                     }
                 }
             }
