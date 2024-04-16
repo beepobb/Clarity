@@ -138,7 +138,6 @@ public class Create extends Fragment {
                 end_timeEditText.setText("");
                 locationEditText.setText("");
                 descriptionEditText.setText("");
-                progressBar.setVisibility(View.GONE);
                 postButton.setEnabled(true); // re-enable button
             }
         });
@@ -372,9 +371,20 @@ public class Create extends Fragment {
                                 e.printStackTrace();
                             }
                         }
+                        try {
+                            // Sleep for 200 milliseconds after reaching 100%
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         // Once the operation is completed, show a toast message
                         handler.post(new Runnable() {
                             public void run() {
+                                handler.post(new Runnable() {
+                                    public void run() {
+                                        progressBar.setProgress(0);
+                                    }
+                                });
                                 Toast.makeText(getContext(), "Event successfully added", Toast.LENGTH_LONG).show();
                             }
                         });

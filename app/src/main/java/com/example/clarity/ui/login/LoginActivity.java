@@ -101,6 +101,17 @@ public class LoginActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
+                        try {
+                            // Sleep for 200 milliseconds after reaching 100%
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        handler.post(new Runnable() {
+                            public void run() {
+                                progressBar.setProgress(0);
+                            }
+                        });
                     }
                 }).start();
                 database.getUserRequest(username, password, new RestRepo.RepositoryCallback<User>() {
@@ -112,6 +123,8 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+
+        //triggers when database validates username and password
         userLiveData.observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
@@ -119,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
                 // When user object is fetched (getUserRequest): switch to MainActivity
                 if (user == null) {
                     Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
-                    progressBar.setProgress(0);
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Welcome, " + username + "!", Toast.LENGTH_LONG).show();
