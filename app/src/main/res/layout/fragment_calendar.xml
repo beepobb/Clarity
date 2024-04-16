@@ -26,18 +26,19 @@
 
     <com.applandeo.materialcalendarview.CalendarView
         android:id="@+id/calendarView"
-        app:type="one_day_picker"
-        app:headerColor="@color/white"
-        app:headerLabelColor="@color/white"
-        app:daysLabelsColor="@color/black"
-        app:pagesColor="@color/white"
-        app:todayLabelColor="@color/dark_purple"
-        app:selectionColor="#967ADC"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:daysLabelsColor="@color/black"
+        app:headerColor="@color/white"
+        app:headerLabelColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:pagesColor="@color/white"
+        app:selectionColor="#967ADC"
+        app:todayLabelColor="@color/dark_purple"
+        app:type="one_day_picker" />
 
     <View
         android:id="@+id/view"
@@ -52,8 +53,7 @@
     <View
         android:id="@+id/purpleBar"
         android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:alpha="0.17"
+        android:layout_height="60dp"
         style="@style/CalendarBanner"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,9 +65,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="15dp"
         android:text="MONTH"
-        android:textColor="@color/accent_1"
+        android:textSize="20dp"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"

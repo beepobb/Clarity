@@ -10,6 +10,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="profile_circle">@color/dark_purple</item>
         <item name="profile_container">@color/white</item>
+        <item name="android:statusBarColor">@color/purple</item>
     </style>
 
     <style name="Theme.Clarity" parent="Base.Theme.Clarity" />
@@ -43,8 +44,10 @@
     <!-- Styles for Login/Create account -->
     <style name="LogInFields"><item name="android:background">@drawable/grey_rectangle</item> </style>
     <style name="Submit"><item name="android:background">@drawable/purple_rectangle</item></style>
-    <style name="CreateAccountHeading"><item name="android:textColor">@color/dark_purple</item></style>
-    <style name="InputField"><item name="android:background">@drawable/field_light</item></style>
+    <style name="Heading"><item name="android:textColor">@color/dark_purple</item></style>
+    <style name="InputField">
+        <item name="android:background">@drawable/field_light</item>
+    </style>
 
     <!-- Styles for Event Fragment -->
     <style name="EventTitle">
@@ -59,13 +62,17 @@
         <item name="cardBackgroundColor">@color/light_grey</item>
     </style>
 
+    <!--Styles for Create Fragment-->
+    <style name="FieldHeading"><item name="android:textColor">@color/dark_purple</item> </style>
+    <style name="FieldHint"><item name="android:textColor">@color/grey</item> </style>
+
     <!-- Styles for Calendar Fragment -->
     <style name="CalendarEventCard">
         <item name="cardBackgroundColor">@color/purple_tint</item>
     </style>
 
     <style name="CalendarBanner">
-        <item name="android:background">@color/purple_tint</item>
+        <item name="android:background">@color/purple</item>
     </style>
 
     <style name="CalendarEventDateContainer">
