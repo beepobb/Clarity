@@ -31,6 +31,7 @@ import com.example.clarity.model.repository.RestRepo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -244,13 +245,27 @@ public class CalendarFragment extends Fragment {
                 eventList.add(p);
             }
         }
+
+        eventList.sort(new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                return o1.getEventStart().compareTo(o2.getEventStart());
+            }
+        });
+
         adapterMonthly.updateEventList(eventList);
 
     }
 
     private void updateAgendaRecyclerView() {
-        // TODO: sort by start date?
-        adapterAgenda.updateEventList(Objects.requireNonNull(dataRepo.getSavedEvents()));
+        List<Post> eventList = dataRepo.getSavedEvents();
+        eventList.sort(new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                return o1.getEventStart().compareTo(o2.getEventStart());
+            }
+        });
+        adapterAgenda.updateEventList(Objects.requireNonNull(eventList));
     }
 
     // sets date for Calendar object

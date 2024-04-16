@@ -104,7 +104,6 @@ public class EventsPageActivity extends AppCompatActivity {
         eventNameTextView.setText(thisPost.getTitle());
         eventLocationTextView.setText(thisPost.getLocation());
         eventDateTimeTextView.setText(CardFormatter.formatCalendarObject(thisPost.getEventStart(), thisPost.getEventEnd(), true));
-        eventDescriptionTextView.setText(thisPost.getDescription());
 
         // set up tag recycler
         tagRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

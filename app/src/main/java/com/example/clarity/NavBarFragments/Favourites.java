@@ -27,6 +27,7 @@ import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -80,7 +81,15 @@ public class Favourites extends Fragment {
                 // executed in main thread, so that we can modify Views
 
                 Log.d(TAG, "favouriteEventsLiveData triggered: refresh UI");
-                favouriteEventAdapter.updateEventList(dataRepo.getFavouriteEvents());
+                List<Post> eventList = dataRepo.getFavouriteEvents();
+                eventList.sort(new Comparator<Post>() {
+                    @Override
+                    public int compare(Post o1, Post o2) {
+                        return o1.getEventStart().compareTo(o2.getEventStart());
+                    }
+                });
+
+                favouriteEventAdapter.updateEventList(eventList);
             }
         });
 

@@ -157,14 +157,14 @@ public class CreateNewAccountView extends AppCompatActivity {
 
                             try {
                                 // Sleep for 200 milliseconds to simulate a long operation
-                                Thread.sleep(40);
+                                Thread.sleep(30);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }
                         try {
                             // Sleep for 200 milliseconds after reaching 100%
-                            Thread.sleep(2000);
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

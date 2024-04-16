@@ -197,6 +197,15 @@ public class Discover extends Fragment {
             }
 
         }
+
+        // Sort the list of post
+        subList.sort(new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                return o1.getEventStart().compareTo(o2.getEventStart());
+            }
+        });
+
         // refresh adapter for event recycler
         discoverEventAdapter.updateEventList(subList);
 

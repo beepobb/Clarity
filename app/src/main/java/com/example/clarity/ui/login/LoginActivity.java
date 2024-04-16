@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         try {
                             // Sleep for 200 milliseconds after reaching 100%
-                            Thread.sleep(2000);
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
