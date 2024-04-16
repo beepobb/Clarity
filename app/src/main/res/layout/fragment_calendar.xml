@@ -31,7 +31,7 @@
         app:headerLabelColor="@color/white"
         app:daysLabelsColor="@color/black"
         app:pagesColor="@color/white"
-        app:todayLabelColor="#FF0000"
+        app:todayLabelColor="@color/dark_purple"
         app:selectionColor="#967ADC"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

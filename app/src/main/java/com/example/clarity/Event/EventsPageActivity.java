@@ -57,9 +57,7 @@ public class EventsPageActivity extends AppCompatActivity {
     private RecyclerView tagRecycler;
     private EventTagAdapter eventTagAdapter;
     private MutableLiveData<String> organiserUsernameLiveData;
-    private MutableLiveData<ArrayList<Tag>> categoryListLiveData;
     private MutableLiveData<Bitmap> organiserProfilePictureLiveData;
-    private Intent intent;
     private Post thisPost;
 
 
@@ -85,7 +83,6 @@ public class EventsPageActivity extends AppCompatActivity {
         prefUtils = PreferenceUtils.getInstance(this);
         appUser = ((MyApplication) getApplicationContext()).getAppUser();
         dataRepo = MyDataRepository.getInstance();
-        categoryListLiveData = new MutableLiveData<>(new ArrayList<>());
         organiserProfilePictureLiveData = new MutableLiveData<>();
         organiserUsernameLiveData = new MutableLiveData<>();
 
@@ -94,11 +91,11 @@ public class EventsPageActivity extends AppCompatActivity {
         PostParcelable postParcelable = intent.getParcelableExtra("POST");
         assert postParcelable != null;
         thisPost = postParcelable.getPost();
-        int organiser = post.getAuthor_id();
+        int organiser = thisPost.getAuthor_id();
 
         // TODO: Bind Post data to Views
         //addLinks only takes in Spannable object
-        Spannable descriptionSpannable = new SpannableString(post.getDescription());
+        Spannable descriptionSpannable = new SpannableString(thisPost.getDescription());
         Linkify.addLinks(descriptionSpannable, Linkify.WEB_URLS);
         eventDescriptionTextView.setText(descriptionSpannable);
         eventDescriptionTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -124,6 +121,7 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
+        // Set listener: update organizer profile picture once it has been fetched
         organiserProfilePictureLiveData.observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(Bitmap bitmap) {
@@ -134,6 +132,7 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
+        // Set listener: update organizer username once it has been fetched
         organiserUsernameLiveData.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -141,6 +140,7 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
+        // Set listener: update post tags once fetched
         dataRepo.getTagsEventMappingLiveData().observe(this, new Observer<HashMap<EventTags, ArrayList<Integer>>>() {
             @Override
             public void onChanged(HashMap<EventTags, ArrayList<Integer>> eventTagsArrayListHashMap) {
@@ -156,7 +156,7 @@ public class EventsPageActivity extends AppCompatActivity {
             }
         });
 
-        // Get profile picture of organiser (user who posted the event)
+        // Get profile picture of organiser (user who posted the event) from database
         // Get username of organiser of event
         db.getAuthorRequest(organiser, new RestRepo.RepositoryCallback<Author>() {
             @Override
@@ -170,6 +170,7 @@ public class EventsPageActivity extends AppCompatActivity {
                 organiserUsernameLiveData.postValue(result.getUsername());
             }
         });
+
 
         // 'Add to Calendar' Toggle Button
         // Check whether post is saved to Calendar (for the icon)
