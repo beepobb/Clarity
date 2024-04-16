@@ -311,8 +311,10 @@ public class RestRepo {
                 try {
                     String filename = username + ".png";
                     String url = imageBucket + '/' + filename;
-                    addImage(bm, filename);
                     String response = addUser(username, MD5.getMd5(password), email, role, url);
+                    if(response != null) {
+                        addImage(bm, filename);
+                    }
                     callback.onComplete(response);
                 }
                 catch (Exception e) {
@@ -330,10 +332,13 @@ public class RestRepo {
         data.put("role", role);
         data.put("profile_pic_url", profile_pic_url);
         try {
-            return urlPost(endPointUser, new JSONObject(data));
+            JSONObject res = new JSONObject(urlPost(endPointUser, new JSONObject(data)));
+            if(res.getString("body").equals("Error adding data.")) {
+                return null;
+            }
+            return res.getString("body");
         }
         catch(Exception e) {
-            System.out.println(e.getMessage());
             return null;
         }
     }
