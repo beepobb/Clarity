@@ -31,6 +31,9 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,34 +73,27 @@ import com.example.clarity.R;
 
 public class Create extends Fragment {
 
-    private AutoCompleteTextView mAutoCompleteTextView; // Declare as class-level field
+
     private MultiAutoCompleteTextView mMultiAutoCompleteTextView;
-    ArrayAdapter<String> adapterTags;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
-//    private EditText editTextDate, editTextTime;
     private Calendar calendar;
     private View rootView;
-    //start
     private RestRepo database;
     private User appUser;
     private MutableLiveData<String> userLiveData;
     private MutableLiveData<String> userdescriptionLiveData;
     private BottomNavigationView bottomNavigationView;
     private Bitmap image;
-    boolean limitExceeded = false;
-    private int selectedCount;
-    TextView textView;
     boolean[] selectedLanguage;
     ArrayList<Integer> langList = new ArrayList<>();
     String[] langArray = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
-//end
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create, container, false);
         selectedImageView = rootView.findViewById(R.id.placeHolder);
-//start
         Button postButton = rootView.findViewById(R.id.postButton);
         ImageView placeholderImageView = rootView.findViewById(R.id.middle_image);
         EditText titleEditText = rootView.findViewById(R.id.editTextValue);
@@ -108,7 +104,6 @@ public class Create extends Fragment {
         EditText end_dateEditText = rootView.findViewById(R.id.editTextDate2);
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
-        EditText contactEditText = rootView.findViewById(R.id.contact_text);
         Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
         Log.d("EESONG", AIornotSpinner.toString());
         ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
@@ -131,9 +126,11 @@ public class Create extends Fragment {
         userLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
+                //opens Discover fragment
                 Menu menu = bottomNavigationView.getMenu();
                 MenuItem menuItem = menu.findItem(R.id.Discover);
                 bottomNavigationView.setSelectedItemId(menuItem.getItemId());
+                //resets all text fields
                 titleEditText.setText("");
                 tagsEditText.setText("");
                 start_dateEditText.setText("");
@@ -143,9 +140,11 @@ public class Create extends Fragment {
                 locationEditText.setText("");
                 descriptionEditText.setText("");
                 progressBar.setVisibility(View.GONE);
+                postButton.setEnabled(true); // re-enable button
             }
         });
 
+        //triggers when user wants to use AI to generate description
         userdescriptionLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
@@ -153,6 +152,7 @@ public class Create extends Fragment {
             }
         });
 
+        //allows user to pick a custom image for their event
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
@@ -296,6 +296,7 @@ public class Create extends Fragment {
             }
         });
 
+        //sets listener only if the user wants to select AI option to generate description
         AIornotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -316,10 +317,12 @@ public class Create extends Fragment {
             }
         });
 
-        //start
+        //sets OnClickListener to postButton, triggers every time user presses post button
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                postButton.setEnabled(false);
 
                 Integer author_id = appUser_id;
                 String title = titleEditText.getText().toString();
@@ -330,18 +333,18 @@ public class Create extends Fragment {
                 String end_date = end_dateEditText.getText().toString();
                 String end_time = end_timeEditText.getText().toString();
                 String location = locationEditText.getText().toString();
-                String contact = contactEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
 
                 if (image == null) {
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
                 }
 
-                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() || contact.isEmpty()) {
+                if (author_id == null || title.isEmpty() || tags.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() ) {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                //background thread will play a circular loading bar
                 new Thread(new Runnable() {
                     public void run() {
                         handler.post(new Runnable() {
@@ -393,11 +396,6 @@ public class Create extends Fragment {
         //end
         return rootView;
     }
-    private void hideKeyboard(Context context, View v) {
-        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mMultiAutoCompleteTextView.getWindowToken(), 0);
-    }
-
 
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -407,6 +405,8 @@ public class Create extends Fragment {
         }
     }
 
+    //method for date picker
+    //Use most recent API version (Pixel 5 API 34 usable)
     private void showDatePickerDialog(final EditText editText) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
@@ -441,7 +441,9 @@ public class Create extends Fragment {
         );
         datePickerDialog.show();
     }
-//MIGHT HAVE API VERSION ISSUES
+
+    //method for time picker
+    //Use most recent API version (Pixel 5 API 34 usable)
     private void showTimePickerDialog(final EditText editText) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),
