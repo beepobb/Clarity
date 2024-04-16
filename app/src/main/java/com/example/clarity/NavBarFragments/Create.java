@@ -73,34 +73,27 @@ import com.example.clarity.R;
 
 public class Create extends Fragment {
 
-    private AutoCompleteTextView mAutoCompleteTextView; // Declare as class-level field
+
     private MultiAutoCompleteTextView mMultiAutoCompleteTextView;
-    ArrayAdapter<String> adapterTags;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
-//    private EditText editTextDate, editTextTime;
     private Calendar calendar;
     private View rootView;
-    //start
     private RestRepo database;
     private User appUser;
     private MutableLiveData<String> userLiveData;
     private MutableLiveData<String> userdescriptionLiveData;
     private BottomNavigationView bottomNavigationView;
     private Bitmap image;
-    boolean limitExceeded = false;
-    private int selectedCount;
-    TextView textView;
     boolean[] selectedLanguage;
     ArrayList<Integer> langList = new ArrayList<>();
     String[] langArray = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
-//end
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create, container, false);
         selectedImageView = rootView.findViewById(R.id.placeHolder);
-//start
         Button postButton = rootView.findViewById(R.id.postButton);
         ImageView placeholderImageView = rootView.findViewById(R.id.middle_image);
         EditText titleEditText = rootView.findViewById(R.id.editTextValue);
@@ -133,9 +126,11 @@ public class Create extends Fragment {
         userLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
+                //opens Discover fragment
                 Menu menu = bottomNavigationView.getMenu();
                 MenuItem menuItem = menu.findItem(R.id.Discover);
                 bottomNavigationView.setSelectedItemId(menuItem.getItemId());
+                //resets all text fields
                 titleEditText.setText("");
                 tagsEditText.setText("");
                 start_dateEditText.setText("");
@@ -148,6 +143,7 @@ public class Create extends Fragment {
             }
         });
 
+        //triggers when user wants to use AI to generate description
         userdescriptionLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
@@ -155,6 +151,7 @@ public class Create extends Fragment {
             }
         });
 
+        //
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
@@ -442,7 +439,7 @@ public class Create extends Fragment {
         );
         datePickerDialog.show();
     }
-//MIGHT HAVE API VERSION ISSUES
+//Use most recent API version (Pixel 5 API 34)
     private void showTimePickerDialog(final EditText editText) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),
