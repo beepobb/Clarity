@@ -64,6 +64,7 @@
     <style name="EventOrganiserCard"><item name="android:background">#EEEFF1</item></style>
     <style name="EventLikeButton"><item name="android:background">@drawable/like_button</item></style>
     <style name="EventLocationIcon"><item name="android:src">@drawable/baseline_location_on_24</item></style>
+    <style name="EventTag"><item name="android:background">@drawable/tag_rectangle</item></style>
 
     <!--Styles for Create Fragment-->
     <style name="FieldHeading"><item name="android:textColor">@color/dark_purple</item> </style>
