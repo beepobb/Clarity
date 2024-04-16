@@ -81,6 +81,7 @@ public class CreateNewAccountView extends AppCompatActivity {
             }
         });
 
+        //allows user to pick a custom image for their profile picture
         selectedImageView = NewImageView;
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -107,10 +108,10 @@ public class CreateNewAccountView extends AppCompatActivity {
                     }
                 });
 
-// Launch the gallery picker when the ImageView is clicked
+        // Launch the gallery picker when the ImageView is clicked
         selectedImageView.setOnClickListener(view -> selectImage());
-        // Add functionality to handle account creation
-        // For example, set up a button click listener to create an account
+
+        //triggers when user clicks sign up button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,6 +146,8 @@ public class CreateNewAccountView extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Must be more than 8 characters", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                //background thread will play a circular loading bar
                 new Thread(new Runnable() {
                     public void run() {
                         handler.post(new Runnable() {

@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         prefUtils = PreferenceUtils.getInstance(this);
         userLiveData = new MutableLiveData<>(); // contains null at this step
 
+        //triggers when user clicks login button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
+                //background thread will play a circular loading bar
                 new Thread(new Runnable() {
                     public void run() {
                         int progressStatus = 0;
@@ -131,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //triggers when user clicks create new account button
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //method to go to CreateNewAccountView
     private void createNewAccount(){
         Intent go_to_create = new Intent(this, CreateNewAccountView.class);
         startActivity(go_to_create);

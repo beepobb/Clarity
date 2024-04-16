@@ -151,7 +151,7 @@ public class Create extends Fragment {
             }
         });
 
-        //
+        //allows user to pick a custom image for their event
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
@@ -295,6 +295,7 @@ public class Create extends Fragment {
             }
         });
 
+        //sets listener only if the user wants to select AI option to generate description
         AIornotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -315,7 +316,7 @@ public class Create extends Fragment {
             }
         });
 
-        //start
+        //sets OnClickListener to postButton, triggers every time user presses post button
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -340,6 +341,7 @@ public class Create extends Fragment {
                     return;
                 }
 
+                //background thread will play a circular loading bar
                 new Thread(new Runnable() {
                     public void run() {
                         handler.post(new Runnable() {
@@ -405,6 +407,8 @@ public class Create extends Fragment {
         }
     }
 
+    //method for date picker
+    //Use most recent API version (Pixel 5 API 34 usable)
     private void showDatePickerDialog(final EditText editText) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
@@ -439,7 +443,9 @@ public class Create extends Fragment {
         );
         datePickerDialog.show();
     }
-//Use most recent API version (Pixel 5 API 34)
+
+    //method for time picker
+    //Use most recent API version (Pixel 5 API 34 usable)
     private void showTimePickerDialog(final EditText editText) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),
