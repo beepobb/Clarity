@@ -14,6 +14,7 @@ import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Favourite;
 import com.example.clarity.model.data.Tag;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -127,10 +128,11 @@ public class RestRepo {
         try {
             //Create connection
             String data_string = data.toString();
+            System.out.println(data_string);
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("content-type", "application/json");
+            connection.setRequestProperty("content-type", "application/json;charset=UTF-8");
             connection.setRequestProperty("content-length", Integer.toString(data_string.length()));
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -473,10 +475,11 @@ public class RestRepo {
         data.put("event_start", event_start);
         data.put("event_end", event_end);
         data.put("image_url", image_url);
-        data.put("title", title);
+        data.put("title", StringEscapeUtils.escapeJava(title));
         data.put("location", location);
-        data.put("description", description);
+        data.put("description", StringEscapeUtils.escapeJava(description));
         data.put("tag_list", listString);
+
         try {
             return urlPost(endPointPost, new JSONObject(data));
         }
