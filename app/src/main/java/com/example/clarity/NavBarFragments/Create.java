@@ -396,6 +396,7 @@ public class Create extends Fragment {
                             @Override
                             public void onComplete(String result) {
                                 if (result == null || result.equals("")) {
+                                    userLiveData.postValue(null);
                                     Toast.makeText(getContext(), "Failed to add event", Toast.LENGTH_LONG).show();
                                 } else {
                                     userLiveData.postValue(result);
