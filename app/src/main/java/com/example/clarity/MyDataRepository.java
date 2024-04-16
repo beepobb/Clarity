@@ -24,7 +24,11 @@ public class MyDataRepository {
      */
 
     // Singleton class
-    private MyDataRepository() {}
+    private MyDataRepository() {
+        for (EventTags e : EventTags.values()) {
+            getTagsEventMapping().put(e, new ArrayList<>());
+        }
+    }
     public static MyDataRepository getInstance() {
         if (instance == null) {
             instance = new MyDataRepository();

@@ -140,6 +140,7 @@ public class Create extends Fragment {
                 locationEditText.setText("");
                 descriptionEditText.setText("");
                 progressBar.setVisibility(View.GONE);
+                postButton.setEnabled(true); // re-enable button
             }
         });
 
@@ -320,6 +321,8 @@ public class Create extends Fragment {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                postButton.setEnabled(false);
 
                 Integer author_id = appUser_id;
                 String title = titleEditText.getText().toString();

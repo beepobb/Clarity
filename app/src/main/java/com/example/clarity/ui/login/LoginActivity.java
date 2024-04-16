@@ -64,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loginButton.setEnabled(false);
+
                 // Start long operation in a background thread
                 hideKeyboard(getApplicationContext(), v);
 
@@ -73,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (username.isEmpty() || password.isEmpty()) {
                     // Display an error message if any field is empty
                     Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
@@ -112,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         userLiveData.observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-
+                loginButton.setEnabled(true);
                 // When user object is fetched (getUserRequest): switch to MainActivity
                 if (user == null) {
                     Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
