@@ -66,6 +66,7 @@ public class CreateNewAccountView extends AppCompatActivity {
         stringMutableLiveData.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String string) {
+                loginButton.setEnabled(true);
                 // When string is fetched (addUserRequest): switch to MainActivity
                 Intent intent = new Intent(CreateNewAccountView.this, LoginActivity.class);
                 startActivity(intent);
@@ -110,6 +111,7 @@ public class CreateNewAccountView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                loginButton.setEnabled(false);
                 String role = choicesSpinner.getSelectedItem().toString();
                 String username = usernameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
@@ -122,22 +124,26 @@ public class CreateNewAccountView extends AppCompatActivity {
                 if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     // Display an error message if any field is empty
                     Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
                 // Additional validation logic can be added here (e.g., check if passwords match)
                 if (!password.equals(confirmPassword)) {
                     Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
                 if (!email.contains("@")) {
                     Toast.makeText(getApplicationContext(), "Must be a valid email", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
                 if (!(password.length() >= 8)) {
                     Toast.makeText(getApplicationContext(), "Must be more than 8 characters", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
