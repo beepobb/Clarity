@@ -86,7 +86,7 @@ public class TagButtonAdapter extends RecyclerView.Adapter<TagButtonAdapter.TagB
                 }
             }
         });
-        //TODO: pre-select "All" category
+        // Pre-select "All" category
         if (position == 0) {
             holder.button.performClick();
         }

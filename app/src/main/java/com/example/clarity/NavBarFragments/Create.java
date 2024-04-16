@@ -108,7 +108,6 @@ public class Create extends Fragment {
         EditText end_dateEditText = rootView.findViewById(R.id.editTextDate2);
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
-        EditText contactEditText = rootView.findViewById(R.id.contact_text);
         Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
         Log.d("EESONG", AIornotSpinner.toString());
         ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
@@ -330,14 +329,13 @@ public class Create extends Fragment {
                 String end_date = end_dateEditText.getText().toString();
                 String end_time = end_timeEditText.getText().toString();
                 String location = locationEditText.getText().toString();
-                String contact = contactEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
 
                 if (image == null) {
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
                 }
 
-                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() || contact.isEmpty()) {
+                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty()) {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                     return;
                 }

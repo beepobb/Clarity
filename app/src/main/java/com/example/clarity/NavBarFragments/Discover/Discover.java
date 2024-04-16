@@ -213,7 +213,7 @@ public class Discover extends Fragment implements TagButtonUpdateEventsClickList
      */
     @Override
     public void onButtonClick(int position) {
-        Toast.makeText(getActivity(), "TAG BUTTON CLICKED "+tagButtons.get(position).toString(), Toast.LENGTH_SHORT).show();
+//      // Toast.makeText(getActivity(), "TAG BUTTON CLICKED "+tagButtons.get(position).toString(), Toast.LENGTH_SHORT).show();
         Log.d("DiscoverFragment", tagButtons.get(position).toString());
 
         List<Post> subList = new ArrayList<>();
