@@ -86,33 +86,34 @@
                 style="@style/EventLikeButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="60dp"
                 android:textOff=""
                 android:textOn=""
+                app:layout_constraintBottom_toTopOf="@+id/horizontalLineView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/eventDateTimeTextView" />
 
             <ToggleButton
                 android:id="@+id/addToggleButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="60dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/plus_button"
                 android:textOff=""
                 android:textOn=""
+                app:layout_constraintBottom_toTopOf="@+id/horizontalLineView"
                 app:layout_constraintEnd_toStartOf="@+id/likeToggleButton"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/eventDateTimeTextView" />
 
             <View
                 android:id="@+id/horizontalLineView"
                 android:layout_width="380dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="96dp"
+                android:layout_marginTop="10dp"
                 android:background="#BDA4FC"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/eventLocationTextView" />
 
             <TextView
                 android:id="@+id/descriptionHeaderTextView"
