@@ -2,12 +2,12 @@
 <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="1000dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/CreateEvent"
@@ -285,14 +285,10 @@
             android:id="@+id/spinner"
             style="@style/InputField"
             android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="4dp"
+            android:layout_height="30dp"
             android:entries="@array/AIornot"
             android:minWidth="300dp"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintStart_toStartOf="@+id/description_info"
             app:layout_constraintTop_toBottomOf="@+id/description_info" />
 
         <TextView
@@ -303,20 +299,21 @@
             android:text="You can include links to Sign-up forms or event websites etc."
             android:textColor="#000000"
             android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintStart_toStartOf="@+id/description"
             app:layout_constraintTop_toBottomOf="@+id/description" />
 
         <EditText
             android:id="@+id/description_text"
+            style="@style/InputField"
             android:layout_width="300dp"
             android:layout_height="100dp"
-            style="@style/InputField"
+            android:layout_marginTop="10dp"
             android:inputType="textMultiLine"
-            android:paddingStart="10dp"
             android:textColor="#000000"
             android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="@+id/description_info"
-            app:layout_constraintTop_toBottomOf="@+id/description_info" />
+            app:layout_constraintEnd_toEndOf="@+id/spinner"
+            app:layout_constraintStart_toStartOf="@+id/spinner"
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
 
         <Button
@@ -331,9 +328,9 @@
             android:text="Post"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/purple_line"
+            app:layout_constraintEnd_toEndOf="@+id/description_text"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintStart_toStartOf="@+id/description_text"
             app:layout_constraintTop_toBottomOf="@+id/description_text" />
 
         <RelativeLayout
