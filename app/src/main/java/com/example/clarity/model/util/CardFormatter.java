@@ -10,14 +10,20 @@ public class CardFormatter {
     private static String TAG = "CardFormatter";
     private static String[] monthMap = {"Jan","Feb","Mar","Apr","May","Jun","July",
     "Aug","Sep","Oct","Nov","Dec"};
+    public enum EventCardType {DISCOVER, AGENDA_VIEW}
 
     /**
      *  Formats the original post title such that it can fit in the card view
      * @param fullTitle original post title
      * @return shortened post title
      */
-    public static String formatTitleDiscover(String fullTitle) {
-        int LENGTH = 30;
+    public static String formatTitleDiscover(String fullTitle, EventCardType eventCardType) {
+        int LENGTH = 0;
+        if (eventCardType == EventCardType.DISCOVER){
+            LENGTH = 22;
+        } else if (eventCardType == EventCardType.AGENDA_VIEW) {
+            LENGTH = 20;
+        }
         int str_len = fullTitle.length();
         if (str_len > LENGTH) {
             // reformat string

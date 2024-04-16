@@ -46,6 +46,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         TextView eventLocationTextView;
         TextView eventDayNumber;
         TextView eventDay;
+        TextView eventName;
         View eventDateLabel; // used in agenda view only
 
         public EventViewHolder(@NonNull View itemView) {
@@ -94,6 +95,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
             holder.eventDayNumber.setVisibility(View.GONE);
         } else if (this.calendarDisplayState == CalendarFragment.CalendarDisplayState.AGENDA_VIEW) {
             Log.d("onBindViewHolder", CalendarFragment.CalendarDisplayState.AGENDA_VIEW.name() + " " + holder.eventDateLabel);
+            holder.eventNameTextView.setText(CardFormatter.formatTitleDiscover(event.getTitle(), CardFormatter.EventCardType.AGENDA_VIEW));
             holder.eventDateLabel.setVisibility(View.VISIBLE);
             holder.eventDay.setVisibility(View.VISIBLE);
             holder.eventDayNumber.setVisibility(View.VISIBLE);

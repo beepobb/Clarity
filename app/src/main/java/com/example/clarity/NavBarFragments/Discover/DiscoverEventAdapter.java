@@ -80,7 +80,7 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
             String rawName = eventPost.getTitle();
             String rawStartTime = eventPost.getEvent_start();
             String rawEndTime = eventPost.getEvent_end();
-            String formattedName = CardFormatter.formatTitleDiscover(rawName);
+            String formattedName = CardFormatter.formatTitleDiscover(rawName, CardFormatter.EventCardType.DISCOVER);
             String formattedDate = CardFormatter.formatDate(rawStartTime, rawEndTime);
             String formattedTime = CardFormatter.formatTime(rawStartTime, rawEndTime);
 
