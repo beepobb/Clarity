@@ -773,19 +773,19 @@ public class RestRepo {
             @Override
             public void run() {
                 callback.onComplete("Updated");
-//                try {
-//                    String base64Text = getStringImage(bm, Bitmap.CompressFormat.JPEG);
-//                    base64Text = base64Text.replace("\n", "");
-//                    HashMap<String, String> data = new HashMap<String, String>();
-//                    data.put("document", base64Text);
-//                    String response = urlPost(endPointSummary, new JSONObject(data));
-//                    JSONObject tmp = new JSONObject(response);
-//                    String result = tmp.getString("summary");
-//                    callback.onComplete(result.substring(1,result.length() - 1));
-//                }
-//                catch(Exception e) {
-//                    callback.onComplete("");
-//                }
+                try {
+                    String base64Text = getStringImage(bm, Bitmap.CompressFormat.JPEG);
+                    base64Text = base64Text.replace("\n", "");
+                    HashMap<String, String> data = new HashMap<String, String>();
+                    data.put("document", base64Text);
+                    String response = urlPost(endPointSummary, new JSONObject(data));
+                    JSONObject tmp = new JSONObject(response);
+                    String result = tmp.getString("summary");
+                    callback.onComplete(result.substring(1,result.length() - 1));
+                }
+                catch(Exception e) {
+                    callback.onComplete("");
+                }
             }
         });
     }
