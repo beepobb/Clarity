@@ -50,7 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Profile extends Fragment {
-    private static String TAG = "ProfileFragment";
     private PreferenceUtils userPrefs;
     private MyApplication appContext;
     private User appUser;
@@ -60,9 +59,9 @@ public class Profile extends Fragment {
     private RestRepo db;
     private MyDataRepository dataRepo;
     private TextView username,role,alertBoxAction;
-    ShapeableImageView profilePicture;
-    MutableLiveData<Bitmap> bitmapLiveData;
-    TextView description;
+    private ShapeableImageView profilePicture;
+    private MutableLiveData<Bitmap> bitmapLiveData;
+    private TextView description;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,7 +128,6 @@ public class Profile extends Fragment {
             @Override
             public void onChanged(Bitmap bitmap) {
                 if (bitmap != null) {
-                    Log.d(TAG, "Image changed");
                     profilePicture.setImageBitmap(bitmap);
                 }
             }
