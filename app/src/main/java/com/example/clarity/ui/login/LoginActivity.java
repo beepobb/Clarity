@@ -34,12 +34,10 @@ public class LoginActivity extends AppCompatActivity {
     private MutableLiveData<User> userLiveData;
     private PreferenceUtils prefUtils;
     private String username;
-    private Handler handler;
-    private ProgressBar progressBar;
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
@@ -77,7 +75,40 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 //new thread will play a circular loading bar
-                loadingBar();
+                new Thread(new Runnable() {
+                    public void run() {
+                        int progressStatus = 0;
+                        while (progressStatus < 100) {
+                            progressStatus += 1;
+
+                            // Update the progress bar and display the current value
+                            int finalProgressStatus = progressStatus;
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    progressBar.setProgress(finalProgressStatus);
+                                }
+                            });
+
+                            try {
+                                // Sleep for 200 milliseconds to simulate a long operation
+                                Thread.sleep(25);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        try {
+                            // Sleep for 200 milliseconds after reaching 100%
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        handler.post(new Runnable() {
+                            public void run() {
+                                progressBar.setProgress(0);
+                            }
+                        });
+                    }
+                }).start();
 
                 //calling RestRepo method for instance in order to get user from database
                 database.getUserRequest(username, password, new RestRepo.RepositoryCallback<User>() {
@@ -141,41 +172,5 @@ public class LoginActivity extends AppCompatActivity {
     private void hideKeyboard(Context context, View v) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
-    private void loadingBar() {
-        new Thread(new Runnable() {
-            public void run() {
-                int progressStatus = 0;
-                while (progressStatus < 100) {
-                    progressStatus += 1;
-
-                    // Update the progress bar and display the current value
-                    int finalProgressStatus = progressStatus;
-                    handler.post(new Runnable() {
-                        public void run() {
-                            progressBar.setProgress(finalProgressStatus);
-                        }
-                    });
-
-                    try {
-                        // Sleep for 200 milliseconds to simulate a long operation
-                        Thread.sleep(25);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    // Sleep for 200 milliseconds after reaching 100%
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                handler.post(new Runnable() {
-                    public void run() {
-                        progressBar.setProgress(0);
-                    }
-                });
-            }
-        }).start();
     }
 }
