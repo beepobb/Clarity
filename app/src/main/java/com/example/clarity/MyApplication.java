@@ -19,14 +19,12 @@ public class MyApplication extends Application {
     Add [android:name=".MyApplication"] to the AndroidManifest
      */
 
-    // Initialize Threads and Database on application start
-
+    // Initialize Threads and Database on application start.
+    // Multithreading based on the Executor and Runnable Interface.
     private Executor executor = Executors.newFixedThreadPool(8);
-
     private RestRepo database = RestRepo.getInstance(executor);
 
     private User appUser; // User object for logged in user
-
 
     // Database methods //
     public RestRepo getDatabase() {
