@@ -38,12 +38,10 @@ public class CreateNewAccount extends AppCompatActivity {
     private RestRepo database;
     private MutableLiveData<String> stringMutableLiveData;
     private Bitmap image;
-    private Handler handler;
-    private ProgressBar progressBar;
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = CreateNewBinding.inflate(getLayoutInflater());
@@ -134,7 +132,45 @@ public class CreateNewAccount extends AppCompatActivity {
                     return;
                 }
                 //background thread will play a circular loading bar
-                loadingBar();
+                new Thread(new Runnable() {
+                    public void run() {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "Please wait for your account to be created...", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        int progressStatus = 0;
+                        while (progressStatus < 100) {
+                            progressStatus += 1;
+
+                            // Update the progress bar and display the current value
+                            int finalProgressStatus = progressStatus;
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    progressBar.setProgress(finalProgressStatus);
+                                }
+                            });
+
+                            try {
+                                // Sleep for 200 milliseconds to simulate a long operation
+                                Thread.sleep(30);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        try {
+                            // Sleep for 200 milliseconds after reaching 100%
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        handler.post(new Runnable() {
+                            public void run() {
+                                progressBar.setProgress(0);
+                            }
+                        });
+                    }
+                }).start();
 
                 //calling RestRepo method for instance in order to add new user to database
                 database.addUserRequest(username, password, email, role, image, new RestRepo.RepositoryCallback<String>() {
@@ -162,7 +198,7 @@ public class CreateNewAccount extends AppCompatActivity {
             }
         });
     }
-    public void selectImage() {
+    private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         if (intent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
@@ -170,51 +206,9 @@ public class CreateNewAccount extends AppCompatActivity {
         }
     }
 
-    public void goToLoginActivity() {
+    private void goToLoginActivity() {
         Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(CreateNewAccount.this, LoginActivity.class);
         startActivity(intent);
-    }
-
-    public void loadingBar() {
-        new Thread(new Runnable() {
-            public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Please wait for your account to be created...", Toast.LENGTH_LONG).show();
-                    }
-                });
-                int progressStatus = 0;
-                while (progressStatus < 100) {
-                    progressStatus += 1;
-
-                    // Update the progress bar and display the current value
-                    int finalProgressStatus = progressStatus;
-                    handler.post(new Runnable() {
-                        public void run() {
-                            progressBar.setProgress(finalProgressStatus);
-                        }
-                    });
-
-                    try {
-                        // Sleep for 200 milliseconds to simulate a long operation
-                        Thread.sleep(30);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    // Sleep for 200 milliseconds after reaching 100%
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                handler.post(new Runnable() {
-                    public void run() {
-                        progressBar.setProgress(0);
-                    }
-                });
-            }
-        }).start();
     }
 }
