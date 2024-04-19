@@ -3,18 +3,18 @@ package com.example.clarity.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.lifecycle.MutableLiveData;
-
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class PreferenceUtils {
-    /*
+    /**
      * Singleton class for managing user preferences (persistent local storage)
+     * i.e. controller in the MVC design architecture
      * -----------------------------------------------------------------
-     * Fetch instance and use it to manage all fetches/updates to user preferences
+     * Fetch instance and use it to manage all fetches/updates to user preferences (locally stored)
+     * - Events saved to calendar
+     * - Session token
      */
 
 
@@ -22,7 +22,6 @@ public class PreferenceUtils {
     private static final String PREF_NAME = "ClarityAppPreferences";
     private static final String KEY_CAL_POST_IDS = "calendarPostIds";
     private static final String SESSION_TOKEN = "sessionToken";
-    private static final String KEY_THEME = "appTheme";
     private static PreferenceUtils instance;
 
     // Instance attributes:
@@ -30,6 +29,11 @@ public class PreferenceUtils {
     private final Set<Integer> calendarPostIds; // Set prevents duplicates
     private String sessionToken;
 
+    /**
+     * Constructor for singleton class
+     * @param context Context object (e.g. Activity instance)
+     * @return PreferenceUtils instance
+     */
     public static PreferenceUtils getInstance(Context context) {
         if (instance == null) {
             instance = new PreferenceUtils(context.getApplicationContext());
@@ -100,7 +104,17 @@ public class PreferenceUtils {
 
 
     // SESSION TOKEN METHODS //
+
+    /**
+     * Fetches session token from local storage
+     * @return serialized sessionToken string
+     */
     public String getSessionToken() {return sessionToken;}
+
+    /**
+     * Saves session token
+     * @param sessionToken Serialized string
+     */
     public void saveSessionToken(String sessionToken) {
         this.sessionToken = sessionToken;
 
@@ -110,6 +124,9 @@ public class PreferenceUtils {
         editor.apply();
     }
 
+    /**
+     * Clears session token
+     */
     public void clearSessionToken() {
         saveSessionToken(""); // set empty session token
     }

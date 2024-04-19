@@ -12,23 +12,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-// Ideally, we would use a ViewModel class
+
 public class MyDataRepository {
-    // Singleton class for managing data (Post objects)
+    /**
+     * Singleton class for storing and managing data fetched from database
+     * Activities/Fragments can attach listeners (observers) to the MutableLiveData
+     * attributes of this class instance to be informed of changes in data and
+     * update their respective UI accordingly
+     */
+
     private static MyDataRepository instance;
-    private MutableLiveData<List<Post>> savedEventsLiveData = new MutableLiveData<>(new ArrayList<>());
-    private MutableLiveData<List<Post>> favouriteEventsLiveData = new MutableLiveData<>(new ArrayList<>());
     /*
     By initialising the value inside the MutableLiveData in the constructor, observer callbacks
     will be executed the moment they attach, even without setValue/postValue
      */
 
-    // Singleton class
+
     private MyDataRepository() {
         for (EventTags e : EventTags.values()) {
             getTagsEventMapping().put(e, new ArrayList<>());
         }
     }
+
+    /**
+     * Singleton class constructor
+     * @return MyDataRepository instance
+     */
     public static MyDataRepository getInstance() {
         if (instance == null) {
             instance = new MyDataRepository();
@@ -38,6 +47,7 @@ public class MyDataRepository {
 
 
     // CALENDAR METHODS: for posts/events saved to calendar //
+    private MutableLiveData<List<Post>> savedEventsLiveData = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<Post>> getSavedEventsLiveData() {
         // Primarily used to attach listeners to the MutableLiveData
         return savedEventsLiveData;
@@ -74,7 +84,9 @@ public class MyDataRepository {
         // Observers of savedEventsLiveData will be triggered
     }
 
-    // FAVOURITE METHODS: for posts/events liked by logged-in user
+
+    // FAVOURITE METHODS: for posts/events liked by logged-in user //
+    private MutableLiveData<List<Post>> favouriteEventsLiveData = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<Post>> getFavouriteEventsLiveData() {
         // Primarily used to attach listeners to the MutableLiveData
         return favouriteEventsLiveData;
@@ -107,6 +119,7 @@ public class MyDataRepository {
     }
 
     public boolean postInFavourites(Post post) {
+        // Returns true if post is in user's favourites
         List<Post> favouriteEvents = favouriteEventsLiveData.getValue();
         assert favouriteEvents != null;
         return favouriteEvents.contains(post);
@@ -114,7 +127,7 @@ public class MyDataRepository {
 
 
 
-    // DISCOVER METHODS //
+    // DISCOVER METHODS: all uploaded posts //
     private MutableLiveData<HashMap<Integer, Post>> allEventsHashMapLiveData = new MutableLiveData<>(new HashMap<>());
     private MutableLiveData<HashMap<Integer, Bitmap>> eventImageMappingLiveData = new MutableLiveData<>(new HashMap<>());
     private MutableLiveData<HashMap<EventTags, ArrayList<Integer>>> tagsEventMappingLiveData = new MutableLiveData<>(new HashMap<>());
@@ -176,7 +189,6 @@ public class MyDataRepository {
 
     public MutableLiveData<HashMap<EventTags, ArrayList<Integer>>> getTagsEventMappingLiveData() { return tagsEventMappingLiveData; }
     public HashMap<EventTags, ArrayList<Integer>> getTagsEventMapping() { return tagsEventMappingLiveData.getValue(); }
-
 
 
 }
