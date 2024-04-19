@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -15,14 +14,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
-import com.example.clarity.R;
 import com.example.clarity.SerializationUtils;
 import com.example.clarity.databinding.ActivityLoginBinding;
 import com.example.clarity.model.PreferenceUtils;
@@ -38,8 +34,16 @@ public class LoginActivity extends AppCompatActivity {
     private MutableLiveData<User> userLiveData;
     private PreferenceUtils prefUtils;
     private String username;
-    private EditText passwordEditText;
+    private Handler handler;
+    private ProgressBar progressBar;
 
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,42 +82,10 @@ public class LoginActivity extends AppCompatActivity {
                     loginButton.setEnabled(true);
                     return;
                 }
+                //new thread will play a circular loading bar
+                loadingBar();
 
-                //background thread will play a circular loading bar
-                new Thread(new Runnable() {
-                    public void run() {
-                        int progressStatus = 0;
-                        while (progressStatus < 100) {
-                            progressStatus += 1;
-
-                            // Update the progress bar and display the current value
-                            int finalProgressStatus = progressStatus;
-                            handler.post(new Runnable() {
-                                public void run() {
-                                    progressBar.setProgress(finalProgressStatus);
-                                }
-                            });
-
-                            try {
-                                // Sleep for 200 milliseconds to simulate a long operation
-                                Thread.sleep(25);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        try {
-                            // Sleep for 200 milliseconds after reaching 100%
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        handler.post(new Runnable() {
-                            public void run() {
-                                progressBar.setProgress(0);
-                            }
-                        });
-                    }
-                }).start();
+                //calling RestRepo method for instance in order to get user from database
                 database.getUserRequest(username, password, new RestRepo.RepositoryCallback<User>() {
 
                     @Override
@@ -136,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(getApplicationContext(), "Welcome, " + username + "!", Toast.LENGTH_LONG).show();
                     ((MyApplication) getApplicationContext()).saveAppUser(user); // save logged-in user
+                    // serializes a User object into a string representation and saves it using prefUtils
                     try {
                         String sessionToken = SerializationUtils.serializeToString(user);
                         prefUtils.saveSessionToken(sessionToken);
@@ -144,8 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                         throw new RuntimeException(e);
                     }
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
+                    goToMainActivity();
                     finish();
                 }
             }
@@ -162,13 +134,54 @@ public class LoginActivity extends AppCompatActivity {
 
     //method to go to CreateNewAccountView
     private void createNewAccount(){
-        Intent go_to_create = new Intent(this, CreateNewAccountView.class);
-        startActivity(go_to_create);
+        Intent intent = new Intent(this, CreateNewAccount.class);
+        startActivity(intent);
+    }
+
+    private void goToMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     //hides keyboard after user inputs password
     private void hideKeyboard(Context context, View v) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+    private void loadingBar() {
+        new Thread(new Runnable() {
+            public void run() {
+                int progressStatus = 0;
+                while (progressStatus < 100) {
+                    progressStatus += 1;
+
+                    // Update the progress bar and display the current value
+                    int finalProgressStatus = progressStatus;
+                    handler.post(new Runnable() {
+                        public void run() {
+                            progressBar.setProgress(finalProgressStatus);
+                        }
+                    });
+
+                    try {
+                        // Sleep for 200 milliseconds to simulate a long operation
+                        Thread.sleep(25);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    // Sleep for 200 milliseconds after reaching 100%
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                handler.post(new Runnable() {
+                    public void run() {
+                        progressBar.setProgress(0);
+                    }
+                });
+            }
+        }).start();
     }
 }
