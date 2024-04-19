@@ -2,7 +2,9 @@ package com.example.clarity.NavBarFragments.Discover;
 
 import androidx.annotation.NonNull;
 
-// for tag button creation
+/**
+ * Used for tag buttons in Discover Fragment
+ */
 public enum EventTags {
     ALL, CAREER, CAMPUS_LIFE, FIFTH_ROW, COMPETITION, WORKSHOP;
 

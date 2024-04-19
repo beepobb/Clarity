@@ -44,20 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Database instance
         database = ((MyApplication) getApplicationContext()).getDatabase();
-//        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder1);
-//        database.postImageRequest(bm, "event_placeholder1.png", new RestRepo.RepositoryCallback<String>() {
-//            @Override
-//            public void onComplete(String result) {
-//                System.out.println(result);
-//            }
-//        });
-
-//        database.getProfilePictureRequest(15, new RestRepo.RepositoryCallback<Bitmap>() {
-//            @Override
-//            public void onComplete(Bitmap result) {
-//                System.out.println(result.toString());
-//            }
-//        });
 
         discoverFragment = new Discover();
         favouritesFragment = new Favourites();

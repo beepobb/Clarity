@@ -7,8 +7,7 @@ import java.util.Calendar;
  * This class provides methods to format items for card view to be used in adapters.
  */
 public class CardFormatter {
-    private static String TAG = "CardFormatter";
-    private static String[] monthMap = {"Jan","Feb","Mar","Apr","May","Jun","July",
+    private static final String[] monthMap = {"Jan","Feb","Mar","Apr","May","Jun","July",
     "Aug","Sep","Oct","Nov","Dec"};
     public enum EventCardType {DISCOVER, AGENDA_VIEW}
 
@@ -44,27 +43,6 @@ public class CardFormatter {
         String endTime = getTime(eventEnd);
         return startTime + " - " + endTime;
     }
-
-    /**
-     * Formats start and end time for event
-     * @param eventStart format: yyyy-MM-dd HH:mm:ss
-     * @param eventEnd format: yyyy-MM-dd HH:mm:ss
-     * @return time in start - end time, format HH:mm - HH:mm
-     */
-    public static String formatTimeWithDate(String eventStart, String eventEnd) {
-        String startDate = getDate(eventStart);
-        String endDate = getDate(eventEnd);
-        String startTime = getTime(eventStart);
-        String endTime = getTime(eventEnd);
-
-        // One day event: just show time only
-        if (startDate.equals(endDate)) {
-            return startTime + " - " + endTime;
-        } else {
-            return startDate.substring(0,5) + " " + startTime + " - " + endDate.substring(0,5) + " " + endTime;
-        }
-    }
-
 
     /**
      * Formats the full date time string
@@ -110,6 +88,14 @@ public class CardFormatter {
     public static String formatCalendarObject(Calendar eventStart, Calendar eventEnd) {
         return formatCalendarObject(eventStart, eventEnd, false);
     }
+
+    /**
+     * Turn start and end Calendar objects into a presentable String
+     * @param eventStart
+     * @param eventEnd
+     * @param retainDate
+     * @return formatted String used in Calendar fragment
+     */
     public static String formatCalendarObject(Calendar eventStart, Calendar eventEnd, boolean retainDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
@@ -126,5 +112,4 @@ public class CardFormatter {
             return (startDay+" "+startMonth+", "+startTime)+" - "+(endDay+" "+endMonth+", "+endTime);
         }
     }
-
 }

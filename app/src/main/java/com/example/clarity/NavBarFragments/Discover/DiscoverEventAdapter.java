@@ -19,8 +19,6 @@ import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.util.CardFormatter;
 
-import java.io.ByteArrayOutputStream;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +32,7 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
         this.eventList = eventList;
         this.eventImageMapping = new HashMap<>();
     }
+
     public static class DiscoverEventViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
         TextView eventName;
@@ -54,14 +53,15 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
     @NonNull
     @Override
     public DiscoverEventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("DiscoverEventAdapter", "onCreateViewHolder");
+        Log.i("DiscoverEventAdapter", "onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item_model, parent, false);
         return new DiscoverEventViewHolder(view);
     }
 
+    // bind data for each cardView in Event Recycler
     @Override
     public void onBindViewHolder(@NonNull DiscoverEventViewHolder holder, int position) {
-        Log.d("DiscoverEventAdapter", "onBindViewHolder");
+        Log.i("DiscoverEventAdapter", "onBindViewHolder");
         Post eventPost = eventList.get(position);
         if (eventPost != null) {
             Integer post_id = eventPost.getId();
@@ -95,7 +95,6 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     // Go to corresponding events page
                     Intent intent = new Intent(context, EventsPageActivity.class); // Intent for going to events page activity
 
@@ -106,7 +105,6 @@ public class DiscoverEventAdapter extends  RecyclerView.Adapter<DiscoverEventAda
                 }
             });
         }
-
     }
 
     @Override
