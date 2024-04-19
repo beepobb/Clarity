@@ -1,6 +1,7 @@
 package com.example.clarity.NavBarFragments;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 public class Favourites extends Fragment {
@@ -78,7 +81,22 @@ public class Favourites extends Fragment {
                 // executed in main thread, so that we can modify Views
 
                 Log.d(TAG, "favouriteEventsLiveData triggered: refresh UI");
-                favouriteEventAdapter.updateEventList(dataRepo.getFavouriteEvents());
+                List<Post> eventList = dataRepo.getFavouriteEvents();
+                eventList.sort(new Comparator<Post>() {
+                    @Override
+                    public int compare(Post o1, Post o2) {
+                        return o1.getEventStart().compareTo(o2.getEventStart());
+                    }
+                });
+
+                favouriteEventAdapter.updateEventList(eventList);
+            }
+        });
+
+        dataRepo.getEventImageMappingLiveData().observe(getViewLifecycleOwner(), new Observer<HashMap<Integer, Bitmap>>() {
+            @Override
+            public void onChanged(HashMap<Integer, Bitmap> integerBitmapHashMap) {
+                favouriteEventAdapter.updateEventImageMapping(dataRepo.getEventImageMapping());
             }
         });
 

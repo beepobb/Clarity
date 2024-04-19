@@ -10,17 +10,17 @@
     app:cardElevation="5dp"
     app:cardUseCompatPadding="true"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="7dp"
     android:layout_marginRight="7dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/EventCard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="2dp"
-        tools:layout_editor_absoluteY="3dp">
+        android:layout_height="wrap_content">
 
         <TextView
+            style="@style/EventTitle"
             android:id="@+id/calendarEventNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,6 +39,7 @@
             android:layout_marginStart="44dp"
             android:layout_marginTop="52dp"
             android:src="@drawable/baseline_access_time_24"
+            app:tint="@color/purple"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,84 +48,94 @@
             android:layout_width="19dp"
             android:layout_height="16dp"
             android:layout_marginStart="44dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:src="@drawable/baseline_location_on_24"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/calendarClockImageView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarClockImageView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/calendarEventLocationTextView"
+            app:tint="@color/purple" />
 
         <TextView
             android:id="@+id/calendarEventLocationTextView"
-            android:layout_width="124dp"
-            android:layout_height="18dp"
+            style="@style/EventDetails"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
             android:text="Event Location Here"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/eventDateLabel"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/calendarLocationImageView" />
+            app:layout_constraintStart_toEndOf="@+id/calendarLocationImageView"
+            app:layout_constraintTop_toBottomOf="@+id/calendarEventTimeTextView" />
 
         <TextView
             android:id="@+id/calendarEventTimeTextView"
-            android:layout_width="wrap_content"
+            style="@style/EventDetails"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="50dp"
             android:text="1300 - 1800"
-            app:layout_constraintEnd_toStartOf="@+id/eventDateLabel"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/calendarClockImageView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:id="@+id/view2"
-            android:layout_width="28dp"
-            android:layout_height="wrap_content"
-            android:background="@color/calendar_label_red"
+            android:id="@+id/calendarEventLabelColor"
+            style="@style/CalendarEventLabelColor"
+            android:layout_width="30dp"
+            android:layout_height="120dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/eventDateLabel"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:background="@color/calendar_label_date"
-            android:rotation="180"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/eventDay"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="DAY"
-            android:textColor="@color/accent_2"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/eventDayNumber"
-            app:layout_constraintStart_toStartOf="@+id/eventDayNumber"
-            app:layout_constraintTop_toBottomOf="@+id/eventDayNumber" />
-
-        <TextView
-            android:id="@+id/eventDayNumber"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="01"
-            android:textColor="@color/accent_1"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/eventDateLabel"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/eventDateLabel"
-            app:layout_constraintTop_toTopOf="@+id/eventDateLabel"
-            app:layout_constraintVertical_bias="0.307" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/eventDateLabel"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:background="@color/calendar_label_date"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/eventDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="DAY"
+                android:textColor="@color/accent_2"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/eventDayNumber"
+                app:layout_constraintStart_toStartOf="@+id/eventDayNumber"
+                app:layout_constraintTop_toBottomOf="@+id/eventDayNumber" />
+
+            <TextView
+                android:id="@+id/eventDayNumber"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="01"
+                android:textColor="@color/accent_1"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/eventDay"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/eventDateLabel"
+                app:layout_constraintTop_toTopOf="@+id/eventDateLabel" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

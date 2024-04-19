@@ -22,7 +22,6 @@
         <item name="tint">@color/white</item>
     </style>
 
-    <style name="ScreenBackground"><item name="android:background">@color/dark_grey</item></style>
     <style name="Container"><item name="android:background">@color/dark_grey</item></style>
     <style name="Accent1"><item name="android:textColor">@color/purple</item></style>
     <style name="Subtitle"><item name="android:textColor">@color/grey</item></style>
@@ -31,20 +30,37 @@
     <!-- Styles for Login/Create account -->
     <style name="LogInFields"><item name="android:background">@drawable/grey_rectangle_night</item> </style>
     <style name="Submit"><item name="android:background">@drawable/purple_rectangle_night</item></style>
-    <style name="CreateAccountHeading"><item name="android:textColor">@color/purple</item></style>
-    <style name="InputField"><item name="android:background">@drawable/field_night</item></style>
+    <style name="Heading"><item name="android:textColor">@color/purple</item></style>
+    <style name="InputField">
+        <item name="android:background">@drawable/field_night</item>
+    </style>
 
-    <!-- Styles for Event Fragment -->
+    <!-- Styles for Event Activity -->
     <style name="EventTitle"><item name="android:textColor">@color/white</item></style>
     <style name="EventDetails"><item name="android:textColor">@color/light_grey</item></style>
     <style name="EventCard"><item name="android:background">@color/purplish_grey</item></style>
+    <style name="EventOrganiserCard"><item name="android:background">@color/purplish_grey</item></style>
+    <style name="EventLikeButton"><item name="android:background">@drawable/like_button_dark</item></style>
+    <style name="EventLocationIcon"><item name="android:src">@drawable/baseline_location_on_24_dark</item></style>
+    <style name="EventTag"><item name="android:background">@drawable/tag_rectangle_dark</item></style>
+    <style name="EventScreenBackground"><item name="android:background">@color/bg_dark</item></style>
+
+    <!--Styles for Create Fragment-->
+    <style name="FieldHeading"><item name="android:textColor">@color/purple</item> </style>
+    <style name="FieldHint"><item name="android:textColor">@color/light_grey</item> </style>
 
     <!-- Styles for Calendar Fragment -->
-    <style name="CalendarEventCard"><item name="cardBackgroundColor">@color/purplish_grey</item></style>
-    <style name="CalendarBanner"><item name="android:background">#1F2020</item></style>
+    <style name="CalendarEventCard">
+        <item name="abbreviationsBarColor">@color/bg_dark</item>
+        <item name="pagesColor">@color/bg_dark</item>
+        <item name="daysLabelsColor">@color/white</item>
+    </style>
+    <style name="CalendarBanner"><item name="android:background">#2B2254</item></style>
     <style name="CalendarEventDateContainer"><item name="android:background">@color/purple</item></style>
     <style name="CalendarEventMainText"><item name="android:textColor">@color/white</item></style>
     <style name="CalendarEventSubText"><item name="android:textColor">@color/light_grey</item></style>
+    <style name="CalendarEventContainer"><item name="android:background">@color/bg_dark</item></style>
+    <style name="CalendarEventLabelColor"><item name="android:background">@color/purple</item></style>
 
     <!-- Styles for Profile Fragment -->
     <style name="ProfileBanner"><item name="android:background">@color/dark_purple</item></style>

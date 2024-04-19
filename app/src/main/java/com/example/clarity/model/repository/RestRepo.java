@@ -14,6 +14,7 @@ import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Favourite;
 import com.example.clarity.model.data.Tag;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -127,10 +128,11 @@ public class RestRepo {
         try {
             //Create connection
             String data_string = data.toString();
+            System.out.println(data_string);
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("content-type", "application/json");
+            connection.setRequestProperty("content-type", "application/json;charset=UTF-8");
             connection.setRequestProperty("content-length", Integer.toString(data_string.length()));
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -311,8 +313,10 @@ public class RestRepo {
                 try {
                     String filename = username + ".png";
                     String url = imageBucket + '/' + filename;
-                    addImage(bm, filename);
                     String response = addUser(username, MD5.getMd5(password), email, role, url);
+                    if(response != null) {
+                        addImage(bm, filename);
+                    }
                     callback.onComplete(response);
                 }
                 catch (Exception e) {
@@ -330,10 +334,13 @@ public class RestRepo {
         data.put("role", role);
         data.put("profile_pic_url", profile_pic_url);
         try {
-            return urlPost(endPointUser, new JSONObject(data));
+            JSONObject res = new JSONObject(urlPost(endPointUser, new JSONObject(data)));
+            if(res.getString("body").equals("Error adding data.")) {
+                return null;
+            }
+            return res.getString("body");
         }
         catch(Exception e) {
-            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -468,10 +475,11 @@ public class RestRepo {
         data.put("event_start", event_start);
         data.put("event_end", event_end);
         data.put("image_url", image_url);
-        data.put("title", title);
+        data.put("title", StringEscapeUtils.escapeJava(title));
         data.put("location", location);
-        data.put("description", description);
+        data.put("description", StringEscapeUtils.escapeJava(description));
         data.put("tag_list", listString);
+
         try {
             return urlPost(endPointPost, new JSONObject(data));
         }
@@ -765,19 +773,19 @@ public class RestRepo {
             @Override
             public void run() {
                 callback.onComplete("Updated");
-//                try {
-//                    String base64Text = getStringImage(bm, Bitmap.CompressFormat.JPEG);
-//                    base64Text = base64Text.replace("\n", "");
-//                    HashMap<String, String> data = new HashMap<String, String>();
-//                    data.put("document", base64Text);
-//                    String response = urlPost(endPointSummary, new JSONObject(data));
-//                    JSONObject tmp = new JSONObject(response);
-//                    String result = tmp.getString("summary");
-//                    callback.onComplete(result.substring(1,result.length() - 1));
-//                }
-//                catch(Exception e) {
-//                    callback.onComplete("");
-//                }
+                try {
+                    String base64Text = getStringImage(bm, Bitmap.CompressFormat.JPEG);
+                    base64Text = base64Text.replace("\n", "");
+                    HashMap<String, String> data = new HashMap<String, String>();
+                    data.put("document", base64Text);
+                    String response = urlPost(endPointSummary, new JSONObject(data));
+                    JSONObject tmp = new JSONObject(response);
+                    String result = tmp.getString("summary");
+                    callback.onComplete(result.substring(1,result.length() - 1));
+                }
+                catch(Exception e) {
+                    callback.onComplete("");
+                }
             }
         });
     }

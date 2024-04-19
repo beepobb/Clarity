@@ -31,9 +31,6 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.Handler;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,16 +45,13 @@ import android.widget.Toast;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -73,34 +67,27 @@ import com.example.clarity.R;
 
 public class Create extends Fragment {
 
-    private AutoCompleteTextView mAutoCompleteTextView; // Declare as class-level field
+
     private MultiAutoCompleteTextView mMultiAutoCompleteTextView;
-    ArrayAdapter<String> adapterTags;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
-//    private EditText editTextDate, editTextTime;
     private Calendar calendar;
     private View rootView;
-    //start
     private RestRepo database;
     private User appUser;
     private MutableLiveData<String> userLiveData;
     private MutableLiveData<String> userdescriptionLiveData;
     private BottomNavigationView bottomNavigationView;
     private Bitmap image;
-    boolean limitExceeded = false;
-    private int selectedCount;
-    TextView textView;
-    boolean[] selectedLanguage;
-    ArrayList<Integer> langList = new ArrayList<>();
-    String[] langArray = {"CAREER", "CAMPUS LIFE", "FIFTH ROW", "COMPETITION", "WORKSHOP"};
-//end
+    boolean[] selectedTags;
+    ArrayList<Integer> tagList = new ArrayList<>();
+    String[] tagArray = {"CAREER", "CAMPUS_LIFE", "FIFTH_ROW", "COMPETITION", "WORKSHOP"};
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create, container, false);
         selectedImageView = rootView.findViewById(R.id.placeHolder);
-//start
         Button postButton = rootView.findViewById(R.id.postButton);
         ImageView placeholderImageView = rootView.findViewById(R.id.middle_image);
         EditText titleEditText = rootView.findViewById(R.id.editTextValue);
@@ -112,7 +99,6 @@ public class Create extends Fragment {
         EditText end_timeEditText = rootView.findViewById(R.id.editTextTime2);
         EditText descriptionEditText = rootView.findViewById(R.id.description_text);
         Spinner AIornotSpinner = rootView.findViewById(R.id.spinner);
-        Log.d("EESONG", AIornotSpinner.toString());
         ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
         Handler handler = new Handler();
 
@@ -133,9 +119,11 @@ public class Create extends Fragment {
         userLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
+                //opens Discover fragment
                 Menu menu = bottomNavigationView.getMenu();
                 MenuItem menuItem = menu.findItem(R.id.Discover);
                 bottomNavigationView.setSelectedItemId(menuItem.getItemId());
+                //resets all text fields
                 titleEditText.setText("");
                 tagsEditText.setText("");
                 start_dateEditText.setText("");
@@ -144,10 +132,11 @@ public class Create extends Fragment {
                 end_timeEditText.setText("");
                 locationEditText.setText("");
                 descriptionEditText.setText("");
-                progressBar.setVisibility(View.GONE);
+                postButton.setEnabled(true); // re-enable button
             }
         });
 
+        //triggers when user wants to use AI to generate description
         userdescriptionLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
@@ -155,6 +144,7 @@ public class Create extends Fragment {
             }
         });
 
+        //allows user to pick a custom image for their event
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
@@ -185,7 +175,7 @@ public class Create extends Fragment {
         TextView textView  = rootView.findViewById(R.id.textView);
 
         // initialize selected language array
-        selectedLanguage = new boolean[langArray.length];
+        selectedTags = new boolean[tagArray.length];
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,22 +190,25 @@ public class Create extends Fragment {
                 // set dialog non cancelable
                 builder.setCancelable(false);
 
-                builder.setMultiChoiceItems(langArray, selectedLanguage, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(tagArray, selectedTags, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        selectedTags[i] = b;
+
                         // Check if the number of selected items exceeds three
-                        if (b && langList.size() >= 3) {
+                        if (b && tagList.size() >= 3) {
                             // If more than three options are selected, uncheck the current item
                             ((AlertDialog) dialogInterface).getListView().setItemChecked(i, false);
+                            selectedTags[i] = false;
                             Toast.makeText(requireContext(), "You can select up to three options", Toast.LENGTH_SHORT).show();
                         } else {
                             // If less than three options are selected, proceed as usual
                             if (b) {
-                                langList.add(i);
+                                tagList.add(i);
                             } else {
-                                langList.remove(Integer.valueOf(i));
+                                tagList.remove(Integer.valueOf(i));
                             }
-                            Collections.sort(langList);
+                            Collections.sort(tagList);
                         }
                     }
                 });
@@ -226,11 +219,11 @@ public class Create extends Fragment {
                         // Initialize string builder
                         StringBuilder stringBuilder = new StringBuilder();
                         // use for loop
-                        for (int j = 0; j < langList.size(); j++) {
+                        for (int j = 0; j < tagList.size(); j++) {
                             // concat array value
-                            stringBuilder.append(langArray[langList.get(j)]);
+                            stringBuilder.append(tagArray[tagList.get(j)]);
                             // check condition
-                            if (j != langList.size() - 1) {
+                            if (j != tagList.size() - 1) {
                                 // When j value  not equal
                                 // to lang list size - 1
                                 // add comma
@@ -253,11 +246,11 @@ public class Create extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // use for loop
-                        for (int j = 0; j < selectedLanguage.length; j++) {
+                        for (int j = 0; j < selectedTags.length; j++) {
                             // remove all selection
-                            selectedLanguage[j] = false;
+                            selectedTags[j] = false;
                             // clear language list
-                            langList.clear();
+                            tagList.clear();
                             // clear text view value
                             textView.setText("");
                         }
@@ -298,6 +291,7 @@ public class Create extends Fragment {
             }
         });
 
+        //sets listener only if the user wants to select AI option to generate description
         AIornotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -318,14 +312,17 @@ public class Create extends Fragment {
             }
         });
 
-        //start
+        //sets OnClickListener to postButton, triggers every time user presses post button
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                postButton.setEnabled(false);
+                hideKeyboard(getContext(), v);
+
                 Integer author_id = appUser_id;
                 String title = titleEditText.getText().toString();
-                String tagsString = tagsEditText.getText().toString().trim();
+                String tagsString = tagsEditText.getText().toString().replaceAll("\\s", "");
                 ArrayList<String> tags = new ArrayList<>(Arrays.asList(tagsString.split(",")));
                 String start_date = start_dateEditText .getText().toString();
                 String start_time = start_timeEditText.getText().toString();
@@ -338,11 +335,13 @@ public class Create extends Fragment {
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.event_placeholder5);
                 }
 
-                if (author_id == null || title.isEmpty() || tags.isEmpty() || start_date.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty()) {
+                if (author_id == null || title.isEmpty() || tagsString.isEmpty() || end_date.isEmpty() || end_time.isEmpty() || start_date.isEmpty() || location.isEmpty() || description.isEmpty() ) {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+                    postButton.setEnabled(true);
                     return;
                 }
 
+                //background thread will play a circular loading bar
                 new Thread(new Runnable() {
                     public void run() {
                         handler.post(new Runnable() {
@@ -364,14 +363,25 @@ public class Create extends Fragment {
 
                             try {
                                 // Sleep for 200 milliseconds to simulate a long operation
-                                Thread.sleep(40);
+                                Thread.sleep(30);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }
+                        try {
+                            // Sleep for 200 milliseconds after reaching 100%
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         // Once the operation is completed, show a toast message
                         handler.post(new Runnable() {
                             public void run() {
+                                handler.post(new Runnable() {
+                                    public void run() {
+                                        progressBar.setProgress(0);
+                                    }
+                                });
                                 Toast.makeText(getContext(), "Event successfully added", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -394,11 +404,6 @@ public class Create extends Fragment {
         //end
         return rootView;
     }
-    private void hideKeyboard(Context context, View v) {
-        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mMultiAutoCompleteTextView.getWindowToken(), 0);
-    }
-
 
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -408,6 +413,8 @@ public class Create extends Fragment {
         }
     }
 
+    //method for date picker
+    //Use most recent API version (Pixel 5 API 34 usable)
     private void showDatePickerDialog(final EditText editText) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
@@ -442,7 +449,9 @@ public class Create extends Fragment {
         );
         datePickerDialog.show();
     }
-//MIGHT HAVE API VERSION ISSUES
+
+    //method for time picker
+    //Use most recent API version (Pixel 5 API 34 usable)
     private void showTimePickerDialog(final EditText editText) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),
@@ -469,6 +478,12 @@ public class Create extends Fragment {
                 true // 24-hour format
         );
         timePickerDialog.show();
+    }
+
+    //hides keyboard after user inputs password
+    private void hideKeyboard(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
 }

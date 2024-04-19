@@ -25,9 +25,8 @@ public class MyDataRepository {
 
     // Singleton class
     private MyDataRepository() {
-        // Initialize values for use in Discover fragment
         for (EventTags e : EventTags.values()) {
-            tagsEventMapping.put(e, new ArrayList<>());
+            getTagsEventMapping().put(e, new ArrayList<>());
         }
     }
     public static MyDataRepository getInstance() {
@@ -115,39 +114,34 @@ public class MyDataRepository {
 
 
 
-
     // DISCOVER METHODS //
-    private MutableLiveData<List<Post>> allEventsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<HashMap<Integer, Post>> allEventsHashMapLiveData = new MutableLiveData<>(new HashMap<>());
     private MutableLiveData<HashMap<Integer, Bitmap>> eventImageMappingLiveData = new MutableLiveData<>(new HashMap<>());
-    private HashMap<EventTags, ArrayList<Integer>> tagsEventMapping = new HashMap<>();
-
-    /*
-    fetch all posts --> save to allEvents --> observer 1) fetch all tags --> load all tags
-    observer 2) fetch all images --> load all images
-     */
-
-    public void loadEventImageMappingLiveData(HashMap<Integer, Bitmap> mapping) {
-        eventImageMappingLiveData.postValue(mapping);
-    }
-    public HashMap<EventTags, ArrayList<Integer>> getTagsEventMapping() {
-        return tagsEventMapping;
-    }
-
-    public MutableLiveData<List<Post>> getAllEventsLiveData() {
-        return allEventsLiveData;
-    }
-
-    public MutableLiveData<HashMap<Integer, Bitmap>> getEventImageMappingLiveData() {
-        return eventImageMappingLiveData;
-    }
+    private MutableLiveData<HashMap<EventTags, ArrayList<Integer>>> tagsEventMappingLiveData = new MutableLiveData<>(new HashMap<>());
 
     public void loadAllEventsOnWorkerThread(ArrayList<Post> eventsList) {
-        allEventsLiveData.postValue(eventsList);
+        // Takes list of Post objects and save it in a hash map (the key is the post id)
+        HashMap<Integer, Post> hashMap = new HashMap<>();
+        for (Post post: eventsList) {
+            hashMap.put(post.getId(), post);
+        }
+        allEventsHashMapLiveData.postValue(hashMap);
+
+        // allEventsLiveData.postValue(eventsList);
         // Observers of allEventsLiveData will be triggered
     }
+    public void loadEventImageMappingOnWorkerThread(HashMap<Integer, Bitmap> mapping) {
+        eventImageMappingLiveData.postValue(mapping);
+        // Observers of eventImageMapping will be triggered
+    }
 
-    public void createTagEventMapping(ArrayList<Tag> tagObjects) {
-        // Populate: tagEventNapping
+    public void createTagEventMappingOnWorkerThread(ArrayList<Tag> tagObjects) {
+        // Initialize hash map
+        HashMap<EventTags, ArrayList<Integer>> tagsEventMapping = new HashMap<>();
+        for (EventTags e : EventTags.values()) {
+            tagsEventMapping.put(e, new ArrayList<>());
+        }
+
         for (Tag tag : tagObjects) {
             Integer post_id = tag.getPost_id();
             String tag_category = tag.getTag_category();
@@ -164,5 +158,25 @@ public class MyDataRepository {
                 tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
             }
         }
+
+        tagsEventMappingLiveData.postValue(tagsEventMapping);
+        // Observers of tagsEventMappingLiveData will be triggered
     }
+
+    public MutableLiveData<HashMap<Integer, Post>> getAllEventsHashMapLiveData() {
+        return allEventsHashMapLiveData;
+    }
+    public HashMap<Integer, Post> getAllEventsHashMap() { return allEventsHashMapLiveData.getValue(); }
+    public List<Post> getAllEvents() {
+        return new ArrayList<>(getAllEventsHashMap().values());
+    }
+
+    public MutableLiveData<HashMap<Integer, Bitmap>> getEventImageMappingLiveData() { return eventImageMappingLiveData; }
+    public HashMap<Integer, Bitmap> getEventImageMapping() { return eventImageMappingLiveData.getValue(); }
+
+    public MutableLiveData<HashMap<EventTags, ArrayList<Integer>>> getTagsEventMappingLiveData() { return tagsEventMappingLiveData; }
+    public HashMap<EventTags, ArrayList<Integer>> getTagsEventMapping() { return tagsEventMappingLiveData.getValue(); }
+
+
+
 }

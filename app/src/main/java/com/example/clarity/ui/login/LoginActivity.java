@@ -1,5 +1,6 @@
 package com.example.clarity.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private MutableLiveData<User> userLiveData;
     private PreferenceUtils prefUtils;
     private String username;
+    private EditText passwordEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,8 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final Button loginButton = (Button) binding.login;
-        final ImageView imageView = binding.imageView;
-        final Button createButton = (Button) binding.newAccount;
+        final Button createButton = binding.newAccount;
 
         final ProgressBar progressBar = binding.progressBar;
 
@@ -58,10 +60,14 @@ public class LoginActivity extends AppCompatActivity {
         prefUtils = PreferenceUtils.getInstance(this);
         userLiveData = new MutableLiveData<>(); // contains null at this step
 
+        //triggers when user clicks login button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loginButton.setEnabled(false);
+
                 // Start long operation in a background thread
+                hideKeyboard(getApplicationContext(), v);
 
                 username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
@@ -69,9 +75,11 @@ public class LoginActivity extends AppCompatActivity {
                 if (username.isEmpty() || password.isEmpty()) {
                     // Display an error message if any field is empty
                     Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
+                //background thread will play a circular loading bar
                 new Thread(new Runnable() {
                     public void run() {
                         int progressStatus = 0;
@@ -93,6 +101,17 @@ public class LoginActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
+                        try {
+                            // Sleep for 200 milliseconds after reaching 100%
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        handler.post(new Runnable() {
+                            public void run() {
+                                progressBar.setProgress(0);
+                            }
+                        });
                     }
                 }).start();
                 database.getUserRequest(username, password, new RestRepo.RepositoryCallback<User>() {
@@ -104,14 +123,15 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+
+        //triggers when database validates username and password
         userLiveData.observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-
+                loginButton.setEnabled(true);
                 // When user object is fetched (getUserRequest): switch to MainActivity
                 if (user == null) {
                     Toast.makeText(getApplicationContext(), "Username/password not valid", Toast.LENGTH_SHORT).show();
-                    progressBar.setProgress(0);
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Welcome, " + username + "!", Toast.LENGTH_LONG).show();
@@ -131,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //triggers when user clicks create new account button
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,8 +160,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //method to go to CreateNewAccountView
     private void createNewAccount(){
         Intent go_to_create = new Intent(this, CreateNewAccountView.class);
         startActivity(go_to_create);
+    }
+
+    //hides keyboard after user inputs password
+    private void hideKeyboard(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 }

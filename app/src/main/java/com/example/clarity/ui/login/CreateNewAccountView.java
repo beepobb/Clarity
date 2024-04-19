@@ -52,16 +52,10 @@ public class CreateNewAccountView extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         final ImageView NewImageView = binding.addImage;
-        final TextView CreateAccountTextView = binding.textView4;
-        final TextView choiceTextView = binding.textView5;
         final Spinner choicesSpinner = binding.spinner;
-        final TextView usernameTextView = binding.textView1;
         final EditText usernameEditText = binding.username;
-        final TextView emailTextView = binding.textView2;
         final EditText emailEditText = binding.email;
-        final TextView passwordTextView = binding.password;
         final EditText passwordEditText = binding.enterPassword;
-        final TextView confirmTextView = binding.textView3;
         final EditText confirmEditText = binding.confirmPassword;
         final Button loginButton = binding.login;
         final ProgressBar progressBar = binding.progressBar;
@@ -69,18 +63,8 @@ public class CreateNewAccountView extends AppCompatActivity {
 
         database = ((MyApplication) getApplicationContext()).getDatabase();
         stringMutableLiveData = new MutableLiveData<>(); // contains null at this step
-        stringMutableLiveData.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String string) {
-                // When string is fetched (addUserRequest): switch to MainActivity
-                Intent intent = new Intent(CreateNewAccountView.this, LoginActivity.class);
-                startActivity(intent);
-                progressBar.setProgress(0);
-                finish();
 
-            }
-        });
-
+        //allows user to pick a custom image for their profile picture
         selectedImageView = NewImageView;
         imageActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -107,14 +91,15 @@ public class CreateNewAccountView extends AppCompatActivity {
                     }
                 });
 
-// Launch the gallery picker when the ImageView is clicked
+        // Launch the gallery picker when the ImageView is clicked
         selectedImageView.setOnClickListener(view -> selectImage());
-        // Add functionality to handle account creation
-        // For example, set up a button click listener to create an account
+
+        //triggers when user clicks sign up button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                loginButton.setEnabled(false);
                 String role = choicesSpinner.getSelectedItem().toString();
                 String username = usernameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
@@ -127,24 +112,30 @@ public class CreateNewAccountView extends AppCompatActivity {
                 if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     // Display an error message if any field is empty
                     Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
                 // Additional validation logic can be added here (e.g., check if passwords match)
                 if (!password.equals(confirmPassword)) {
                     Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
                 if (!email.contains("@")) {
                     Toast.makeText(getApplicationContext(), "Must be a valid email", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
 
                 if (!(password.length() >= 8)) {
                     Toast.makeText(getApplicationContext(), "Must be more than 8 characters", Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
                     return;
                 }
+
+                //background thread will play a circular loading bar
                 new Thread(new Runnable() {
                     public void run() {
                         handler.post(new Runnable() {
@@ -166,15 +157,20 @@ public class CreateNewAccountView extends AppCompatActivity {
 
                             try {
                                 // Sleep for 200 milliseconds to simulate a long operation
-                                Thread.sleep(40);
+                                Thread.sleep(30);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }
-                        // Once the operation is completed, show a toast message
+                        try {
+                            // Sleep for 200 milliseconds after reaching 100%
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         handler.post(new Runnable() {
                             public void run() {
-                                Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
+                                progressBar.setProgress(0);
                             }
                         });
                     }
@@ -186,6 +182,23 @@ public class CreateNewAccountView extends AppCompatActivity {
                         stringMutableLiveData.postValue(result);
                     }
                 });
+
+            }
+        });
+        stringMutableLiveData.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String string) {
+                loginButton.setEnabled(true);
+                if (string == null) {
+                    Toast.makeText(getApplicationContext(), "Username/email taken, please choose another username/email", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    // When string is fetched (addUserRequest): switch to MainActivity
+                    Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(CreateNewAccountView.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
     }
