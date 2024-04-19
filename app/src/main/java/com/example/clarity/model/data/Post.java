@@ -2,6 +2,8 @@ package com.example.clarity.model.data;
 
 import android.util.Log;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,9 +31,9 @@ public class Post {
         this.event_start = event_start;
         this.event_end = event_end;
         this.image_url = image_url;
-        this.title = title;
+        this.title = StringEscapeUtils.unescapeJava(title);
         this.location = location;
-        this.description = description;
+        this.description = StringEscapeUtils.unescapeJava(description);
         this.created_at = created_at;
 
         // Initialize Calendar objects for event_start, event_end, and created_at attributes
@@ -50,7 +52,6 @@ public class Post {
         } catch (ParseException e) {
             Log.d("RYAN TEST", "Post: Parse Exception " + event_end);
         }
-
     }
 
     public int getId() {

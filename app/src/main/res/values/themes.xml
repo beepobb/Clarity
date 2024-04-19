@@ -10,6 +10,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="profile_circle">@color/dark_purple</item>
         <item name="profile_container">@color/white</item>
+        <item name="android:statusBarColor">@color/purple</item>
     </style>
 
     <style name="Theme.Clarity" parent="Base.Theme.Clarity" />
@@ -18,10 +19,6 @@
         <item name="cornerFamily">rounded</item>
         <item name="android:radius">40dp</item>
         <item name="backgroundTint">#B9A3F3</item>
-    </style>
-
-    <style name="ScreenBackground">
-        <item name="android:background">@color/off_white</item>
     </style>
 
     <style name="Container">
@@ -43,10 +40,12 @@
     <!-- Styles for Login/Create account -->
     <style name="LogInFields"><item name="android:background">@drawable/grey_rectangle</item> </style>
     <style name="Submit"><item name="android:background">@drawable/purple_rectangle</item></style>
-    <style name="CreateAccountHeading"><item name="android:textColor">@color/dark_purple</item></style>
-    <style name="CreateAccountFields"><item name="android:background">@drawable/field_light</item></style>
+    <style name="Heading"><item name="android:textColor">@color/dark_purple</item></style>
+    <style name="InputField">
+        <item name="android:background">@drawable/field_light</item>
+    </style>
 
-    <!-- Styles for Event Fragment -->
+    <!-- Styles for Event Activity -->
     <style name="EventTitle">
         <item name="android:textColor">@color/black</item>
     </style>
@@ -56,35 +55,42 @@
     </style>
 
     <style name="EventCard">
-        <item name="cardBackgroundColor">@color/light_grey</item>
+        <item name="cardBackgroundColor">#EEEFF1</item>
     </style>
+    <style name="EventOrganiserCard"><item name="android:background">#EEEFF1</item></style>
+    <style name="EventLikeButton"><item name="android:background">@drawable/like_button</item></style>
+    <style name="EventLocationIcon"><item name="android:src">@drawable/baseline_location_on_24</item></style>
+    <style name="EventTag"><item name="android:background">@drawable/tag_rectangle</item></style>
+    <style name="EventScreenBackground"><item name="android:background">@color/white</item></style>
+
+    <!--Styles for Create Fragment-->
+    <style name="FieldHeading"><item name="android:textColor">@color/dark_purple</item> </style>
+    <style name="FieldHint"><item name="android:textColor">@color/grey</item> </style>
 
     <!-- Styles for Calendar Fragment -->
     <style name="CalendarEventCard">
-        <item name="cardBackgroundColor">@color/purple_tint</item>
+        <item name="pagesColor">@color/white</item>
+        <item name="daysLabelsColor">@color/black</item>
     </style>
 
     <style name="CalendarBanner">
-        <item name="android:background">@color/purple_tint</item>
+        <item name="android:background">@color/purple</item>
     </style>
 
     <style name="CalendarEventDateContainer">
         <item name="android:background">#F2DFFF</item>
     </style>
 
-    <style name="CalendarEventMainText">
-        <item name="android:textColor">@color/dark_purple</item>
-    </style>
+    <style name="CalendarEventMainText"><item name="android:textColor">@color/dark_purple</item></style>
 
     <style name="CalendarEventSubText">
         <item name="android:textColor">@color/purple</item>
     </style>
+    <style name="CalendarEventContainer"><item name="android:background">@color/white</item></style>
+    <style name="CalendarEventLabelColor"><item name="android:background">@color/dark_purple</item></style>
 
     <!-- Styles for Profile Fragment -->
-    <style name="ProfileBanner">
-        <item name="android:background">@color/purple</item>
-    </style>
-
+    <style name="ProfileBanner"><item name="android:background">@color/purple</item></style>
     <style name="ProfileButton">
         <item name="backgroundTint">@color/light_grey</item>
         <item name="android:textColor">@color/wolf_grey</item>

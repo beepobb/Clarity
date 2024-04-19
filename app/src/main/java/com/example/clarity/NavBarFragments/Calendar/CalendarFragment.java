@@ -31,6 +31,7 @@ import com.example.clarity.model.repository.RestRepo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -45,7 +46,6 @@ public class CalendarFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1"; private static final String ARG_PARAM2 = "param2";
 
     private String mParam1; private String mParam2;
-    private TextView aabbcc;
     private RecyclerView monthlyRecyclerView;
     private RecyclerView agendaRecyclerView;
     private CalendarEventAdapter adapterMonthly;
@@ -118,7 +118,6 @@ public class CalendarFragment extends Fragment {
 
         // get reference to all UI elements
         calendarView = view.findViewById(R.id.calendarView);
-        aabbcc = view.findViewById(R.id.AABBCC);
         displayToggle = view.findViewById(R.id.displayToggle);
         monthlyRecyclerView = view.findViewById(R.id.monthlyRecycler);
         agendaRecyclerView = view.findViewById(R.id.agendaRecycler);
@@ -235,7 +234,6 @@ public class CalendarFragment extends Fragment {
         int year = selectedDate.get(Calendar.YEAR);
         int month = selectedDate.get(Calendar.MONTH); // January is 0 (not 1)
         int dayOfMonth = selectedDate.get(Calendar.DAY_OF_MONTH);
-        aabbcc.setText(String.valueOf(dayOfMonth+"/"+ (month+1) +"/"+year));
 
         // Only display Events on selected date
         List<Post> eventList = new ArrayList<>();
@@ -247,13 +245,27 @@ public class CalendarFragment extends Fragment {
                 eventList.add(p);
             }
         }
+
+        eventList.sort(new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                return o1.getEventStart().compareTo(o2.getEventStart());
+            }
+        });
+
         adapterMonthly.updateEventList(eventList);
 
     }
 
     private void updateAgendaRecyclerView() {
-        // TODO: sort by start date?
-        adapterAgenda.updateEventList(Objects.requireNonNull(dataRepo.getSavedEvents()));
+        List<Post> eventList = dataRepo.getSavedEvents();
+        eventList.sort(new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                return o1.getEventStart().compareTo(o2.getEventStart());
+            }
+        });
+        adapterAgenda.updateEventList(Objects.requireNonNull(eventList));
     }
 
     // sets date for Calendar object
@@ -280,7 +292,6 @@ public class CalendarFragment extends Fragment {
         calendarView.setVisibility(View.VISIBLE);
         monthlyRecyclerView.setVisibility(View.VISIBLE);
         monthLabelTextView.setVisibility(View.VISIBLE);
-        aabbcc.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -290,7 +301,6 @@ public class CalendarFragment extends Fragment {
         // hide Monthly view UI
         calendarView.setVisibility(View.GONE);
         monthlyRecyclerView.setVisibility(View.GONE);
-        aabbcc.setVisibility(View.GONE);
         monthLabelTextView.setVisibility(View.GONE);
 
         // show Agenda view UI

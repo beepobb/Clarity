@@ -7,24 +7,24 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
+            style="@style/Heading"
             android:id="@+id/CreateEvent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Event"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="24dp"
             android:gravity="center"
-            android:paddingTop="30dp"
-            android:textSize="17sp"
+            android:text="Create Event"
+            android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="#6339CD"
-            />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
 
         <ImageView
             android:id="@+id/purple_line"
-            android:layout_width="300dp"
+            android:layout_width="320dp"
             android:layout_height="5dp"
             android:src="@drawable/purple_line"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,10 +36,10 @@
             android:id="@+id/thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thumbnail"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
             android:paddingTop="10dp"
+            android:text="Thumbnail"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/purple_line" />
@@ -49,8 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add your event photo here"
-            android:textSize = "8sp"
-            android:textColor="#434A54"
+            android:textSize = "10sp"
+            style="@style/FieldHint"
             app:layout_constraintStart_toStartOf="@+id/thumbnail"
             app:layout_constraintTop_toBottomOf="@+id/thumbnail"
             />
@@ -59,58 +59,60 @@
             android:id="@+id/placeHolder"
             android:layout_width="140dp"
             android:layout_height="140dp"
-            android:src="@drawable/spinner_background"
-            app:layout_constraintEnd_toEndOf="@+id/purple_line"
+            android:layout_marginTop="8dp"
+            style="@style/InputField"
             android:paddingTop="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/purple_line"
             app:layout_constraintStart_toStartOf="@+id/add_your_event_poster_here"
             app:layout_constraintTop_toBottomOf="@+id/add_your_event_poster_here" />
 
         <ImageView
             android:id="@+id/middle_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="60dp"
-            android:src="@drawable/placeholder_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_your_event_poster_here" />
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/baseline_image_24"
+            app:layout_constraintBottom_toBottomOf="@+id/placeHolder"
+            app:layout_constraintEnd_toEndOf="@+id/placeHolder"
+            app:layout_constraintStart_toStartOf="@+id/placeHolder"
+            app:layout_constraintTop_toTopOf="@+id/placeHolder"
+            app:tint="@color/grey" />
 
         <TextView
             android:id="@+id/Event_Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event Name"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
             android:paddingTop="10dp"
             android:paddingBottom="5dp"
+            android:text="Event Name"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintStart_toStartOf="@+id/thumbnail"
             app:layout_constraintTop_toBottomOf="@+id/placeHolder" />
 
         <EditText
             android:id="@+id/editTextValue"
             android:layout_width="300dp"
             android:layout_height="30dp"
-            android:background="@drawable/text_box"
-            android:paddingStart="10dp"
-            android:textSize="15sp"
+            style="@style/InputField"
             android:hint="Enter the name of event"
             android:inputType="text"
+            android:paddingStart="10dp"
             android:textColor="#000000"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@+id/Event_Name"
             app:layout_constraintTop_toBottomOf="@+id/Event_Name" />
+
         <TextView
             android:id="@+id/tags"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tags"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
+            android:text="Tags"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintStart_toStartOf="@+id/editTextValue"
             app:layout_constraintTop_toBottomOf="@+id/editTextValue" />
 
         <TextView
@@ -118,53 +120,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choose upto 3 tags."
-            android:textColor="#434A54"
-            android:textSize="8sp"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            style="@style/FieldHint"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/tags"
             app:layout_constraintTop_toBottomOf="@+id/tags" />
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/chipGroup"
+
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="300dp"
-            android:layout_height="60dp"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/tag_choose"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            style="@style/InputField"
+            android:layout_marginTop="5dp"
             android:hint="Select Tags"
+            android:padding="12dp"
+            app:layout_constraintStart_toStartOf="@+id/tag_choose"
+            app:layout_constraintTop_toBottomOf="@+id/tag_choose" />
 
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-            <MultiAutoCompleteTextView
-                android:id="@+id/multiAutoCompleteTextView"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:hint="Select Tags"
-                android:inputType="textMultiLine" />
-    <!--        <com.google.android.material.chip.ChipGroup-->
-
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginTop="8dp"-->
-    <!--            app:singleLine="false" />-->
-
-        </com.google.android.material.textfield.TextInputLayout>
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Date"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
+            android:text="Start Date"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginTop="60dp"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/tag_choose" />
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <EditText
             android:id="@+id/editTextDate"
-            android:layout_width="130dp"
+            android:layout_width="140dp"
             android:layout_height="30dp"
-            android:background="@drawable/text_box"
+            style="@style/InputField"
             android:focusable="false"
             android:hint="Select Date"
             android:paddingStart="10dp"
@@ -177,80 +166,79 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Time"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
+            android:layout_marginStart="92dp"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
+            android:text="Start Time"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginTop="60dp"
-            android:layout_marginStart="115dp"
             app:layout_constraintStart_toEndOf="@+id/date"
-            app:layout_constraintTop_toBottomOf="@+id/tag_choose" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
         <EditText
             android:id="@+id/editTextTime"
-            android:layout_width="130dp"
+            android:layout_width="140dp"
             android:layout_height="30dp"
-            android:background="@drawable/text_box"
+            style="@style/InputField"
             android:focusable="false"
             android:hint="Select Time"
             android:paddingStart="10dp"
             android:textSize="15sp"
-            android:textColor="#000000"
-            app:layout_constraintEnd_toEndOf="@+id/editTextValue"
+            app:layout_constraintEnd_toEndOf="@+id/textView"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/editTextDate"
             app:layout_constraintTop_toBottomOf="@+id/time" />
+
         <TextView
             android:id="@+id/date2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End Date"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
+            android:text="End Date"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:textStyle="bold"
-
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintStart_toStartOf="@+id/editTextDate"
             app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
 
         <EditText
             android:id="@+id/editTextDate2"
-            android:layout_width="130dp"
+            android:layout_width="140dp"
             android:layout_height="30dp"
-            android:background="@drawable/text_box"
+            style="@style/InputField"
             android:focusable="false"
             android:hint="Select Date"
             android:paddingStart="10dp"
-            android:textSize="15sp"
             android:textColor="#000000"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@+id/date2"
             app:layout_constraintTop_toBottomOf="@+id/date2" /> <!-- Disable direct editing -->
 
         <TextView
             android:id="@+id/time2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End Time"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
+            android:layout_marginStart="100dp"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
+            android:text="End Time"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginStart="115dp"
             app:layout_constraintStart_toEndOf="@+id/date2"
             app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
+
         <EditText
             android:id="@+id/editTextTime2"
-            android:layout_width="130dp"
+            android:layout_width="140dp"
             android:layout_height="30dp"
-            android:background="@drawable/text_box"
+            style="@style/InputField"
             android:focusable="false"
             android:hint="Select Time"
             android:paddingStart="10dp"
-            android:textSize="15sp"
             android:textColor="#000000"
-            app:layout_constraintEnd_toEndOf="@+id/editTextValue"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@+id/editTextTime"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/editTextDate2"
             app:layout_constraintTop_toBottomOf="@+id/time2" />
 
@@ -259,10 +247,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Location"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/purple_line"
             app:layout_constraintTop_toBottomOf="@+id/editTextDate2" />
@@ -271,95 +258,79 @@
             android:id="@+id/location_text"
             android:layout_width="300dp"
             android:layout_height="30dp"
-            android:background="@drawable/text_box"
+            style="@style/InputField"
             android:hint="Enter the name of event"
             android:inputType="text"
             android:paddingStart="10dp"
-            android:textColor="#000000"
             android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintStart_toStartOf="@+id/location"
             app:layout_constraintTop_toBottomOf="@+id/location" />
+
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
             android:inputType="text"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
+            android:text="Description"
+            style="@style/FieldHeading"
+            android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
+            app:layout_constraintStart_toStartOf="@+id/location_text"
             app:layout_constraintTop_toBottomOf="@+id/location_text" />
+
         <TextView
             android:id="@+id/description_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You can include links to Sign-up forms or event websites etc."
-            android:textSize = "8sp"
             android:inputType="text"
-            android:textColor="#000000"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/description"
-            />
+            android:text="You can include links to Sign-up forms or event websites etc."
+            style="@style/FieldHint"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/description"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/InputField"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:entries="@array/AIornot"
+            android:minWidth="300dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@+id/description_info"
+            app:layout_constraintTop_toBottomOf="@+id/description_info" />
 
         <EditText
             android:id="@+id/description_text"
+            style="@style/InputField"
             android:layout_width="300dp"
             android:layout_height="100dp"
-            android:background="@drawable/text_box"
-            android:hint=""
+            android:layout_marginTop="10dp"
             android:inputType="textMultiLine"
-            android:paddingStart="10dp"
             android:textColor="#000000"
             android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/description_info" />
+            app:layout_constraintEnd_toEndOf="@+id/spinner"
+            app:layout_constraintStart_toStartOf="@+id/spinner"
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
-        <TextView
-            android:id="@+id/contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Contact"
-            android:textColor="#6338CD"
-            android:textSize="10sp"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/description_text" />
-
-        <EditText
-            android:id="@+id/contact_text"
-            android:layout_width="300dp"
-            android:layout_height="30dp"
-            android:background="@drawable/text_box"
-            android:paddingStart="10dp"
-            android:textSize="15sp"
-            android:hint=""
-            android:inputType="text"
-            android:textColor="#000000"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-            app:layout_constraintTop_toBottomOf="@+id/contact" />
 
         <Button
             android:id="@+id/postButton"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/purple_button_rect"
             android:gravity="center"
             android:padding="8dp"
             android:text="Post"
-            android:textColor="#FFFFFF"
+            style="@style/Submit"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/purple_line"
+            app:layout_constraintEnd_toEndOf="@+id/description_text"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/purple_line"
-
-            app:layout_constraintTop_toBottomOf="@+id/contact_text" />
+            app:layout_constraintStart_toStartOf="@+id/description_text"
+            app:layout_constraintTop_toBottomOf="@+id/description_text" />
 
         <RelativeLayout
             android:id="@+id/progress_layout"

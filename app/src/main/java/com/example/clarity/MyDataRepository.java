@@ -1,10 +1,15 @@
 package com.example.clarity;
 
+import android.graphics.Bitmap;
+
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.clarity.NavBarFragments.Discover.EventTags;
 import com.example.clarity.model.data.Post;
+import com.example.clarity.model.data.Tag;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 // Ideally, we would use a ViewModel class
@@ -13,9 +18,17 @@ public class MyDataRepository {
     private static MyDataRepository instance;
     private MutableLiveData<List<Post>> savedEventsLiveData = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<List<Post>> favouriteEventsLiveData = new MutableLiveData<>(new ArrayList<>());
+    /*
+    By initialising the value inside the MutableLiveData in the constructor, observer callbacks
+    will be executed the moment they attach, even without setValue/postValue
+     */
 
     // Singleton class
-    private MyDataRepository() {}
+    private MyDataRepository() {
+        for (EventTags e : EventTags.values()) {
+            getTagsEventMapping().put(e, new ArrayList<>());
+        }
+    }
     public static MyDataRepository getInstance() {
         if (instance == null) {
             instance = new MyDataRepository();
@@ -89,7 +102,7 @@ public class MyDataRepository {
         List<Post> favouriteEvents = favouriteEventsLiveData.getValue();
         assert favouriteEvents != null;
         favouriteEvents.remove(post);
-        savedEventsLiveData.setValue(favouriteEvents); // setValue can only be executed on main UI thread
+        favouriteEventsLiveData.setValue(favouriteEvents); // setValue can only be executed on main UI thread
         // Observers of savedEventsLiveData will be triggered
     }
 
@@ -98,4 +111,72 @@ public class MyDataRepository {
         assert favouriteEvents != null;
         return favouriteEvents.contains(post);
     }
+
+
+
+    // DISCOVER METHODS //
+    private MutableLiveData<HashMap<Integer, Post>> allEventsHashMapLiveData = new MutableLiveData<>(new HashMap<>());
+    private MutableLiveData<HashMap<Integer, Bitmap>> eventImageMappingLiveData = new MutableLiveData<>(new HashMap<>());
+    private MutableLiveData<HashMap<EventTags, ArrayList<Integer>>> tagsEventMappingLiveData = new MutableLiveData<>(new HashMap<>());
+
+    public void loadAllEventsOnWorkerThread(ArrayList<Post> eventsList) {
+        // Takes list of Post objects and save it in a hash map (the key is the post id)
+        HashMap<Integer, Post> hashMap = new HashMap<>();
+        for (Post post: eventsList) {
+            hashMap.put(post.getId(), post);
+        }
+        allEventsHashMapLiveData.postValue(hashMap);
+
+        // allEventsLiveData.postValue(eventsList);
+        // Observers of allEventsLiveData will be triggered
+    }
+    public void loadEventImageMappingOnWorkerThread(HashMap<Integer, Bitmap> mapping) {
+        eventImageMappingLiveData.postValue(mapping);
+        // Observers of eventImageMapping will be triggered
+    }
+
+    public void createTagEventMappingOnWorkerThread(ArrayList<Tag> tagObjects) {
+        // Initialize hash map
+        HashMap<EventTags, ArrayList<Integer>> tagsEventMapping = new HashMap<>();
+        for (EventTags e : EventTags.values()) {
+            tagsEventMapping.put(e, new ArrayList<>());
+        }
+
+        for (Tag tag : tagObjects) {
+            Integer post_id = tag.getPost_id();
+            String tag_category = tag.getTag_category();
+
+            if (tag_category.equals(EventTags.FIFTH_ROW.name())) {
+                tagsEventMapping.get(EventTags.FIFTH_ROW).add(post_id);
+            } else if (tag_category.equals(EventTags.CAREER.name())) {
+                tagsEventMapping.get(EventTags.CAREER).add(post_id);
+            } else if (tag_category.equals(EventTags.WORKSHOP.name())) {
+                tagsEventMapping.get(EventTags.WORKSHOP).add(post_id);
+            } else if (tag_category.equals(EventTags.CAMPUS_LIFE.name())) {
+                tagsEventMapping.get(EventTags.CAMPUS_LIFE).add(post_id);
+            } else if (tag_category.equals(EventTags.COMPETITION.name())) {
+                tagsEventMapping.get(EventTags.COMPETITION).add(post_id);
+            }
+        }
+
+        tagsEventMappingLiveData.postValue(tagsEventMapping);
+        // Observers of tagsEventMappingLiveData will be triggered
+    }
+
+    public MutableLiveData<HashMap<Integer, Post>> getAllEventsHashMapLiveData() {
+        return allEventsHashMapLiveData;
+    }
+    public HashMap<Integer, Post> getAllEventsHashMap() { return allEventsHashMapLiveData.getValue(); }
+    public List<Post> getAllEvents() {
+        return new ArrayList<>(getAllEventsHashMap().values());
+    }
+
+    public MutableLiveData<HashMap<Integer, Bitmap>> getEventImageMappingLiveData() { return eventImageMappingLiveData; }
+    public HashMap<Integer, Bitmap> getEventImageMapping() { return eventImageMappingLiveData.getValue(); }
+
+    public MutableLiveData<HashMap<EventTags, ArrayList<Integer>>> getTagsEventMappingLiveData() { return tagsEventMappingLiveData; }
+    public HashMap<EventTags, ArrayList<Integer>> getTagsEventMapping() { return tagsEventMappingLiveData.getValue(); }
+
+
+
 }

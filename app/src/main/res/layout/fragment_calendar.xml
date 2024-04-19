@@ -8,6 +8,7 @@
     tools:context=".NavBarFragments.Calendar.CalendarFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        style="@style/CalendarEventContainer"
         android:id="@+id/agendaRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,23 +22,21 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/purpleBar"
-        app:layout_constraintVertical_bias="0.0"
-        style=""/>
+        app:layout_constraintVertical_bias="0.0"/>
 
     <com.applandeo.materialcalendarview.CalendarView
         android:id="@+id/calendarView"
-        app:type="one_day_picker"
-        app:headerColor="@color/white"
-        app:headerLabelColor="@color/white"
-        app:daysLabelsColor="@color/black"
-        app:pagesColor="@color/white"
-        app:todayLabelColor="#FF0000"
-        app:selectionColor="#967ADC"
+        style="@style/CalendarEventCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:abbreviationsLabelsColor="@color/purple"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:selectionColor="#967ADC"
+        app:todayLabelColor="@color/calendar_label_red"
+        app:type="one_day_picker" />
 
     <View
         android:id="@+id/view"
@@ -52,8 +51,7 @@
     <View
         android:id="@+id/purpleBar"
         android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:alpha="0.17"
+        android:layout_height="58dp"
         style="@style/CalendarBanner"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,9 +63,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="15dp"
         android:text="MONTH"
-        android:textColor="@color/accent_1"
+        android:textSize="20dp"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,20 +86,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/AABBCC"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AABBCC"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView"
-        app:layout_constraintVertical_bias="0.0" />
-
     <androidx.recyclerview.widget.RecyclerView
+        style="@style/CalendarEventContainer"
         android:id="@+id/monthlyRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -108,7 +95,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AABBCC"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"
         app:layout_constraintVertical_bias="0.369" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

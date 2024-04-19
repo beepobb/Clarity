@@ -49,4 +49,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.5.0") // circular image
     implementation ("org.signal:argon2:13.1@aar")
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0") //swipe down to refresh
+    implementation ("com.github.bumptech.glide:glide:4.12.0") //load image from URI
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0") //load image from URI
+    implementation("org.apache.commons:commons-lang3:3.4") //
 }

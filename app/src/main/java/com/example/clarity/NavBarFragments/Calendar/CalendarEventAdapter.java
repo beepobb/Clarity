@@ -11,10 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.clarity.EventsPageActivity;
+import com.example.clarity.Event.EventsPageActivity;
 import com.example.clarity.PostParcelable;
 import com.example.clarity.R;
 import com.example.clarity.model.data.Post;
+import com.example.clarity.model.util.CardFormatter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +46,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         TextView eventLocationTextView;
         TextView eventDayNumber;
         TextView eventDay;
+        TextView eventName;
         View eventDateLabel; // used in agenda view only
 
         public EventViewHolder(@NonNull View itemView) {
@@ -80,7 +82,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
 
         // Bind Event object data to the EventViewHolder i.e. fill in data
         holder.eventNameTextView.setText(event.getTitle());
-        holder.eventTimeTextView.setText(event.getEvent_start());
+        holder.eventTimeTextView.setText(CardFormatter.formatCalendarObject(event.getEventStart(), event.getEventEnd()));
         holder.eventLocationTextView.setText(event.getLocation());
         holder.eventDayNumber.setText(String.valueOf(event.getEventStart().get(Calendar.DAY_OF_MONTH)));
         holder.eventDay.setText(daysOfWeekConverter[event.getEventStart().get(Calendar.DAY_OF_WEEK)]);
@@ -93,6 +95,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
             holder.eventDayNumber.setVisibility(View.GONE);
         } else if (this.calendarDisplayState == CalendarFragment.CalendarDisplayState.AGENDA_VIEW) {
             Log.d("onBindViewHolder", CalendarFragment.CalendarDisplayState.AGENDA_VIEW.name() + " " + holder.eventDateLabel);
+            holder.eventNameTextView.setText(CardFormatter.formatTitleDiscover(event.getTitle(), CardFormatter.EventCardType.AGENDA_VIEW));
             holder.eventDateLabel.setVisibility(View.VISIBLE);
             holder.eventDay.setVisibility(View.VISIBLE);
             holder.eventDayNumber.setVisibility(View.VISIBLE);

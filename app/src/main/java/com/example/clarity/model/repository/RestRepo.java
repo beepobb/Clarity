@@ -8,11 +8,13 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import com.example.clarity.R;
+import com.example.clarity.model.data.Author;
 import com.example.clarity.model.data.User;
 import com.example.clarity.model.data.Post;
 import com.example.clarity.model.data.Favourite;
 import com.example.clarity.model.data.Tag;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -23,23 +25,21 @@ import java.io.OutputStreamWriter;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.lang.Runnable;
-import java.util.concurrent.Executors;
 
 import com.example.clarity.model.util.MD5;
 
 public class RestRepo {
-    //################STATIC METHODS################/
     private final String endPointUser = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/user";
     private final String endPointPost = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/post";
     private final String endPointFavourites = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/favourites";
     private final String endPointTags = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/tags";
     private final String imageBucket = "https://18ihlowsu4.execute-api.ap-southeast-2.amazonaws.com/beta/sutdclarity";
+    private final String endPointSummary = "https://ixx239v32j.execute-api.ap-southeast-2.amazonaws.com/beta/summary";
 
     private final Executor executor;
     private static RestRepo instance; // single instance
@@ -49,6 +49,7 @@ public class RestRepo {
         this.executor = executor;
     }
 
+    //################STATIC METHODS################/
     public static RestRepo getInstance(Executor executor) {
         if (instance == null) {
             instance = new RestRepo(executor);
@@ -126,14 +127,17 @@ public class RestRepo {
         HttpURLConnection connection = null;
         try {
             //Create connection
+            String data_string = data.toString();
+            System.out.println(data_string);
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("content-type", "application/json");
+            connection.setRequestProperty("content-type", "application/json;charset=UTF-8");
+            connection.setRequestProperty("content-length", Integer.toString(data_string.length()));
             connection.setDoOutput(true);
             connection.setDoInput(true);
             OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-            wr.write(data.toString());
+            wr.write(data_string);
             wr.flush();
 
             //Get Response
@@ -262,6 +266,29 @@ public class RestRepo {
             return null;
         }
     }
+
+    public void getAuthorRequest(int author_id, RepositoryCallback<Author> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Author response = getAuthor(Integer.toString(author_id));
+                callback.onComplete(response);
+            }
+        });
+    }
+
+    private Author getAuthor(String author_id) {
+        try {
+            String urlQuery = "?author_id="+author_id;
+            JSONObject tmp = urlGet(endPointUser,urlQuery);
+            System.out.println(tmp);
+            return new Author(tmp.getString("username"),tmp.getString("role"),tmp.getString("profile_pic_url"));
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
     private Boolean checkUser(String id) {
         try {
             String urlQuery = "?id="+id;
@@ -286,8 +313,10 @@ public class RestRepo {
                 try {
                     String filename = username + ".png";
                     String url = imageBucket + '/' + filename;
-                    addImage(bm, filename);
                     String response = addUser(username, MD5.getMd5(password), email, role, url);
+                    if(response != null) {
+                        addImage(bm, filename);
+                    }
                     callback.onComplete(response);
                 }
                 catch (Exception e) {
@@ -305,10 +334,13 @@ public class RestRepo {
         data.put("role", role);
         data.put("profile_pic_url", profile_pic_url);
         try {
-            return urlPost(endPointUser, new JSONObject(data));
+            JSONObject res = new JSONObject(urlPost(endPointUser, new JSONObject(data)));
+            if(res.getString("body").equals("Error adding data.")) {
+                return null;
+            }
+            return res.getString("body");
         }
         catch(Exception e) {
-            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -443,10 +475,11 @@ public class RestRepo {
         data.put("event_start", event_start);
         data.put("event_end", event_end);
         data.put("image_url", image_url);
-        data.put("title", title);
+        data.put("title", StringEscapeUtils.escapeJava(title));
         data.put("location", location);
-        data.put("description", description);
+        data.put("description", StringEscapeUtils.escapeJava(description));
         data.put("tag_list", listString);
+
         try {
             return urlPost(endPointPost, new JSONObject(data));
         }
@@ -643,7 +676,7 @@ public class RestRepo {
     }
 
 
-
+    // #############IMAGE METHODS##############
     // provide image in a specific type given the url.
     // UPDATE FROM UI/UX side regarding which type to display
     public void postImageRequest(Bitmap bmp, String filename, RepositoryCallback<String> callback) {
@@ -676,6 +709,23 @@ public class RestRepo {
             System.out.println(e.getMessage());
             return "";
         }
+    }
+
+    public void getProfilePictureRequest(int userID, RepositoryCallback<Bitmap> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Author author = getAuthor(Integer.toString(userID));
+                    Bitmap bm = getImage(author.getProfile_pic_url());
+                    callback.onComplete(bm);
+                }
+                catch(Exception e) {
+                    callback.onComplete(null);
+                }
+            }
+        });
+
     }
 
     public void getImageRequest(String url, RepositoryCallback<Bitmap> callback) {
@@ -716,5 +766,27 @@ public class RestRepo {
             return filename.substring(index + 1);
         }
         return "";
+    }
+
+    public void  bitmapToTextSummaryRequest(Bitmap bm, RepositoryCallback<String> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onComplete("Updated");
+                try {
+                    String base64Text = getStringImage(bm, Bitmap.CompressFormat.JPEG);
+                    base64Text = base64Text.replace("\n", "");
+                    HashMap<String, String> data = new HashMap<String, String>();
+                    data.put("document", base64Text);
+                    String response = urlPost(endPointSummary, new JSONObject(data));
+                    JSONObject tmp = new JSONObject(response);
+                    String result = tmp.getString("summary");
+                    callback.onComplete(result.substring(1,result.length() - 1));
+                }
+                catch(Exception e) {
+                    callback.onComplete("");
+                }
+            }
+        });
     }
 }
