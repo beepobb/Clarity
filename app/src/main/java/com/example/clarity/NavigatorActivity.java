@@ -2,8 +2,6 @@ package com.example.clarity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,11 +18,10 @@ import com.example.clarity.ui.login.LoginActivity;
 import java.io.IOException;
 
 // No views associated with this class - only start-up navigation logic
+// This is the first Activity of the application
 public class NavigatorActivity extends AppCompatActivity {
-    // Need to test whether it is better to have start-up logic be in this no-view activity
-    // or in MyApplication class
+
     private static final String TAG = "NavigatorActivity";
-    // TODO: set starting activity of app to be NavigatorActivity
     private PreferenceUtils prefUtils;
     private RestRepo database;
     private MyApplication myApplication;
@@ -45,17 +42,18 @@ public class NavigatorActivity extends AppCompatActivity {
 
         loadingMessageTextView = findViewById(R.id.loadingMessageTextView);
 
+        // If there is a session token, login as user:
         hasSessionTokenLive.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean hasSessionToken) {
                 if (hasSessionToken) { // deserialized user object is valid (in database)
-                    Log.d(TAG, "User found in database, logging in");
+                    Log.i(TAG, "User found in database, logging in");
                     assert appUser != null;
                     myApplication.saveAppUser(appUser);
                     goToMainActivity();
                 }
                 else {
-                    Log.d(TAG, "onChanged: User not in database, log in again");
+                    Log.i(TAG, "onChanged: User not in database, log in again");
                     myApplication.saveAppUser(null);
                     prefUtils.clearSessionToken();
                     Toast.makeText(myApplication, "User no longer exists.", Toast.LENGTH_SHORT).show();
@@ -80,14 +78,14 @@ public class NavigatorActivity extends AppCompatActivity {
              * we will serialize the User object as a session token in local storage (sharedPrefs).
              * Whenever the app is opened, if there is a "session token" in sharedPrefs,
              * then we simply log in with that user (and skip the log-in page).
-             * This "session token" can be cleared by logging out.
+             * We then verify that the User object is in the database (and not deleted).
+             * This "session token" is cleared when logging out.
              */
 
             try {
                 loadingMessageTextView.setText("Verifying session token...");
                 appUser = (User) (SerializationUtils.deserializeFromString(sessionToken));
-                // TODO: ensure that the User object exists in database with database method
-                Log.d(TAG, "Fetched User object from session token. ID: " + appUser.getId());
+                Log.i(TAG, "Fetched User object from session token. ID: " + appUser.getId());
                 database.checkUserRequest(appUser.getId(), new RestRepo.RepositoryCallback<Boolean>() {
                     @Override
                     public void onComplete(Boolean result) {
@@ -97,7 +95,7 @@ public class NavigatorActivity extends AppCompatActivity {
                 });
 
             } catch (IOException | ClassNotFoundException e) {
-                Log.d(TAG, "Failed to get User object from session token");
+                Log.i(TAG, "Failed to get User object from session token");
                 // throw new RuntimeException(e);
                 goToLoginActivity();
             }
@@ -106,6 +104,9 @@ public class NavigatorActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Redirect to MainActivity (user object saved)
+     */
     private void goToMainActivity() {
         Toast.makeText(myApplication, "Logged in: Welcome "+appUser.getUsername()+"!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
@@ -113,6 +114,9 @@ public class NavigatorActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Redirect to LoginActivity
+     */
     private void goToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

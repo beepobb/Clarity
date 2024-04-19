@@ -56,7 +56,6 @@ public class Discover extends Fragment {
         // initialise values
         tagButtons = Arrays.asList(EventTags.values());
         dataRepo = MyDataRepository.getInstance();
-
     }
 
     // create UI here
@@ -102,7 +101,6 @@ public class Discover extends Fragment {
 
                 HashMap<Integer, Bitmap> tmpMap = new HashMap<>();
                 // get images for every Post object
-                // TODO: single DB request that fetches entire
                 for (Post post: dataRepo.getAllEvents()) {
                     String url = post.getImage_url();
                     Integer post_id = post.getId();
@@ -117,7 +115,6 @@ public class Discover extends Fragment {
                 }
                 updateRecyclerEventsShown();
             }
-
         });
 
         // set up observer for eventImageMappingLiveData, refresh UI when images are loaded in
@@ -129,7 +126,7 @@ public class Discover extends Fragment {
             }
         });
 
-        // set up observer for tagsImageMappingLiveData, refresh UI when tag mappings are loading in
+        // set up observer for tagsImageMappingLiveData , refresh UI when tag mappings are loading in
         dataRepo.getTagsEventMappingLiveData().observe(getViewLifecycleOwner(), new Observer<HashMap<EventTags, ArrayList<Integer>>>() {
             @Override
             public void onChanged(HashMap<EventTags, ArrayList<Integer>> eventTagsArrayListHashMap) {
@@ -152,7 +149,6 @@ public class Discover extends Fragment {
         swipeDownToRefresh.setRefreshing(true);
         loadDatabase();
 
-        // TODO: swipe to refresh might be broken
         swipeDownToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -195,7 +191,6 @@ public class Discover extends Fragment {
             for (Integer postId: Objects.requireNonNull(dataRepo.getTagsEventMapping().get(buttonPressed))) {
                 subList.add(dataRepo.getAllEventsHashMap().get(postId));
             }
-
         }
 
         // Sort the list of post
@@ -208,7 +203,6 @@ public class Discover extends Fragment {
 
         // refresh adapter for event recycler
         discoverEventAdapter.updateEventList(subList);
-
     }
 
     public void updateRecyclerImageMapping() {

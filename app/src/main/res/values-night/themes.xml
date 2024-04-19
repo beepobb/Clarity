@@ -22,7 +22,6 @@
         <item name="tint">@color/white</item>
     </style>
 
-    <style name="ScreenBackground"><item name="android:background">@color/dark_grey</item></style>
     <style name="Container"><item name="android:background">@color/dark_grey</item></style>
     <style name="Accent1"><item name="android:textColor">@color/purple</item></style>
     <style name="Subtitle"><item name="android:textColor">@color/grey</item></style>
@@ -44,7 +43,7 @@
     <style name="EventLikeButton"><item name="android:background">@drawable/like_button_dark</item></style>
     <style name="EventLocationIcon"><item name="android:src">@drawable/baseline_location_on_24_dark</item></style>
     <style name="EventTag"><item name="android:background">@drawable/tag_rectangle_dark</item></style>
-    <style name="EventScreenBackground"><item name="android:background">@color/dark_grey</item></style>
+    <style name="EventScreenBackground"><item name="android:background">@color/bg_dark</item></style>
 
     <!--Styles for Create Fragment-->
     <style name="FieldHeading"><item name="android:textColor">@color/purple</item> </style>

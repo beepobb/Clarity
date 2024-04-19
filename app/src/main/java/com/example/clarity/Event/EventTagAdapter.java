@@ -11,17 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clarity.NavBarFragments.Discover.EventTags;
 import com.example.clarity.R;
-import com.example.clarity.model.data.Tag;
 
 import java.util.List;
 
+//Adapter to show tags in the events page
 public class EventTagAdapter extends RecyclerView.Adapter<EventTagAdapter.EventTagViewHolder> {
-    private Context context;
+    private final Context context;
     private List<EventTags> categoryList;
     public EventTagAdapter(Context context, List<EventTags> categoryList){
         this.context = context;
         this.categoryList = categoryList;
     }
+    //Creates a new EventTagViewHolder by inflating the layout.
     @NonNull
     @Override
     public EventTagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -29,6 +30,7 @@ public class EventTagAdapter extends RecyclerView.Adapter<EventTagAdapter.EventT
         return new EventTagViewHolder(view);
     }
 
+    //Binds the event tag data to the view holder.
     @Override
     public void onBindViewHolder(@NonNull EventTagViewHolder holder, int position) {
         EventTags tag = categoryList.get(position);

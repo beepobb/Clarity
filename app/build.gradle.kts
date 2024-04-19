@@ -51,5 +51,5 @@ dependencies {
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0") //swipe down to refresh
     implementation ("com.github.bumptech.glide:glide:4.12.0") //load image from URI
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0") //load image from URI
-    implementation("org.apache.commons:commons-lang3:3.4")
+    implementation("org.apache.commons:commons-lang3:3.4") //
 }

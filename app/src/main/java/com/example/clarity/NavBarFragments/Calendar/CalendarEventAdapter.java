@@ -46,7 +46,6 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<CalendarEventAdap
         TextView eventLocationTextView;
         TextView eventDayNumber;
         TextView eventDay;
-        TextView eventName;
         View eventDateLabel; // used in agenda view only
 
         public EventViewHolder(@NonNull View itemView) {

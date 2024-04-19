@@ -4,10 +4,10 @@ import android.os.Parcelable;
 
 import com.example.clarity.model.data.Post;
 
-// Wrapper class for Post object that implements Parcelable
-// The wrapped Post (a PostParcelable object) can be attached to Intents
 public class PostParcelable implements Parcelable {
     /*
+    Wrapper class for Post object that implements Parcelable
+    The wrapped Post can be attached to Intents as it implements Parcelable
     PostParcelable gets serialized into a Parcel object internally when sent through intent
     Then the Parcel objects get deserialized back into PostParcelable object when we receive it
      */
@@ -17,13 +17,20 @@ public class PostParcelable implements Parcelable {
         return post;
     }
 
+    /**
+     * Constructor used to wrap the Post object so that it can be serialized into a Package object
+     * @param post Post object that needs to be serialized (to be sent through intent)
+     */
     public PostParcelable(Post post) {
         // This constructor is used for constructing a PostParcelable from existing Post object
         // i.e. wrap a Post object
         this.post = post;
     }
 
-    // Parcelable implementation
+    /**
+     * Constructor used to reconstruct the wrapped object from a Parcel object during deserialization
+     * @param in Parcel object to be deserialized
+     */
     protected PostParcelable(Parcel in) {
         // This constructor is used to reconstruct a PostParcelable object from a Parcel object during deserialization.
         // Gets called by the Creator object (see below)
@@ -42,8 +49,10 @@ public class PostParcelable implements Parcelable {
         post = new Post(id, author_id, event_start, event_end, image_url, title, location, description, created_at);
     }
 
-    // Creator object manages the reconstruction of the PostParcelable object from the serialized Parcel object during deserialization
-    // Calls the alternative constructor
+    /**
+     * Anonymous class object (implementing Creator) that will manage the rdconstruction of the PostParcelable
+     * object from the serialized Parcel object during deserialization (calls the alternative constructor)
+     */
     public static final Creator<PostParcelable> CREATOR = new Creator<PostParcelable>() {
         @Override
         public PostParcelable createFromParcel(Parcel in) {
@@ -56,6 +65,11 @@ public class PostParcelable implements Parcelable {
         }
     };
 
+    /**
+     * Serializes this PostParcelable instance into Parcel object
+     * @param dest Parcel object to be defined
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         // Responsible for serialization

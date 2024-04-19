@@ -27,7 +27,7 @@
         <ImageView
             android:id="@+id/profileWhiteBg"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
+            android:layout_height="1000dp"
             android:layout_marginTop="136dp"
             android:background="@drawable/profile_container"
             android:backgroundTint="?attr/profile_container"

@@ -6,14 +6,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -27,22 +25,22 @@ import androidx.lifecycle.Observer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.clarity.MainActivity;
 import com.example.clarity.MyApplication;
 import com.example.clarity.R;
 import com.example.clarity.databinding.CreateNewBinding;
-import com.example.clarity.model.data.User;
 import com.example.clarity.model.repository.RestRepo;
 
-import java.io.FileNotFoundException;
+public class CreateNewAccount extends AppCompatActivity {
 
-public class CreateNewAccountView extends AppCompatActivity {
     private CreateNewBinding binding;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
     private RestRepo database;
     private MutableLiveData<String> stringMutableLiveData;
     private Bitmap image;
+    private Handler handler;
+    private ProgressBar progressBar;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,7 +106,7 @@ public class CreateNewAccountView extends AppCompatActivity {
                 if (image == null) {
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_profile);
                 }
-                // Validate input fields (e.g., check if username, email, and password are not empty)
+                // Validate input fields (check if username, email, and password are not empty)
                 if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     // Display an error message if any field is empty
                     Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
@@ -116,66 +114,29 @@ public class CreateNewAccountView extends AppCompatActivity {
                     return;
                 }
 
-                // Additional validation logic can be added here (e.g., check if passwords match)
+                // check if passwords match
                 if (!password.equals(confirmPassword)) {
                     Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
                     loginButton.setEnabled(true);
                     return;
                 }
 
+                //check if email is "valid"
                 if (!email.contains("@")) {
                     Toast.makeText(getApplicationContext(), "Must be a valid email", Toast.LENGTH_SHORT).show();
                     loginButton.setEnabled(true);
                     return;
                 }
-
+                //check if password length is more than 7 characters
                 if (!(password.length() >= 8)) {
                     Toast.makeText(getApplicationContext(), "Must be more than 8 characters", Toast.LENGTH_SHORT).show();
                     loginButton.setEnabled(true);
                     return;
                 }
-
                 //background thread will play a circular loading bar
-                new Thread(new Runnable() {
-                    public void run() {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "Please wait for your account to be created...", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                        int progressStatus = 0;
-                        while (progressStatus < 100) {
-                            progressStatus += 1;
+                loadingBar();
 
-                            // Update the progress bar and display the current value
-                            int finalProgressStatus = progressStatus;
-                            handler.post(new Runnable() {
-                                public void run() {
-                                    progressBar.setProgress(finalProgressStatus);
-                                }
-                            });
-
-                            try {
-                                // Sleep for 200 milliseconds to simulate a long operation
-                                Thread.sleep(30);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        try {
-                            // Sleep for 200 milliseconds after reaching 100%
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        handler.post(new Runnable() {
-                            public void run() {
-                                progressBar.setProgress(0);
-                            }
-                        });
-                    }
-                }).start();
-
+                //calling RestRepo method for instance in order to add new user to database
                 database.addUserRequest(username, password, email, role, image, new RestRepo.RepositoryCallback<String>() {
                     @Override
                     public void onComplete(String result) {
@@ -185,6 +146,7 @@ public class CreateNewAccountView extends AppCompatActivity {
 
             }
         });
+        // sets up an observer on a MutableLiveData<String> object, listen for changes to stringMutableLiveData object
         stringMutableLiveData.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String string) {
@@ -194,9 +156,7 @@ public class CreateNewAccountView extends AppCompatActivity {
                 }
                 else {
                     // When string is fetched (addUserRequest): switch to MainActivity
-                    Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(CreateNewAccountView.this, LoginActivity.class);
-                    startActivity(intent);
+                    goToLoginActivity();
                     finish();
                 }
             }
@@ -208,5 +168,53 @@ public class CreateNewAccountView extends AppCompatActivity {
         if (intent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
             imageActivityResultLauncher.launch(intent);
         }
+    }
+
+    public void goToLoginActivity() {
+        Toast.makeText(getApplicationContext(), "Account created successfully, please log in again", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(CreateNewAccount.this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void loadingBar() {
+        new Thread(new Runnable() {
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Please wait for your account to be created...", Toast.LENGTH_LONG).show();
+                    }
+                });
+                int progressStatus = 0;
+                while (progressStatus < 100) {
+                    progressStatus += 1;
+
+                    // Update the progress bar and display the current value
+                    int finalProgressStatus = progressStatus;
+                    handler.post(new Runnable() {
+                        public void run() {
+                            progressBar.setProgress(finalProgressStatus);
+                        }
+                    });
+
+                    try {
+                        // Sleep for 200 milliseconds to simulate a long operation
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    // Sleep for 200 milliseconds after reaching 100%
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                handler.post(new Runnable() {
+                    public void run() {
+                        progressBar.setProgress(0);
+                    }
+                });
+            }
+        }).start();
     }
 }

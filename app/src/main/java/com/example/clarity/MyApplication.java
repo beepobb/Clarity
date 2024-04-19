@@ -12,7 +12,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class MyApplication extends Application {
-    /*
+    /**
     Custom Application class for maintaining global application state.
     Will instantiate when application first starts (is a singleton class).
     Things initialized here remain for entire application life cycle.
@@ -32,7 +32,9 @@ public class MyApplication extends Application {
     }
     public Executor getExecutor() { return executor; }
 
+
     // Logged-in user methods //
+    // Saved User object of logged-in user
     public User getAppUser() { return appUser; }
     public void saveAppUser(User user) {
         appUser = user;
