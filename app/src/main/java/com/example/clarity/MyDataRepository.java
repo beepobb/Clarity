@@ -140,7 +140,6 @@ public class MyDataRepository {
         }
         allEventsHashMapLiveData.postValue(hashMap);
 
-        // allEventsLiveData.postValue(eventsList);
         // Observers of allEventsLiveData will be triggered
     }
     public void loadEventImageMappingOnWorkerThread(HashMap<Integer, Bitmap> mapping) {
