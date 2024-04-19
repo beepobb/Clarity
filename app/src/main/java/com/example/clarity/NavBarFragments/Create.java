@@ -31,7 +31,6 @@ import com.example.clarity.model.repository.RestRepo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
@@ -47,7 +46,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.MultiAutoCompleteTextView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -66,9 +64,6 @@ import android.widget.TimePicker;
 import com.example.clarity.R;
 
 public class Create extends Fragment {
-
-
-    private MultiAutoCompleteTextView mMultiAutoCompleteTextView;
     private ActivityResultLauncher<Intent> imageActivityResultLauncher;
     private ImageView selectedImageView;
     private Calendar calendar;
@@ -88,6 +83,8 @@ public class Create extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create, container, false);
         selectedImageView = rootView.findViewById(R.id.placeHolder);
+
+        // Defining all the views and buttons in the create fragment
         Button postButton = rootView.findViewById(R.id.postButton);
         ImageView placeholderImageView = rootView.findViewById(R.id.middle_image);
         EditText titleEditText = rootView.findViewById(R.id.editTextValue);
@@ -177,6 +174,7 @@ public class Create extends Fragment {
         // initialize selected language array
         selectedTags = new boolean[tagArray.length];
 
+        //
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -405,6 +403,7 @@ public class Create extends Fragment {
         return rootView;
     }
 
+    //Select image from the gallery
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -414,7 +413,6 @@ public class Create extends Fragment {
     }
 
     //method for date picker
-    //Use most recent API version (Pixel 5 API 34 usable)
     private void showDatePickerDialog(final EditText editText) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
@@ -451,7 +449,6 @@ public class Create extends Fragment {
     }
 
     //method for time picker
-    //Use most recent API version (Pixel 5 API 34 usable)
     private void showTimePickerDialog(final EditText editText) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),

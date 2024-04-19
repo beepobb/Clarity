@@ -43,16 +43,13 @@ import java.util.Map;
 
 
 public class EventsPageActivity extends AppCompatActivity {
-    private String TAG = "EventsPageActivity";
+    private final String TAG = "EventsPageActivity";
     private PreferenceUtils prefUtils;
     private MyDataRepository dataRepo;
     private RestRepo db;
     private User appUser;
-
-    // TODO: Define Views
     private ImageView eventImageView;
-    private TextView eventNameTextView,eventLocationTextView,eventDateTimeTextView,
-            eventDescriptionTextView,organiserNameTextView;
+    private TextView eventNameTextView,eventLocationTextView,eventDateTimeTextView,eventDescriptionTextView,organiserNameTextView;
     private ShapeableImageView organiserPictureImageView;
     private ToggleButton addButtonView;
     private ToggleButton likeButtonView;
@@ -62,13 +59,13 @@ public class EventsPageActivity extends AppCompatActivity {
     private MutableLiveData<Bitmap> organiserProfilePictureLiveData;
     private Post thisPost;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_page_remake);
 
-        // TODO: fetch Views
+        // Fetching all the views defined in events_page_remake
+
         addButtonView = findViewById(R.id.addToggleButton);
         likeButtonView = findViewById(R.id.likeToggleButton);
         eventImageView = findViewById(R.id.eventImageView);
@@ -126,7 +123,7 @@ public class EventsPageActivity extends AppCompatActivity {
             @Override
             public void onChanged(Bitmap bitmap) {
                 if (bitmap != null) {
-                    Log.d(TAG, "Image changed");
+                    Log.i(TAG, "Image changed");
                     organiserPictureImageView.setImageBitmap(bitmap);
                 }
             }
@@ -214,10 +211,10 @@ public class EventsPageActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(String result) {
                             if (result != null) {
-                                Log.d(TAG, "onComplete: event successfully added to user's favourites");
+                                Log.i(TAG, "onComplete: event successfully added to user's favourites");
                             }
                             else {
-                                Log.d(TAG, "onComplete: error - event failed to be added to user's favourites");
+                                Log.i(TAG, "onComplete: error - event failed to be added to user's favourites");
                             }
                         }
                     });
@@ -230,10 +227,10 @@ public class EventsPageActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(String result) {
                             if (result != null) {
-                                Log.d(TAG, "onComplete: event successfully removed from user's favourites");
+                                Log.i(TAG, "onComplete: event successfully removed from user's favourites");
                             }
                             else {
-                                Log.d(TAG, "onComplete: error - event failed to be removed from user's favourites");
+                                Log.i(TAG, "onComplete: error - event failed to be removed from user's favourites");
                             }
                         }
                     });
@@ -259,6 +256,7 @@ public class EventsPageActivity extends AppCompatActivity {
 
     }
 
+    //Setting up the pop-up to show bigger view of the
     private void showImageDialog(Drawable drawable) {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.image_dialog, null);
         ImageView dialogImageView = dialogView.findViewById(R.id.imageDialogView);
