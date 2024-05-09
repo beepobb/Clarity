@@ -30,5 +30,5 @@ To use the app, download this repo and compile with Android Studio according to 
 Do note that the database is closed, so remove any database calls or the app may crash. 
 
 ## Acknowledgement 
-Our project was a collaborative effort involving Yee Jia Zhen (myself), Ryan Lee Jun Hui, Loh Eesong, Cai Junjie, Ho Xiaoyang, Pankti Amish Shah and Sun Sitong.
-The comprehensive README for this project has been authored by Loh Eesong
+Our project was a collaborative effort involving Yee Jia Zhen (myself), Ryan Lee Jun Hui, Loh Ee Song, Cai Junjie, Ho Xiaoyang, Pankti Shah and Sun Sitong.
+The comprehensive README for this project has been authored by Loh Ee Song
