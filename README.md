@@ -25,5 +25,9 @@ For the app:
 For AWS RDS backend: 
 - Python 
 
+To use the app, download this repo and compile with Android Studio according to the specs above to see the UI. The development of this app is done using the Pixel 5a AVD within Android Studio and a physical phone Samsung Flip 5. 
+
+Do note that the database is closed, so remove any database calls or the app may crash. 
+
 ## Acknowledgement 
 This project would not be possible without  Pankti Shah, Yee Jia Zhen, Sun Sitong, Ho Xiaoyang, Cai Junjie, Ryan Lee. Thanks for the great work!  
