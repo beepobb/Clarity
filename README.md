@@ -31,4 +31,4 @@ Do note that the database is closed, so remove any database calls or the app may
 
 ## Acknowledgement 
 Our project was a collaborative effort involving Yee Jia Zhen (myself), Ryan Lee Jun Hui, Loh Ee Song, Cai Junjie, Ho Xiaoyang, Pankti Shah and Sun Sitong. <br><br>
-The comprehensive README for this project has been authored by Loh Ee Song
+The comprehensive README for this project has been authored by Loh Ee Song.
